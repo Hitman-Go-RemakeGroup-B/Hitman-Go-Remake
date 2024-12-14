@@ -151,9 +151,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dab6b224679b54741b7f362d6b8edd41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rows: 3
-  Collums: 3
-  UnitScale: 2
+  RowsZ: 3
+  CollumsX: 5
+  UnitScale: 1.5
   NodePrefab: {fileID: 5278464472800113699, guid: 89295502976fe144caa9ee301ee61048, type: 3}
 --- !u!4 &90306666
 Transform:
@@ -350,7 +350,7 @@ Transform:
   m_GameObject: {fileID: 1493684556}
   serializedVersion: 2
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 99, y: 99, z: 99}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

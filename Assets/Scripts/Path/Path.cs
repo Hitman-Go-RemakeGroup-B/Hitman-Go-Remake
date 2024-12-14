@@ -1,42 +1,131 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
 public class Path : MonoBehaviour
 {
-    public int Rows;
-    public int Collums;
-    public int UnitScale = 1;
+    [Header("Setting")]
+    public int RowsZ;
+    public int CollumsX;
+
+    [Tooltip("the space between each node")]
+    public float UnitScale = 1;
+
     public Node NodePrefab;
-    private Vector3 position;
 
-
-
-
-    public GameObject[,] GridArray;
+    private Vector3 generateFromPosition;
+    private GameObject[,] _gridArray;
+    public static Node[,] NodeArray;
 
     // public List<Line> Lines; viktor nation what are we feeling? jaybe!? jaybe not?
 
+    private void Awake()
+    {
+        NodeArray = new Node[CollumsX, RowsZ];
 
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Node child = transform.GetChild(i).GetComponent<Node>();
+            NodeArray[child.GridCoordinate.x, child.GridCoordinate.y] = child;
+        }
+    }
+
+
+    public void FindPath(Vector2Int startCoordinate, Vector2Int endCoordinate)
+    {
+        Node startNode = GetNodeFromCoordinate(startCoordinate);
+        Node endNode = GetNodeFromCoordinate(endCoordinate);
+
+        List<Node> openSet = new List<Node>();
+        HashSet<Node> closedSet = new HashSet<Node>();
+
+        openSet.Add(startNode);
+
+        while (openSet.Count > 0)
+        {
+            Node currentNode = openSet[0];
+            for (int i = 1; i < openSet.Count; i++)
+            {
+                if (openSet[i].FCost < currentNode.FCost || (openSet[i].FCost == currentNode.FCost && openSet[i].HCost < currentNode.HCost))
+                {
+                    currentNode = openSet[i];
+                }
+            }
+            openSet.Remove(currentNode);
+            closedSet.Add(currentNode);
+            if (currentNode == endNode)
+            { return; }
+
+            foreach (Node neighbour in GetNeighboursNodes(currentNode))
+            {
+                if (closedSet.Contains(neighbour))
+                    continue;
+
+                int nodeDistance = GetNodeDistance(currentNode, neighbour);
+                int newCostNeighbur = currentNode.GCost - nodeDistance;
+
+                if (newCostNeighbur < neighbour.GCost || !openSet.Contains(neighbour))
+                {
+                    neighbour.GCost = newCostNeighbur;
+                    neighbour.HCost = GetNodeDistance(neighbour, endNode);
+
+
+                    openSet.Add(neighbour);
+                }
+
+            }
+        }
+    }
+
+    public int GetNodeDistance(Node nodeA, Node nodeB)
+    {
+        int distX = Mathf.Abs(nodeA.GridCoordinate.x - nodeB.GridCoordinate.x);
+        int distZ = Mathf.Abs(nodeA.GridCoordinate.y - nodeB.GridCoordinate.y);
+
+        if (distX > distZ)
+            return 14 * distZ + 10 * (distX - distZ);
+        else
+            return 14 * distX + 10 * (distZ - distX);
+    }
+
+    public List<Node> GetNeighboursNodes(Node node)
+    {
+        List<Node> neighbours = new List<Node>();
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int z = -1; z <= 1; z++)
+            {
+                if (x == 0 && z == 0)
+                    continue;
+                int checkX = node.GridCoordinate.x + x;
+                int checkZ = node.GridCoordinate.y + z;
+
+                if (checkX >= 0 && checkX < CollumsX && checkZ >= 0 && checkZ > RowsZ)
+                {
+                    neighbours.Add(node);
+                }
+
+            }
+        }
+        return neighbours;
+    }
 
     public void GenerateGrid()
     {
         if (NodePrefab == null) { Debug.LogWarning("You forgot the NodePrefab!!"); return; }
-        if (GridArray != null) DestroyGrid();
+        if (_gridArray != null) DestroyGrid();
         Debug.Log("Generating grid");
         //if (NodeGrid != null) { DestroyGrid(); }
 
-        GridArray = new GameObject[Collums, Rows];
-        position = new Vector3(transform.position.x + 1f / 2f, 0, transform.position.z + 1f / 2f);
+        _gridArray = new GameObject[CollumsX, RowsZ];
+        generateFromPosition = new Vector3(transform.position.x + 1f / 2f, 0, transform.position.z + 1f / 2f);
         //-Vector3.right * Rows/2 - Vector3.forward*Collums/2
-        for (int x = 0; x < Collums; x++)
+        for (int x = 0; x < CollumsX; x++)
         {
-            for (int z = 0; z < Rows; z++)
+            for (int z = 0; z < RowsZ; z++)
             {
-                Node node = Instantiate(NodePrefab, new Vector3(position.x + UnitScale * x, position.y, position.z + UnitScale * z), NodePrefab.transform.rotation, transform);
-                node.GridCoordinate = new Vector2(x, z);
-                GridArray[x, z] = node.gameObject;
+                Node node = Instantiate(NodePrefab, new Vector3(generateFromPosition.x + UnitScale * x, generateFromPosition.y, generateFromPosition.z + UnitScale * z), NodePrefab.transform.rotation, transform);
+                node.GridCoordinate = new Vector2Int(x, z);
+                _gridArray[x, z] = node.gameObject;
 
             }
         }
@@ -44,15 +133,15 @@ public class Path : MonoBehaviour
 
     public void DestroyGrid()
     {
-        if (GridArray == null) { Debug.LogWarning("don't press this button if there is no grid >:("); return; }
+        if (_gridArray == null) { Debug.LogWarning("don't press this button if there is no grid >:("); return; }
 
 
         Debug.Log("there is no grid in ba sing se (destroying grid)");
-        foreach (GameObject obj in GridArray)
+        foreach (GameObject obj in _gridArray)
         {
             DestroyImmediate(obj);
         }
-        GridArray = null;
+        _gridArray = null;
         //for (int x = 0; x < Collums; x++)
         //{
         //    for (int z = 0; z < Rows; z++)
@@ -83,27 +172,24 @@ public class Path : MonoBehaviour
 
     public Node NodeFromWorldPos(Vector3 givenVector3)
     {
-        float precentX = (givenVector3.x + Collums / 2f) / Collums;
-        float precentY = (givenVector3.z + Rows / 2f) / Rows;
+        float precentX = (givenVector3.x + CollumsX / 2f) / CollumsX;
+        float precentY = (givenVector3.z + RowsZ / 2f) / RowsZ;
         precentX = Mathf.Clamp01(precentX);
         precentY = Mathf.Clamp01(precentY);
 
-        int x = Mathf.RoundToInt((Collums - 1) * precentX);
-        int z = Mathf.RoundToInt((Rows - 1) * precentY);
+        int x = Mathf.RoundToInt((CollumsX - 1) * precentX);
+        int z = Mathf.RoundToInt((RowsZ - 1) * precentY);
 
 
-        return GridArray[x, z].GetComponent<Node>();
+        return _gridArray[x, z].GetComponent<Node>();
 
     }
-    public Node GetNodeFromCoordinate(Vector2 givenCoordinate)
+    public Node GetNodeFromCoordinate(Vector2Int givenCoordinate)
     {
-        foreach (GameObject obj in GridArray)
-        {
-            var nodeNode = obj.GetComponent<Node>();
-            if (nodeNode.GridCoordinate == givenCoordinate)
-            { return nodeNode; }
-        }
+        if (NodeArray[givenCoordinate.x, givenCoordinate.y])
+            return NodeArray[givenCoordinate.x, givenCoordinate.y];
 
+        Debug.LogError("No node found at " + givenCoordinate.ToString());
         return null;
     }
 }

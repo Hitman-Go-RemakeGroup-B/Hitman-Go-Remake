@@ -5,7 +5,10 @@ using UnityEngine;
 public class Node : MonoBehaviour
 {
     [HideInInspector] 
-    public Vector2 GridCoordinate;
-    public int Visited = -1;
+    public Vector2Int GridCoordinate;
+
+    public int HCost;
+    public int GCost;
+    public int FCost => HCost+GCost;
     //public Transform Position;
 }

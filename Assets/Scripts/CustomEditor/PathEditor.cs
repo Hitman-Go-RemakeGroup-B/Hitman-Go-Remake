@@ -9,9 +9,10 @@ public class PathEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        base.OnInspectorGUI();
-
         Path path = (Path)target;
+
+        base.OnInspectorGUI();
+        
 
         if (GUILayout.Button("Generate Grid"))
         {
