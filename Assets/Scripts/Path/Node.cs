@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class Node
+public class Node : MonoBehaviour
 {
-    public Vector2 Coordinate;
-    public Transform Position;
+    [HideInInspector] 
+    public Vector2 GridCoordinate;
+    public int Visited = -1;
+    //public Transform Position;
 }
