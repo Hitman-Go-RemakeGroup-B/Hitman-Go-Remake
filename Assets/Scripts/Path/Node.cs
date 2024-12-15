@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Node : MonoBehaviour
 {
-    [HideInInspector] 
-    public Vector2Int GridCoordinate;
-
-    public int HCost;
-    public int GCost;
+    public Line[] Connections;
+    [HideInInspector] public Vector2Int GridCoordinate;
+    [HideInInspector] public int HCost;
+    [HideInInspector] public int GCost;
+    [HideInInspector] public Node PreviousNode;
     public int FCost => HCost+GCost;
     //public Transform Position;
 }

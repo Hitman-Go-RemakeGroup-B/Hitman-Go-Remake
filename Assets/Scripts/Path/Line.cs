@@ -1,10 +1,8 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class Line
+public class Line : MonoBehaviour
 {
-    public Transform StartNodeTransform;
-    public Transform EndNodeTransfrom;
-    private Node _startNode;
-    private Node _endNode;
+    [HideInInspector]public Node endNode;
+
 }
