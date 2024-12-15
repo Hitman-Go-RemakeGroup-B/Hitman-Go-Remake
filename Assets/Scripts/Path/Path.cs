@@ -26,6 +26,9 @@ public class Path : MonoBehaviour
     public static Node[,] NodeArray;
     private Vector3 _generateFromPosition;
 
+    private float _nodeDiameter;
+    private int _gridSizeX, _gridSizeZ;
+
     // public List<Line> Lines; viktor nation what are we feeling? jaybe!? jaybe not?
 
     private void Awake()
@@ -33,6 +36,9 @@ public class Path : MonoBehaviour
         if (NodeArray == null)
             NodeArrayInizalization();
 
+        _nodeDiameter = UnitScale * 2;
+        _gridSizeX = Mathf.RoundToInt( CollumsX / _nodeDiameter);
+        _gridSizeZ = Mathf.RoundToInt(RowsZ / _nodeDiameter);
 #if UNITY_EDITOR
         Vector2Int a = NodeFromWorldPos(seeker.transform.position).GridCoordinate;
         Vector2Int b = NodeFromWorldPos(target.transform.position).GridCoordinate;
@@ -283,13 +289,13 @@ public class Path : MonoBehaviour
 
     public Node NodeFromWorldPos(Vector3 givenVector3)
     {
-        float precentX = (givenVector3.x + CollumsX / 2f) / CollumsX;
-        float precentY = (givenVector3.z + RowsZ / 2f) / RowsZ;
+        float precentX = (givenVector3.x + CollumsX / 2) / CollumsX;
+        float precentY = (givenVector3.z + RowsZ / 2) / RowsZ;
         precentX = Mathf.Clamp01(precentX);
         precentY = Mathf.Clamp01(precentY);
 
-        int x = Mathf.RoundToInt((CollumsX - 1) * precentX);
-        int z = Mathf.RoundToInt((RowsZ - 1) * precentY);
+        int x = Mathf.RoundToInt((_gridSizeX - 1) * precentX);
+        int z = Mathf.RoundToInt((_gridSizeZ - 1) * precentY);
 
 
         return NodeArray[x, z];
