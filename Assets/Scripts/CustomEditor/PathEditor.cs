@@ -33,5 +33,10 @@ public class PathEditor : Editor
             path.DestroyLines();
         }
 
+
+        if (GUILayout.Button("TEST BUTTON"))
+        {
+            path.TestDeleteThisFunc();
+        }
     }
 }

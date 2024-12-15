@@ -153,7 +153,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seeker: {fileID: 1842465194}
   target: {fileID: 2068888683}
-  pathNodeTest: []
+  pathNodeTest:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   RowsZ: 3
   CollumsX: 5
   UnitScale: 5
@@ -459,7 +463,7 @@ Transform:
   m_GameObject: {fileID: 1842465190}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0, z: 0.5}
+  m_LocalPosition: {x: 0.02, y: 0, z: 4.87}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -564,7 +568,7 @@ Transform:
   m_GameObject: {fileID: 2068888679}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 20.5, y: 0, z: 10.5}
+  m_LocalPosition: {x: 20, y: 0, z: 4.98}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []

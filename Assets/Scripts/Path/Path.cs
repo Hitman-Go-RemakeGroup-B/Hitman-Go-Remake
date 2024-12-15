@@ -25,9 +25,8 @@ public class Path : MonoBehaviour
     private GameObject[,] _gridArray;
     public static Node[,] NodeArray;
     private Vector3 _generateFromPosition;
+    private Vector2 _gridSize;
 
-    private float _nodeDiameter;
-    private int _gridSizeX, _gridSizeZ;
 
     // public List<Line> Lines; viktor nation what are we feeling? jaybe!? jaybe not?
 
@@ -36,16 +35,22 @@ public class Path : MonoBehaviour
         if (NodeArray == null)
             NodeArrayInizalization();
 
-        _nodeDiameter = UnitScale * 2;
-        _gridSizeX = Mathf.RoundToInt( CollumsX / _nodeDiameter);
-        _gridSizeZ = Mathf.RoundToInt(RowsZ / _nodeDiameter);
-#if UNITY_EDITOR
-        Vector2Int a = NodeFromWorldPos(seeker.transform.position).GridCoordinate;
-        Vector2Int b = NodeFromWorldPos(target.transform.position).GridCoordinate;
-        pathNodeTest = FindPath(a,b);
-        
-#endif
+        _gridSize = new Vector2(CollumsX * UnitScale, RowsZ * UnitScale);
+
+
     }
+
+#if UNITY_EDITOR
+    public void TestDeleteThisFunc()
+    {
+        Vector2Int a = NodeFromWorldPos(seeker.transform.position).GridCoordinate;
+
+        Vector2Int b = NodeFromWorldPos(target.transform.position).GridCoordinate;
+
+        pathNodeTest = FindPath(a, b);
+
+    }
+#endif
 
     private void NodeArrayInizalization()
     {
@@ -57,6 +62,7 @@ public class Path : MonoBehaviour
             Node child = transform.GetChild(i).GetComponent<Node>();
             NodeArray[child.GridCoordinate.x, child.GridCoordinate.y] = child;
         }
+
     }
     public List<Node> FindPath(Vector2Int startCoordinate, Vector2Int endCoordinate)
     {
@@ -82,7 +88,6 @@ public class Path : MonoBehaviour
             closedSet.Add(currentNode);
             if (currentNode == endNode)
             {
-
                 return RetracePath(startNode, endNode); ;
             }
 
@@ -96,11 +101,11 @@ public class Path : MonoBehaviour
                     continue;
 
                 int nodeDistance = GetNodeDistance(currentNode, neighbour);
-                int newCostNeighbur = currentNode.GCost - nodeDistance;
+                int newCostNeighbour = currentNode.GCost - nodeDistance;
 
-                if (newCostNeighbur < neighbour.GCost || !openSet.Contains(neighbour))
+                if (newCostNeighbour < neighbour.GCost || !openSet.Contains(neighbour))
                 {
-                    neighbour.GCost = newCostNeighbur;
+                    neighbour.GCost = newCostNeighbour;
                     neighbour.HCost = GetNodeDistance(neighbour, endNode);
                     neighbour.PreviousNode = currentNode;
                     openSet.Add(neighbour);
@@ -175,7 +180,7 @@ public class Path : MonoBehaviour
         //if (NodeGrid != null) { DestroyGrid(); }
 
         _gridArray = new GameObject[CollumsX, RowsZ];
-        _generateFromPosition = new Vector3(transform.position.x + 1f / 2f, 0, transform.position.z + 1f / 2f);
+        _generateFromPosition = transform.position; //new Vector3(transform.position.x + 1f / 2f, 0, transform.position.z + 1f / 2f);
         //-Vector3.right * Rows/2 - Vector3.forward*Collums/2
         for (int x = 0; x < CollumsX; x++)
         {
@@ -203,14 +208,6 @@ public class Path : MonoBehaviour
         }
         _gridArray = null;
         NodeArray = null;
-        //for (int x = 0; x < Collums; x++)
-        //{
-        //    for (int z = 0; z < Rows; z++)
-        //    {
-        //        DestroyImmediate(NodeGrid[x, z].gameObject);
-        //    }
-        //};
-
     }
 
     public void GenerateLines()
@@ -289,16 +286,16 @@ public class Path : MonoBehaviour
 
     public Node NodeFromWorldPos(Vector3 givenVector3)
     {
-        float precentX = (givenVector3.x + CollumsX / 2) / CollumsX;
-        float precentY = (givenVector3.z + RowsZ / 2) / RowsZ;
-        precentX = Mathf.Clamp01(precentX);
-        precentY = Mathf.Clamp01(precentY);
+        foreach (Node node in NodeArray) 
+        { 
+            if(Vector3.Distance(node.transform.position,givenVector3)<= UnitScale/2)
+            {
+                Debug.Log(node.name,node.gameObject);
+                return node;
+            }
+        }
 
-        int x = Mathf.RoundToInt((_gridSizeX - 1) * precentX);
-        int z = Mathf.RoundToInt((_gridSizeZ - 1) * precentY);
-
-
-        return NodeArray[x, z];
+        return null;
 
     }
     public Node GetNodeFromCoordinate(Vector2Int givenCoordinate)
@@ -316,12 +313,12 @@ public class Path : MonoBehaviour
     {
         if (_gridArray == null)
             return;
-        foreach (GameObject x in _gridArray) 
-        { 
+        foreach (GameObject x in _gridArray)
+        {
             Gizmos.color = Color.white;
             if (pathNodeTest.Contains(x.GetComponent<Node>()))
                 Gizmos.color = Color.red;
-            Gizmos.DrawCube(x.transform.position, Vector3.one * ((UnitScale/2)-.1f));
+            Gizmos.DrawCube(x.transform.position, Vector3.one * ((UnitScale / 2) - .1f));
         }
     }
 #endif
