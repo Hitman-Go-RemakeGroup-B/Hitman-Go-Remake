@@ -10,7 +10,7 @@ public class PathEditor : Editor
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-        
+
         Path path = (Path)target;
 
         if (GUILayout.Button("Generate Grid"))
@@ -20,7 +20,13 @@ public class PathEditor : Editor
 
         if (GUILayout.Button("Destroy Grid"))
         {
-            path.DestroyGrid();
+            if (path.NodeArray != null && path.NodeArray.Length > 0)
+            {
+               
+                path.DestroyNodeArray();
+            }
+            else
+                path.DestroyGridArray();
         }
 
         if (GUILayout.Button("Generate Lines"))

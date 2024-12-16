@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Path : MonoBehaviour
@@ -16,10 +17,13 @@ public class Path : MonoBehaviour
     public Node NodePrefab;
     public Line LinePrefab;
 
-    private List<GameObject> _lineList;
-    private GameObject[,] _gridArray;
-    public static Node[,] NodeArray;
-    private Vector3 _generateFromPosition;
+
+    [Header("Data")]
+    [SerializeField] private PathDataSo _pathData;
+    private List<GameObject> _lineList { get => _pathData.LineList; set => _pathData.LineList = value; }
+    private GameObject[,] _gridArray { get => _pathData.GridArray; set => _pathData.GridArray = value; }
+    public Node[,] NodeArray { get => _pathData.NodeArray; set => _pathData.NodeArray = value; }
+    private Vector3 _generateFromPosition { get => _pathData.GenerateFromPosition; set => _pathData.GenerateFromPosition = value; }
 
 
 
@@ -29,10 +33,6 @@ public class Path : MonoBehaviour
     {
         if (NodeArray == null)
             NodeArrayInizalization();
-
-        
-
-
     }
 
 
@@ -160,7 +160,7 @@ public class Path : MonoBehaviour
     public void GenerateGrid()
     {
         if (NodePrefab == null) { Debug.LogWarning("You forgot the NodePrefab!!"); return; }
-        if (_gridArray != null) DestroyGrid();
+        if (_gridArray != null) DestroyGridArray();
         Debug.Log("Generating grid");
         //if (NodeGrid != null) { DestroyGrid(); }
 
@@ -181,7 +181,7 @@ public class Path : MonoBehaviour
         }
     }
 
-    public void DestroyGrid()
+    public void DestroyGridArray()
     {
         if (_gridArray == null) { Debug.LogWarning("don't press this button if there is no grid >:("); return; }
         if (_lineList != null) { DestroyLines(); }
@@ -194,6 +194,23 @@ public class Path : MonoBehaviour
         _gridArray = null;
         NodeArray = null;
     }
+    public void DestroyNodeArray()
+    {
+
+        if (NodeArray == null) { Debug.LogWarning("don't press this button if there is no grid >:("); return; }
+        if (_lineList != null) { DestroyLines(); }
+
+        Debug.Log("there is no grid in ba sing se (destroying grid)");
+        foreach (Node node in NodeArray)
+        {
+            if (node == null)
+                continue;
+
+            DestroyImmediate(node.gameObject);
+        }
+        _gridArray = null;
+        NodeArray = null;
+    }
 
     public void GenerateLines()
     {
@@ -201,7 +218,8 @@ public class Path : MonoBehaviour
         if (_gridArray == null) { Debug.LogWarning("Generate the grid first"); return; }
         if (_lineList != null) { DestroyLines(); }
 
-        NodeArrayInizalization();
+        if (NodeArray == null)
+            NodeArrayInizalization();
 
         Debug.Log("generating Lines");
         List<Node> usedNodes = new List<Node>();
@@ -220,14 +238,25 @@ public class Path : MonoBehaviour
             for (int i = 0; i < neighbours.Count; i++)
             {
                 Node neighbour = neighbours[i];
+                Line line;
 
                 if (usedNodes.Contains(neighbour))
+                {
+                    foreach (Line neighLines in neighbour.Connections)
+                    {
+                        if (neighLines.endNode == node)
+                        {
+                            line = neighLines.AddComponent<Line>();
+                            line.endNode = neighbour;
+                            node.Connections[i] = line;
+                        }
+                    }
                     continue;
+                }
 
-                Line line = Instantiate(LinePrefab, nodePos, LinePrefab.transform.rotation, obj.transform);
+                line = Instantiate(LinePrefab, nodePos, LinePrefab.transform.rotation, obj.transform);
                 line.endNode = neighbour;
                 node.Connections[i] = line;
-
                 LineRenderer lineRend = line.GetComponent<LineRenderer>();
                 lineRend.positionCount = 2;
                 lineRend.SetPosition(0, node.transform.position);
@@ -271,13 +300,13 @@ public class Path : MonoBehaviour
 
     public Node NodeFromWorldPos(Vector3 givenVector3)
     {
-        foreach (Node node in NodeArray) 
-        { 
+        foreach (Node node in NodeArray)
+        {
             if (node == null) continue;
 
-            if(Vector3.Distance(node.transform.position,givenVector3)<= UnitScale/2)
+            if (Vector3.Distance(node.transform.position, givenVector3) <= UnitScale / 2)
             {
-                Debug.Log(node.name,node.gameObject);
+                Debug.Log(node.name, node.gameObject);
                 return node;
             }
         }

@@ -6,10 +6,10 @@ public class AiController : MonoBehaviour
 {
 // Testing
     Node currentNode;
+    Node lastNode;
     List<Node> currentPath;
     [SerializeField] GameObject endPoint;
     Path path;
-    int pathIndex =0;
     float timer = 0f;
     private void Start()
     {
@@ -18,10 +18,13 @@ public class AiController : MonoBehaviour
         currentNode = path.NodeFromWorldPos(transform.position);
         Node endNode = path.NodeFromWorldPos(endPoint.transform.position);
         currentPath = path.FindPath(currentNode.GridCoordinate, endNode.GridCoordinate);
+        lastNode = currentPath[currentPath.Count - 1];
+        Debug.Log("uwu");
     }
 
     private void Update()
     {
+        if(currentNode == lastNode) { return; }
         Vector3 pos ;
         if(timer < 1f )
         {
@@ -34,6 +37,7 @@ public class AiController : MonoBehaviour
         currentNode = currentPath[0];
         currentPath.RemoveAt(0);
         timer = -0.3f;
+
     }
 // Testing
 }
