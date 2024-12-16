@@ -34,9 +34,5 @@ public class PathEditor : Editor
         }
 
 
-        if (GUILayout.Button("TEST BUTTON"))
-        {
-            path.TestDeleteThisFunc();
-        }
     }
 }

@@ -3,12 +3,7 @@ using UnityEngine;
 
 public class Path : MonoBehaviour
 {
-#if UNITY_EDITOR
-    [Header("testing need to delete")]
-    public Transform seeker;
-    public Transform target;
-    public List<Node> pathNodeTest;
-#endif
+
 
     [Header("Setting")]
     public int RowsZ;
@@ -25,7 +20,7 @@ public class Path : MonoBehaviour
     private GameObject[,] _gridArray;
     public static Node[,] NodeArray;
     private Vector3 _generateFromPosition;
-    private Vector2 _gridSize;
+
 
 
     // public List<Line> Lines; viktor nation what are we feeling? jaybe!? jaybe not?
@@ -35,22 +30,12 @@ public class Path : MonoBehaviour
         if (NodeArray == null)
             NodeArrayInizalization();
 
-        _gridSize = new Vector2(CollumsX * UnitScale, RowsZ * UnitScale);
+        
 
 
     }
 
-#if UNITY_EDITOR
-    public void TestDeleteThisFunc()
-    {
-        Vector2Int a = NodeFromWorldPos(seeker.transform.position).GridCoordinate;
 
-        Vector2Int b = NodeFromWorldPos(target.transform.position).GridCoordinate;
-
-        pathNodeTest = FindPath(a, b);
-
-    }
-#endif
 
     private void NodeArrayInizalization()
     {
@@ -288,6 +273,8 @@ public class Path : MonoBehaviour
     {
         foreach (Node node in NodeArray) 
         { 
+            if (node == null) continue;
+
             if(Vector3.Distance(node.transform.position,givenVector3)<= UnitScale/2)
             {
                 Debug.Log(node.name,node.gameObject);
@@ -308,20 +295,7 @@ public class Path : MonoBehaviour
     }
 
 
-#if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        if (_gridArray == null)
-            return;
-        foreach (GameObject x in _gridArray)
-        {
-            Gizmos.color = Color.white;
-            if (pathNodeTest.Contains(x.GetComponent<Node>()))
-                Gizmos.color = Color.red;
-            Gizmos.DrawCube(x.transform.position, Vector3.one * ((UnitScale / 2) - .1f));
-        }
-    }
-#endif
+
 }
 
 // public void GenerateLines()
