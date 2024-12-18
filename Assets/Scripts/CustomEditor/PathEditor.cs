@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 using UnityEditor;
-[CustomEditor(typeof(Path))]
+
 
 public class PathEditor : Editor
 {
@@ -22,7 +19,7 @@ public class PathEditor : Editor
         {
             if (path.NodeArray != null && path.NodeArray.Length > 0)
             {
-               
+
                 path.DestroyNodeArray();
             }
             else
