@@ -10,6 +10,9 @@ public class BaseEntity
     protected List<Node> _currentPath;
     protected Color _hilightColor;
     protected Action _onDeath;
+    protected float _timer;
+    protected float _moveDuration;
+    protected Transform _entityTransform;
     protected virtual List<Node> FindPath(Node endNode)
     {
         return new List<Node>();
@@ -19,12 +22,15 @@ public class BaseEntity
     /// <param name="startNode"></param>
     /// <param name="color">color used to higlight nodes</param>
     /// <param name="onDeath">what happends when this entity dies</param>
-    public BaseEntity(Node startNode, Color color, Action onDeath)
+    public BaseEntity(Node startNode, Color color, Action onDeath, float moveDuration, Transform entityTransform)
     {
         _currentNode = startNode;
         _currentPath = new List<Node>();
         _hilightColor = color;
         _onDeath += onDeath;
+        _timer = 0;
+        _moveDuration = moveDuration;
+        _entityTransform = entityTransform;
     }
 
     public virtual void Die()
@@ -79,11 +85,20 @@ public class BaseEntity
     {
         return false;
     }
+
+    public virtual bool Move()
+    {
+        // the movement of the pice
+        if (_currentNode != null)
+            return true;
+
+        return false;
+    }
 }
 
 public class PawnEntity : BaseEntity
 {
-    public PawnEntity(Node startNode, Color color, Action onDeath) : base(startNode, color, onDeath)
+    public PawnEntity(Node startNode, Color color, Action onDeath, float moveDuration, Transform entityTransform) : base(startNode, color, onDeath, moveDuration, entityTransform)
     { }
 
     protected override List<Node> FindPath(Node endNode)
@@ -168,6 +183,26 @@ public class PawnEntity : BaseEntity
         return false;
     }
 
+    public override bool Move()
+    {
+        if (_timer >= _moveDuration)
+        {
+            _entityTransform.position = Vector3.Lerp(_currentNode.transform.position, _currentPath[0].transform.position, _timer / _moveDuration);
+            _timer += Time.deltaTime;
+            return false;
+        }
+        else 
+        {
+            _entityTransform.position = _currentPath[0].transform.position;
+            _currentNode = _currentPath[0];
+            _currentPath.RemoveAt(0);
+            if(_currentPath.Count <= 0 )
+                // reset normal movement
+            _timer = 0;
+            return true;
+        }
+    }
+
     public override void Die()
     {
         base.Die();
@@ -176,21 +211,21 @@ public class PawnEntity : BaseEntity
 
 public class RookEntity : BaseEntity
 {
-    public RookEntity(Node startNode, Color color, Action onDeath) : base(startNode, color, onDeath)
+    public RookEntity(Node startNode, Color color, Action onDeath, float moveDuration, Transform entityTransform) : base(startNode, color, onDeath, moveDuration, entityTransform)
     {
     }
 }
 
 public class BishopEntity : BaseEntity
 {
-    public BishopEntity(Node startNode, Color color, Action onDeath) : base(startNode, color, onDeath)
+    public BishopEntity(Node startNode, Color color, Action onDeath, float moveDuration, Transform entityTransform) : base(startNode, color, onDeath, moveDuration, entityTransform)
     {
     }
 }
 
 public class knightEntity : BaseEntity
 {
-    public knightEntity(Node startNode, Color color, Action onDeath) : base(startNode, color, onDeath)
+    public knightEntity(Node startNode, Color color, Action onDeath, float moveDuration, Transform entityTransform) : base(startNode, color, onDeath,moveDuration, entityTransform)
     {
     }
 }
