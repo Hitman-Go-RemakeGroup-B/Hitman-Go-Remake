@@ -159,6 +159,12 @@ public class PawnEntity : BaseEntity
 
     public override void HiglightNextMove()
     {
+        if(_currentPath.Count != 0)
+        {
+
+            return;
+        }
+
         foreach (Line connection in _currentNode.Connections)
         {
             if (connection == null)
@@ -174,17 +180,18 @@ public class PawnEntity : BaseEntity
     }
     protected override bool MovementCheck(Node neighbour)
     {
-        int nX = neighbour.GridCoordinate.x;
-        int nY = neighbour.GridCoordinate.y;
-        int cX = _currentNode.GridCoordinate.x;
-        int cY = _currentNode.GridCoordinate.y;
-        if (nX + nY == cX + cY || Mathf.Abs(nX - nY) == Mathf.Abs(cX - cY))
+        int neighbourX = neighbour.GridCoordinate.x;
+        int neighbourY = neighbour.GridCoordinate.y;
+        int currentX = _currentNode.GridCoordinate.x;
+        int currentY = _currentNode.GridCoordinate.y;
+        if (neighbourX + neighbourY == currentX + currentY || Mathf.Abs(neighbourX - neighbourY) == Mathf.Abs(currentX - currentY)) // so basicly if they are oblique
             return true;
         return false;
     }
 
     public override bool Move()
     {
+        
         if (_timer >= _moveDuration)
         {
             _entityTransform.position = Vector3.Lerp(_currentNode.transform.position, _currentPath[0].transform.position, _timer / _moveDuration);
