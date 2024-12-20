@@ -19,11 +19,10 @@ public class Path : MonoBehaviour
 
 
     [Header("Data")]
-    [SerializeField] private PathDataSo _pathData;
-    private List<GameObject> _lineList { get => _pathData.LineList; set => _pathData.LineList = value; }
-    private GameObject[,] _gridArray { get => _pathData.GridArray; set => _pathData.GridArray = value; }
-    public Node[,] NodeArray { get => _pathData.NodeArray; set => _pathData.NodeArray = value; }
-    private Vector3 _generateFromPosition { get => _pathData.GenerateFromPosition; set => _pathData.GenerateFromPosition = value; }
+    public static Node[,] NodeArray;
+    private static List<GameObject> _lineList;
+    private GameObject[,] _gridArray;
+    private Vector3 _generateFromPosition;
 
 
 

@@ -19,7 +19,7 @@ public class PathEditor : Editor
 
         if (GUILayout.Button("Destroy Grid"))
         {
-            if (path.NodeArray != null && path.NodeArray.Length > 0)
+            if (Path.NodeArray != null && Path.NodeArray.Length > 0)
             {
 
                 path.DestroyNodeArray();

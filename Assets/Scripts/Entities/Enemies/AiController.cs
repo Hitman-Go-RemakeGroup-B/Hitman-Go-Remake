@@ -6,24 +6,24 @@ using UnityEngine;
 public class AiController : MonoBehaviour
 {
     [SerializeField] EntityType entityType;
-    [SerializeField] private Node _startNode;
     [SerializeField] private Color _higlightColor;
-    
-    Node lastNode;
-    List<Node> currentPath;
+
     Path path;
-    float timer = 0f;
     public BaseEntity BoardPice;
     bool isDead = false;
+    private Node _startNode;
 
     private void Awake()
     {
+        path = FindObjectOfType<Path>();
         TurnsManager.OnEnemiesTurnStart += StartTurn;
+
+        _startNode = path.NodeFromWorldPos(transform.position);
 
         switch (entityType)
         {
             case EntityType.Pawn:
-                BoardPice = new PawnEntity(_startNode, _higlightColor, Death,TurnsManager.MoveDuration,transform);
+                BoardPice = new PawnEntity(_startNode, _higlightColor, Death, TurnsManager.MoveDuration, transform);
                 break;
 
             case EntityType.Rook:
@@ -55,9 +55,12 @@ public class AiController : MonoBehaviour
 
     private void StartTurn()
     {
-        if (isDead) TurnsManager.OnEnemiesTurnEnd?.Invoke(); return;
+        if (isDead)
+        {
+            TurnsManager.OnEnemiesTurnEnd?.Invoke(); return;
+        }
 
-        while (BoardPice.Move()) ;
+        while (BoardPice.Move());
 
         TurnsManager.OnEnemiesTurnEnd?.Invoke();
 

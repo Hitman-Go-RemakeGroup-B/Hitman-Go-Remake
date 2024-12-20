@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,6 +12,8 @@ public class BaseEntity
     protected float _timer;
     protected float _moveDuration;
     protected Transform _entityTransform;
+    protected Vector2Int _dir;
+    protected Vector2Int _gridSize;
     protected virtual List<Node> FindPath(Node endNode)
     {
         return new List<Node>();
@@ -36,6 +37,16 @@ public class BaseEntity
     public virtual void Die()
     {
         _onDeath?.Invoke();
+    }
+
+    public virtual Node NpcPath()
+    {
+        // basicly find Connections 
+        // for the knight = L shape 2x2
+        // for the bishop = X shape 2x2
+        // for the Rook = + shape 2x2
+        // for the Pawn = + shape 1x1
+        return null;
     }
 
     public int GetNodeDistance(Node nodeA, Node nodeB)
@@ -67,13 +78,9 @@ public class BaseEntity
         _currentPath = FindPath(endNode);
     }
 
-    public virtual void HiglightNextMove()
+    public virtual void HiglightNextMove(Node node)
     {
-        // basicly find Connections 
-        // for the knight = L shape 2x2
-        // for the bishop = X shape 2x2
-        // for the Rook = + shape 2x2
-        // for the Pawn = + shape 1x1
+        
     }
 
     protected virtual bool MovementCheck(Node neighbour)
@@ -157,26 +164,29 @@ public class PawnEntity : BaseEntity
         return null;
     }
 
-    public override void HiglightNextMove()
+    public override Node NpcPath()
     {
-        if(_currentPath.Count != 0)
+        Node newNode = null;
+        int newNodeX = _currentNode.GridCoordinate.x + _dir.x;
+        int newNodeY = _currentNode.GridCoordinate.y + _dir.y;
+
+        if (newNodeX < _gridSize.x && newNodeY < _gridSize.y)
         {
-
-            return;
+            newNode = Path.NodeArray[newNodeX, newNodeY];
         }
-
-        foreach (Line connection in _currentNode.Connections)
+        else
         {
-            if (connection == null)
-                continue;
-
-            Node neighbour = connection.endNode;
-
-            if (MovementCheck(neighbour))
-                continue;
-            connection.endNode.Higlight = _hilightColor;
-
+            _dir *= -1;
+            return NpcPath();
         }
+        return newNode;
+    }
+
+    public override void HiglightNextMove(Node node)
+    {
+        
+        node.Higlight = _hilightColor;
+
     }
     protected override bool MovementCheck(Node neighbour)
     {
