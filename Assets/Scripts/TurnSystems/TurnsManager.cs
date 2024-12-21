@@ -6,10 +6,12 @@ using UnityEngine;
 
 public class TurnsManager : MonoBehaviour
 {
-    public static Action OnPlayerTurnStart;
+    public delegate IEnumerator TurnStart();
+
+    public static TurnStart OnPlayerTurnStart;
     public static Action OnPlayerTurnEnd;
     public static Action OnEnemiesTurnEnd;
-    public static Action OnEnemiesTurnStart;
+    public static TurnStart OnEnemiesTurnStart;
     public float _moveDuration = 1f;
 
     public static float MoveDuration;

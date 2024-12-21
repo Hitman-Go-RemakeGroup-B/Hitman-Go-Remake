@@ -1,17 +1,22 @@
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
-public class Pawn : BaseEntityV2
+public class PawnEntity : BaseEntity
 {
-    public Pawn(Node startNode, Vector2Int dir, Vector2Int gridSize, Color color, Action onDeath, Transform entityTransform) : base(startNode, dir, gridSize, color, onDeath, entityTransform)
+    public PawnEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Color color, Action onDeath, Transform entityTransform) : base(startNode, dir, gridSize, color, onDeath, entityTransform)
     {
     }
 
-    public override bool Turn()
+    public override bool TakeTurn()
     {
-        return base.Turn();
+        return base.TakeTurn();
+    }
+
+    public override bool Move()
+    {
+        return base.Move();
     }
 
     public override void OnAllert(Node node)
@@ -29,21 +34,64 @@ public class Pawn : BaseEntityV2
         return base.GetNodeDistance(nodeA, nodeB);
     }
 
-    protected override bool WrongMoveCheck(Node neighbour)
+    protected override bool WrongMoveCheck(Node neighbour,Node currentNode)
     {
         int neighbourX = neighbour.GridCoordinate.x;
         int neighbourY = neighbour.GridCoordinate.y;
-        int currentX = _currentNode.GridCoordinate.x;
-        int currentY = _currentNode.GridCoordinate.y;
+        int currentX = currentNode.GridCoordinate.x;
+        int currentY = currentNode.GridCoordinate.y;
+
         if (neighbourX + neighbourY == currentX + currentY || Mathf.Abs(neighbourX - neighbourY) == Mathf.Abs(currentX - currentY)) // so basicly if they are oblique
             return true;
         return false;
     }
 
+    public override List<Node> NpcPath()
+    {
+        List<Node> newPath = new List<Node>();
+
+        Vector2Int newCoordinates = _currentNode.GridCoordinate + _dir;
+
+
+        if((newCoordinates.x < 0 || newCoordinates.x >= _gridSize.x) || (newCoordinates.y < 0 || newCoordinates.y >= _gridSize.y))
+        {
+            _dir *= -1; 
+            return NpcPath();
+        }
+        
+        Node targetNode = Path.NodeArray[newCoordinates.x, newCoordinates.y];
+
+
+        if (WrongMoveCheck(targetNode, _currentNode))
+        {
+            newPath = FindPath(targetNode);
+            return newPath;
+        }
+        
+        if(!HasConnection(_currentNode, targetNode))
+        {
+            _dir *= -1;
+            return NpcPath();
+        }
+
+
+        newPath.Add(targetNode);
+
+        return newPath;
+    }
+
+    protected override Vector2Int DirectionToNode(Node nodeA, Node nodeB)
+    {
+        return base.DirectionToNode(nodeA, nodeB);
+    }
+    protected override bool HasConnection(Node currentNode, Node endNode)
+    {
+        return base.HasConnection(currentNode, endNode);
+    }
+
     protected override List<Node> FindPath(Node endNode)
     {
         Node startNode = _currentNode;
-
 
         List<Node> openSet = new List<Node>();
         HashSet<Node> closedSet = new HashSet<Node>();
@@ -76,10 +124,10 @@ public class Pawn : BaseEntityV2
                 if (closedSet.Contains(neighbour))
                     continue;
 
-                if (WrongMoveCheck(neighbour))
+                if (WrongMoveCheck(neighbour,currentNode))
                     continue;
 
-                int nodeDistance = GetNodeDistance( neighbour, currentNode);
+                int nodeDistance = GetNodeDistance(neighbour, currentNode);
                 int newCostNeighbour = currentNode.GCost - nodeDistance;
 
                 if (newCostNeighbour < neighbour.GCost || !openSet.Contains(neighbour))

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class AiController : MonoBehaviour
 {
+    [SerializeField] Vector2Int _moveDir;
     [SerializeField] EntityType entityType;
     [SerializeField] private Color _higlightColor;
 
@@ -23,22 +24,25 @@ public class AiController : MonoBehaviour
         switch (entityType)
         {
             case EntityType.Pawn:
-                BoardPice = new PawnEntity(_startNode, _higlightColor, Death, TurnsManager.MoveDuration, transform);
+                BoardPice = new PawnEntity(_startNode,_moveDir,new(path.CollumsX,path.RowsZ),_higlightColor,Death,transform);
                 break;
 
             case EntityType.Rook:
-                BoardPice = new RookEntity(_startNode, _higlightColor, Death, TurnsManager.MoveDuration, transform);
+                BoardPice = new RookEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), _higlightColor, Death, transform);
                 break;
 
             case EntityType.Bishop:
-                BoardPice = new BishopEntity(_startNode, _higlightColor, Death, TurnsManager.MoveDuration, transform);
+                BoardPice = new BishopEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), _higlightColor, Death, transform);
                 break;
 
             case EntityType.Knight:
-                BoardPice = new knightEntity(_startNode, _higlightColor, Death, TurnsManager.MoveDuration, transform);
+                BoardPice = new knightEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), _higlightColor, Death, transform);
                 break;
         }
+        TurnsManager.OnEnemiesTurnStart += StartTurn;
     }
+
+
 
     private void Death()
     {
@@ -48,21 +52,30 @@ public class AiController : MonoBehaviour
 
     private void Start()
     {
-        TurnsManager.OnEnemiesTurnStart += StartTurn;
+       
     }
 
 
 
-    private void StartTurn()
+    private IEnumerator StartTurn()
     {
         if (isDead)
         {
-            TurnsManager.OnEnemiesTurnEnd?.Invoke(); return;
+            TurnsManager.OnEnemiesTurnEnd?.Invoke(); 
+            yield return null;
         }
 
-        while (BoardPice.Move());
+        while (BoardPice.TakeTurn()) 
+        {
+            yield return null;
+        };
 
         TurnsManager.OnEnemiesTurnEnd?.Invoke();
 
+    }
+
+    public void StartTurnCorutine()
+    {
+        StartCoroutine(StartTurn());
     }
 }

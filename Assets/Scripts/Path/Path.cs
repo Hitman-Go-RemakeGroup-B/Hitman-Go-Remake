@@ -36,7 +36,7 @@ public class Path : MonoBehaviour
 
 
 
-    private void NodeArrayInizalization()
+    public void NodeArrayInizalization()
     {
         NodeArray = null;
         NodeArray = new Node[CollumsX, RowsZ];
