@@ -10,7 +10,7 @@ public class BaseEntity
     protected Vector2Int _dir;
     protected Vector2Int _gridSize;
     protected Action _onDeath;
-    protected Color _hilightColor;
+
     protected Transform _entityTransform;
 
     // calculated
@@ -18,24 +18,27 @@ public class BaseEntity
     protected float _timer;
     protected float _moveDuration;
     protected bool _isDead;
-    protected Color _ogNodeColor;
-    protected SpriteRenderer _sprite;
+  
+    //protected SpriteRenderer _sprite;
+    //protected Node _spriteNode;
+ 
 
     /// <param name="startNode"></param>
     /// <param name="color">color used to higlight nodes</param>
     /// <param name="onDeath">what happends when this entity dies</param>
-    public BaseEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Color color, Action onDeath, Transform entityTransform)
+    public BaseEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform)
     {
         _currentNode = startNode;
         _dir = dir;
         _gridSize = gridSize;
-        _hilightColor = color;
+
         _onDeath += onDeath;
         _entityTransform = entityTransform;
 
         _moveDuration = TurnsManager.MoveDuration;
         _timer = 0;
         _path = new List<Node>();
+       
     }
 
 
@@ -54,13 +57,6 @@ public class BaseEntity
             _path = NpcPath();
         }
 
-        if (_sprite != null)
-            return !Move();
-
-        _sprite = _path[0].GetComponent<SpriteRenderer>();
-        _ogNodeColor = _sprite.color;
-        _sprite.color = _hilightColor;
-
         return !Move();
     }
 
@@ -78,8 +74,17 @@ public class BaseEntity
         return newPath;
     }
 
+    protected virtual Node FindNextMove(Vector2Int direction, Node nextNode)
+    {
+        Node node = null;
+        return node;
+    }
+
     public virtual bool Move()
     {
+       
+
+
         if (_timer < _moveDuration)
         {
             _timer += Time.deltaTime;
@@ -90,10 +95,10 @@ public class BaseEntity
         {
             _entityTransform.position = _path[0].transform.position;
             _currentNode = _path[0];
-            _sprite.color = _ogNodeColor;
-            _sprite = null;
             _path.RemoveAt(0);
             _timer = 0;
+
+            
             return true;
         }
     }
@@ -128,14 +133,14 @@ public class BaseEntity
         return path;
     }
 
-    protected virtual bool HasConnection(Node currentNode, Node endNode) 
+    protected virtual bool HasConnection(Node currentNode, Node endNode, Vector2Int direction)
     {
-        foreach(Line connection in currentNode.Connections)
+        foreach (Line connection in currentNode.Connections)
         {
             if (connection == null)
                 continue;
 
-            if(DirectionToNode(currentNode,connection.endNode) == _dir)
+            if (DirectionToNode(currentNode, connection.endNode) == direction)
                 return true;
         }
         return false;
@@ -151,25 +156,4 @@ public class BaseEntity
         return false;
     }
 
-}
-
-public class RookEntity : BaseEntity
-{
-    public RookEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Color color, Action onDeath, Transform entityTransform) : base(startNode, dir, gridSize, color, onDeath, entityTransform)
-    {
-    }
-}
-
-public class BishopEntity : BaseEntity
-{
-    public BishopEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Color color, Action onDeath, Transform entityTransform) : base(startNode, dir, gridSize, color, onDeath, entityTransform)
-    {
-    }
-}
-
-public class knightEntity : BaseEntity
-{
-    public knightEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Color color, Action onDeath, Transform entityTransform) : base(startNode, dir, gridSize, color, onDeath, entityTransform)
-    {
-    }
 }

@@ -305,7 +305,7 @@ public class Path : MonoBehaviour
 
             if (Vector3.Distance(node.transform.position, givenVector3) <= UnitScale / 2)
             {
-                Debug.Log(node.name, node.gameObject);
+                
                 return node;
             }
         }

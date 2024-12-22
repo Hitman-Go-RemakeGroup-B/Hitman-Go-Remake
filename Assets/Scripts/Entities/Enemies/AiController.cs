@@ -7,7 +7,7 @@ public class AiController : MonoBehaviour
 {
     [SerializeField] Vector2Int _moveDir;
     [SerializeField] EntityType entityType;
-    [SerializeField] private Color _higlightColor;
+
 
     Path path;
     public BaseEntity BoardPice;
@@ -15,34 +15,10 @@ public class AiController : MonoBehaviour
     private Node _startNode;
 
     private void Awake()
-    {
+    { 
         path = FindObjectOfType<Path>();
-        TurnsManager.OnEnemiesTurnStart += StartTurn;
-
-        _startNode = path.NodeFromWorldPos(transform.position);
-
-        switch (entityType)
-        {
-            case EntityType.Pawn:
-                BoardPice = new PawnEntity(_startNode,_moveDir,new(path.CollumsX,path.RowsZ),_higlightColor,Death,transform);
-                break;
-
-            case EntityType.Rook:
-                BoardPice = new RookEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), _higlightColor, Death, transform);
-                break;
-
-            case EntityType.Bishop:
-                BoardPice = new BishopEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), _higlightColor, Death, transform);
-                break;
-
-            case EntityType.Knight:
-                BoardPice = new knightEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), _higlightColor, Death, transform);
-                break;
-        }
-        TurnsManager.OnEnemiesTurnStart += StartTurn;
+        TurnsManager.OnEnemiesTurnStart += StartTurnCorutine;
     }
-
-
 
     private void Death()
     {
@@ -52,7 +28,25 @@ public class AiController : MonoBehaviour
 
     private void Start()
     {
-       
+        _startNode = path.NodeFromWorldPos(transform.position);
+        switch (entityType)
+        {
+            case EntityType.Pawn:
+                BoardPice = new PawnEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
+                break;
+
+            case EntityType.Rook:
+                BoardPice = new RookEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
+                break;
+
+            case EntityType.Bishop:
+                BoardPice = new BishopEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
+                break;
+
+            case EntityType.Knight:
+                BoardPice = new knightEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
+                break;
+        }
     }
 
 

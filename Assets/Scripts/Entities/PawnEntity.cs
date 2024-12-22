@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PawnEntity : BaseEntity
 {
-    public PawnEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Color color, Action onDeath, Transform entityTransform) : base(startNode, dir, gridSize, color, onDeath, entityTransform)
+    public PawnEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform) : base(startNode, dir, gridSize, onDeath, entityTransform)
     {
     }
 
@@ -34,7 +34,7 @@ public class PawnEntity : BaseEntity
         return base.GetNodeDistance(nodeA, nodeB);
     }
 
-    protected override bool WrongMoveCheck(Node neighbour,Node currentNode)
+    protected override bool WrongMoveCheck(Node neighbour, Node currentNode)
     {
         int neighbourX = neighbour.GridCoordinate.x;
         int neighbourY = neighbour.GridCoordinate.y;
@@ -53,12 +53,12 @@ public class PawnEntity : BaseEntity
         Vector2Int newCoordinates = _currentNode.GridCoordinate + _dir;
 
 
-        if((newCoordinates.x < 0 || newCoordinates.x >= _gridSize.x) || (newCoordinates.y < 0 || newCoordinates.y >= _gridSize.y))
+        if ((newCoordinates.x < 0 || newCoordinates.x >= _gridSize.x) || (newCoordinates.y < 0 || newCoordinates.y >= _gridSize.y))
         {
-            _dir *= -1; 
+            _dir *= -1;
             return NpcPath();
         }
-        
+
         Node targetNode = Path.NodeArray[newCoordinates.x, newCoordinates.y];
 
 
@@ -67,8 +67,8 @@ public class PawnEntity : BaseEntity
             newPath = FindPath(targetNode);
             return newPath;
         }
-        
-        if(!HasConnection(_currentNode, targetNode))
+
+        if (!HasConnection(_currentNode, targetNode, _dir))
         {
             _dir *= -1;
             return NpcPath();
@@ -80,13 +80,50 @@ public class PawnEntity : BaseEntity
         return newPath;
     }
 
+    protected override Node FindNextMove(Vector2Int direction,Node nextNode)
+    {
+        Vector2Int newCoordinates = nextNode.GridCoordinate + direction;
+
+
+        if ((newCoordinates.x < 0 || newCoordinates.x >= _gridSize.x) || (newCoordinates.y < 0 || newCoordinates.y >= _gridSize.y))
+        {
+            direction *= -1;
+            return FindNextMove(direction,nextNode);
+        }
+
+        Node targetNode = Path.NodeArray[newCoordinates.x, newCoordinates.y];
+
+
+        if (WrongMoveCheck(targetNode, nextNode))
+        {
+            if (_path.Count > 0)
+            {
+                if (_path.Count > 1)
+                    return _path[0];
+                return _path[0];
+            }
+
+            var testPath = FindPath(targetNode);
+
+            return testPath[0];
+        }
+
+        if (!HasConnection(nextNode, targetNode, direction))
+        {
+            direction *= -1;
+            return FindNextMove(direction, nextNode);
+        }
+
+        return targetNode;
+    }
+
     protected override Vector2Int DirectionToNode(Node nodeA, Node nodeB)
     {
         return base.DirectionToNode(nodeA, nodeB);
     }
-    protected override bool HasConnection(Node currentNode, Node endNode)
+    protected override bool HasConnection(Node currentNode, Node endNode, Vector2Int direction)
     {
-        return base.HasConnection(currentNode, endNode);
+        return base.HasConnection(currentNode, endNode, direction);
     }
 
     protected override List<Node> FindPath(Node endNode)
@@ -124,7 +161,7 @@ public class PawnEntity : BaseEntity
                 if (closedSet.Contains(neighbour))
                     continue;
 
-                if (WrongMoveCheck(neighbour,currentNode))
+                if (WrongMoveCheck(neighbour, currentNode))
                     continue;
 
                 int nodeDistance = GetNodeDistance(neighbour, currentNode);

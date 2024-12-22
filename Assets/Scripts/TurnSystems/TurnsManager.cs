@@ -6,12 +6,11 @@ using UnityEngine;
 
 public class TurnsManager : MonoBehaviour
 {
-    public delegate IEnumerator TurnStart();
 
-    public static TurnStart OnPlayerTurnStart;
+    public static Action OnPlayerTurnStart;
     public static Action OnPlayerTurnEnd;
     public static Action OnEnemiesTurnEnd;
-    public static TurnStart OnEnemiesTurnStart;
+    public static Action OnEnemiesTurnStart;
     public float _moveDuration = 1f;
 
     public static float MoveDuration;
@@ -39,7 +38,7 @@ public class TurnsManager : MonoBehaviour
          OnPlayerTurnStart?.Invoke();
     }
 
-    private void PlayerTurnEnd()
+    public void PlayerTurnEnd()
     {
         // startEnemiesTurn
         OnEnemiesTurnStart?.Invoke(); // says to all enemies to start taking their turn 
