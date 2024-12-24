@@ -1,43 +1,75 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class AiController : MonoBehaviour
 {
-// Testing
-    Node currentNode;
-    Node lastNode;
-    List<Node> currentPath;
-    [SerializeField] GameObject endPoint;
+    [SerializeField] Vector2Int _moveDir;
+    [SerializeField] EntityType entityType;
+
+
     Path path;
-    float timer = 0f;
+    public BaseEntity BoardPice;
+    bool isDead = false;
+    private Node _startNode;
+
+    private void Awake()
+    { 
+        path = FindObjectOfType<Path>();
+        TurnsManager.OnEnemiesTurnStart += StartTurnCorutine;
+    }
+
+    private void Death()
+    {
+        isDead = true;
+        // trow it somewhere??
+    }
+
     private void Start()
     {
-        currentPath = new();
-        path = FindObjectOfType<Path>();
-        currentNode = path.NodeFromWorldPos(transform.position);
-        Node endNode = path.NodeFromWorldPos(endPoint.transform.position);
-        currentPath = path.FindPath(currentNode.GridCoordinate, endNode.GridCoordinate);
-        lastNode = currentPath[currentPath.Count - 1];
-        Debug.Log("uwu");
-    }
-
-    private void Update()
-    {
-        if(currentNode == lastNode) { return; }
-        Vector3 pos ;
-        if(timer < 1f )
+        _startNode = path.NodeFromWorldPos(transform.position);
+        switch (entityType)
         {
-            timer += Time.deltaTime;
-            pos = Vector3.Lerp(currentNode.transform.position, currentPath[0].transform.position, timer/1);
-            transform.position = pos;
-            return;
+            case EntityType.Pawn:
+                BoardPice = new PawnEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
+                break;
+
+            case EntityType.Rook:
+                BoardPice = new RookEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
+                break;
+
+            case EntityType.Bishop:
+                BoardPice = new BishopEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
+                break;
+
+            case EntityType.Knight:
+                BoardPice = new knightEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
+                break;
         }
-        transform.position = currentPath[0].transform.position;
-        currentNode = currentPath[0];
-        currentPath.RemoveAt(0);
-        timer = -0.3f;
+    }
+
+
+
+    private IEnumerator StartTurn()
+    {
+        if (isDead)
+        {
+            TurnsManager.OnEnemiesTurnEnd?.Invoke(); 
+            yield return null;
+        }
+
+        while (BoardPice.TakeTurn()) 
+        {
+            yield return null;
+        };
+
+        TurnsManager.OnEnemiesTurnEnd?.Invoke();
 
     }
-// Testing
+
+    public void StartTurnCorutine()
+    {
+        StartCoroutine(StartTurn());
+    }
 }

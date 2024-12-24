@@ -1,6 +1,8 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 
+[CustomEditor(typeof(Path))]
 
 public class PathEditor : Editor
 {
@@ -17,7 +19,7 @@ public class PathEditor : Editor
 
         if (GUILayout.Button("Destroy Grid"))
         {
-            if (path.NodeArray != null && path.NodeArray.Length > 0)
+            if (Path.NodeArray != null && Path.NodeArray.Length > 0)
             {
 
                 path.DestroyNodeArray();
@@ -36,6 +38,13 @@ public class PathEditor : Editor
             path.DestroyLines();
         }
 
-
+        if (GUILayout.Button("Inizialize NodeArray"))
+        {
+            path.NodeArrayInizalization();
+        }
     }
 }
+
+
+
+#endif
