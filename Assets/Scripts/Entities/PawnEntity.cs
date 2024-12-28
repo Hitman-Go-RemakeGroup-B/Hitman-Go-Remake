@@ -80,42 +80,42 @@ public class PawnEntity : BaseEntity
         return newPath;
     }
 
-    protected override Node FindNextMove(Vector2Int direction,Node nextNode)
-    {
-        Vector2Int newCoordinates = nextNode.GridCoordinate + direction;
+    //protected override Node FindNextMove(Vector2Int direction,Node nextNode)
+    //{
+    //    Vector2Int newCoordinates = nextNode.GridCoordinate + direction;
 
 
-        if ((newCoordinates.x < 0 || newCoordinates.x >= _gridSize.x) || (newCoordinates.y < 0 || newCoordinates.y >= _gridSize.y))
-        {
-            direction *= -1;
-            return FindNextMove(direction,nextNode);
-        }
+    //    if ((newCoordinates.x < 0 || newCoordinates.x >= _gridSize.x) || (newCoordinates.y < 0 || newCoordinates.y >= _gridSize.y))
+    //    {
+    //        direction *= -1;
+    //        return FindNextMove(direction,nextNode);
+    //    }
 
-        Node targetNode = Path.NodeArray[newCoordinates.x, newCoordinates.y];
+    //    Node targetNode = Path.NodeArray[newCoordinates.x, newCoordinates.y];
 
 
-        if (WrongMoveCheck(targetNode, nextNode))
-        {
-            if (_path.Count > 0)
-            {
-                if (_path.Count > 1)
-                    return _path[0];
-                return _path[0];
-            }
+    //    if (WrongMoveCheck(targetNode, nextNode))
+    //    {
+    //        if (_path.Count > 0)
+    //        {
+    //            if (_path.Count > 1)
+    //                return _path[0];
+    //            return _path[0];
+    //        }
 
-            var testPath = FindPath(targetNode);
+    //        var testPath = FindPath(targetNode);
 
-            return testPath[0];
-        }
+    //        return testPath[0];
+    //    }
 
-        if (!HasConnection(nextNode, targetNode, direction))
-        {
-            direction *= -1;
-            return FindNextMove(direction, nextNode);
-        }
+    //    if (!HasConnection(nextNode, targetNode, direction))
+    //    {
+    //        direction *= -1;
+    //        return FindNextMove(direction, nextNode);
+    //    }
 
-        return targetNode;
-    }
+    //    return targetNode;
+    //}
 
     protected override Vector2Int DirectionToNode(Node nodeA, Node nodeB)
     {
@@ -157,7 +157,7 @@ public class PawnEntity : BaseEntity
                 if (Connection == null)
                     continue;
 
-                Node neighbour = Connection.endNode;
+                Node neighbour = Connection.EndNode;
                 if (closedSet.Contains(neighbour))
                     continue;
 

@@ -74,17 +74,14 @@ public class BaseEntity
         return newPath;
     }
 
-    protected virtual Node FindNextMove(Vector2Int direction, Node nextNode)
-    {
-        Node node = null;
-        return node;
-    }
+    //protected virtual Node FindNextMove(Vector2Int direction, Node nextNode)
+    //{
+    //    Node node = null;
+    //    return node;
+    //}
 
     public virtual bool Move()
     {
-       
-
-
         if (_timer < _moveDuration)
         {
             _timer += Time.deltaTime;
@@ -140,15 +137,15 @@ public class BaseEntity
             if (connection == null)
                 continue;
 
-            if (DirectionToNode(currentNode, connection.endNode) == direction)
+            if (DirectionToNode(currentNode, connection.EndNode) == direction)
                 return true;
         }
         return false;
     }
 
-    protected virtual Vector2Int DirectionToNode(Node nodeA, Node nodeB)
+    protected virtual Vector2Int DirectionToNode(Node currentNode, Node targetNode)
     {
-        return nodeB.GridCoordinate - nodeA.GridCoordinate;
+        return targetNode.GridCoordinate - currentNode.GridCoordinate;
     }
 
     protected virtual bool WrongMoveCheck(Node neighbour, Node currentNode)

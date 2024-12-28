@@ -40,7 +40,7 @@ public class PathEditor : Editor
 
         if (GUILayout.Button("Inizialize NodeArray"))
         {
-            path.NodeArrayInizalization();
+            path.PathInizalization();
         }
     }
 }
