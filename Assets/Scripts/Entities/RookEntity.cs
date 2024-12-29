@@ -9,7 +9,7 @@ public class RookEntity : BaseEntity
     Node _endNode;
     Vector2Int[] _directions = new Vector2Int[4] { new(1, 0), new(0, 1), new(-1, 0), new(0, -1) };
     Vector2Int _dirToPreviousNode;
-    List<int> _checkedDirections;
+    int _checkedDirections;
     int _index;
 
     //List<Node> debugPath = new List<Node>();
@@ -22,7 +22,7 @@ public class RookEntity : BaseEntity
         _onDeath += onDeath;
         _entityTransform = entityTransform;
 
-        _checkedDirections = new();
+        _checkedDirections = 0;
         _moveDuration = TurnsManager.MoveDuration;
         _timer = 0;
         _path = new List<Node>();
@@ -60,14 +60,14 @@ public class RookEntity : BaseEntity
 
         if (_endNode == null)
         {
-            _checkedDirections.Add(_index);
+            _checkedDirections++;
             ChangeDir();
 
             //Debug.LogError(_dir);
             return NpcPath();
         }
         _dirToPreviousNode = -_dir;
-        _checkedDirections.Clear();
+        _checkedDirections = 0;
         newPath.Add(_endNode);
         return newPath;
         //RetracePath(_currentNode, _endNode); this would make it go 1 node at a time
@@ -167,7 +167,7 @@ public class RookEntity : BaseEntity
             return;
         }
 
-        if (_checkedDirections.Count >= _directions.Length)
+        if (_checkedDirections >= _directions.Length)
         {
             _dir = _dirToPreviousNode;
 

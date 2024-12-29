@@ -44,7 +44,7 @@ public class AiController : MonoBehaviour
                 break;
 
             case EntityType.Knight:
-                BoardPice = new knightEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
+                BoardPice = new KnightEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
                 break;
         }
     }
