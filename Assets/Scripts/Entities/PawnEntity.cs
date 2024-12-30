@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PawnEntity : BaseEntity
 {
-    public PawnEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform) : base(startNode, dir, gridSize, onDeath, entityTransform)
+    public PawnEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform, float rayDistance) : base(startNode, dir, gridSize, onDeath, entityTransform, rayDistance)
     {
     }
 
@@ -13,6 +13,8 @@ public class PawnEntity : BaseEntity
     {
         return base.TakeTurn();
     }
+
+
 
     public override bool Move()
     {
@@ -79,43 +81,6 @@ public class PawnEntity : BaseEntity
 
         return newPath;
     }
-
-    //protected override Node FindNextMove(Vector2Int direction,Node nextNode)
-    //{
-    //    Vector2Int newCoordinates = nextNode.GridCoordinate + direction;
-
-
-    //    if ((newCoordinates.x < 0 || newCoordinates.x >= _gridSize.x) || (newCoordinates.y < 0 || newCoordinates.y >= _gridSize.y))
-    //    {
-    //        direction *= -1;
-    //        return FindNextMove(direction,nextNode);
-    //    }
-
-    //    Node targetNode = Path.NodeArray[newCoordinates.x, newCoordinates.y];
-
-
-    //    if (WrongMoveCheck(targetNode, nextNode))
-    //    {
-    //        if (_path.Count > 0)
-    //        {
-    //            if (_path.Count > 1)
-    //                return _path[0];
-    //            return _path[0];
-    //        }
-
-    //        var testPath = FindPath(targetNode);
-
-    //        return testPath[0];
-    //    }
-
-    //    if (!HasConnection(nextNode, targetNode, direction))
-    //    {
-    //        direction *= -1;
-    //        return FindNextMove(direction, nextNode);
-    //    }
-
-    //    return targetNode;
-    //}
 
     protected override Vector2Int DirectionToNode(Node nodeA, Node nodeB)
     {

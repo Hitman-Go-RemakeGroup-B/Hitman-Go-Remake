@@ -13,7 +13,7 @@ public class RookEntity : BaseEntity
     int _index;
 
     //List<Node> debugPath = new List<Node>();
-    public RookEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform) : base(startNode, dir, gridSize, onDeath, entityTransform)
+    public RookEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform, float rayDistance) : base(startNode, dir, gridSize, onDeath, entityTransform, rayDistance)
     {
         _currentNode = startNode;
         _dir = dir;

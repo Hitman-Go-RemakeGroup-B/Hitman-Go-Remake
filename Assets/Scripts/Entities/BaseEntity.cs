@@ -10,6 +10,7 @@ public class BaseEntity
     protected Vector2Int _dir;
     protected Vector2Int _gridSize;
     protected Action _onDeath;
+    protected float _rayDistance;
 
     protected Transform _entityTransform;
 
@@ -18,19 +19,17 @@ public class BaseEntity
     protected float _timer;
     protected float _moveDuration;
     protected bool _isDead;
-  
+
     //protected SpriteRenderer _sprite;
     //protected Node _spriteNode;
- 
 
-    /// <param name="startNode"></param>
-    /// <param name="color">color used to higlight nodes</param>
-    /// <param name="onDeath">what happends when this entity dies</param>
-    public BaseEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform)
+
+    public BaseEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform, float rayDistance)
     {
         _currentNode = startNode;
         _dir = dir;
         _gridSize = gridSize;
+        _rayDistance = rayDistance;
 
         _onDeath += onDeath;
         _entityTransform = entityTransform;
@@ -38,7 +37,7 @@ public class BaseEntity
         _moveDuration = TurnsManager.MoveDuration;
         _timer = 0;
         _path = new List<Node>();
-       
+
     }
 
 
@@ -58,6 +57,23 @@ public class BaseEntity
         }
 
         return !Move();
+    }
+
+
+    public virtual bool RayCheck()
+    {
+        Vector3 direction = new(_dir.x, 0, _dir.y);
+        Ray ray = new(_entityTransform.position, direction);
+        Physics.Raycast(ray, out RaycastHit hit, _rayDistance);
+        if (hit.transform.TryGetComponent<PlayerController>(out var player))
+        {
+            player.Death();
+            _path.Clear();
+            _path.Add(player.BoardPice._currentNode);
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -95,7 +111,7 @@ public class BaseEntity
             _path.RemoveAt(0);
             _timer = 0;
 
-            
+
             return true;
         }
     }

@@ -10,7 +10,7 @@ public class BishopEntity : BaseEntity
     int _checkedDirectionsNum;
     int _index;
 
-    public BishopEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform) : base(startNode, dir, gridSize, onDeath, entityTransform)
+    public BishopEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform, float rayDistance) : base(startNode, dir, gridSize, onDeath, entityTransform, rayDistance)
     {
         _currentNode = startNode;
         _dir = dir;
