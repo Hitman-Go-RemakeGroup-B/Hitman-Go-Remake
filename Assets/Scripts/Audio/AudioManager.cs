@@ -9,6 +9,7 @@ public class AudioManager : MonoBehaviour
 
 
     public AudioClip backgroundMusic;
+    public AudioClip buttonSFX;
 
     private void Start()
     {

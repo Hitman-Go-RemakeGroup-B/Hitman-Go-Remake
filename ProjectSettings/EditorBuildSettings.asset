@@ -8,7 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Test/TaraTest.unity
     guid: 1d2807b82d3b6bd4998fb8e6b70042aa
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Test/GameTest.unity
     guid: af370bd1e5ecc5749ac9f29185bf1296
+  - enabled: 1
+    path: Assets/TESTING DELETE THIS/PICO_TESTS/PicoTestingGround.unity
+    guid: 17d3658498364f540b9b4ab4c45b707f
   m_configObjects: {}
