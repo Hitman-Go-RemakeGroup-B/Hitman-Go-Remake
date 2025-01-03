@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 
@@ -11,6 +12,7 @@ public class BaseEntity
     protected Vector2Int _gridSize;
     protected Action _onDeath;
     protected float _rayDistance;
+    protected Vector2Int[] _directions;
 
     protected Transform _entityTransform;
 
@@ -19,6 +21,9 @@ public class BaseEntity
     protected float _timer;
     protected float _moveDuration;
     protected bool _isDead;
+    protected int _index;
+    protected int _checkedDirectionsNum;
+    protected Vector2Int _dirToPreviousNode;
 
     //protected SpriteRenderer _sprite;
     //protected Node _spriteNode;
@@ -62,19 +67,65 @@ public class BaseEntity
 
     public virtual bool RayCheck()
     {
-        Vector3 direction = new(_dir.x, 0, _dir.y);
-        Ray ray = new(_entityTransform.position, direction);
-        Physics.Raycast(ray, out RaycastHit hit, _rayDistance);
-        if (hit.transform.TryGetComponent<PlayerController>(out var player))
+        Node nextEnd = findNodesInLine(_currentNode);
+
+        if (nextEnd == null)
         {
-            player.Death();
-            _path.Clear();
-            _path.Add(player.BoardPice._currentNode);
-            return true;
+            _checkedDirectionsNum++;
+            ChangeDir();
+            return RayCheck();
+        }
+        _checkedDirectionsNum = 0;
+        Vector2Int directionV2 = DirectionToNode(_currentNode, nextEnd);
+
+        Vector3 direction = new(directionV2.x, 0, directionV2.y);
+        Ray ray = new(_entityTransform.position, direction);
+        Debug.DrawRay(_entityTransform.position, direction, Color.red, 999f);
+        if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance))
+        {
+            if (hit.transform.TryGetComponent<PlayerController>(out var player))
+            {
+                player.Death();
+                _path.Clear();
+                _path.Add(player.BoardPice._currentNode);
+                return true;
+            }
         }
 
         return false;
     }
+
+
+
+    virtual protected void ChangeDir()
+    {
+
+        // so when 
+
+        _index += 1;
+        if (_index >= _directions.Length)
+        {
+            _index = 0;
+        }
+
+        Vector2Int direction = _directions[_index];
+
+        if (direction == _dirToPreviousNode)
+        {
+            ChangeDir();
+            return;
+        }
+
+        if (_checkedDirectionsNum >= _directions.Length)
+        {
+            _dir = _dirToPreviousNode;
+
+            return;
+        }
+
+        _dir = direction;
+    }
+
 
     /// <summary>
     /// finds the next node to move twoards
@@ -169,4 +220,26 @@ public class BaseEntity
         return false;
     }
 
+
+    public virtual Node findNodesInLine(Node node)
+    {
+        Node nextNode = null;
+
+        foreach (Line connection in node.Connections)
+        {
+            if (connection == null) continue;
+
+            if (DirectionToNode(node, connection.EndNode) == _dir)
+            {
+                connection.EndNode.PreviousNode = node;
+                nextNode = findNodesInLine(connection.EndNode);
+                //Debug.Log(nextNode);
+                if (nextNode != null)
+                    return nextNode;
+                else
+                    return connection.EndNode;
+            }
+        }
+        return null;
+    }
 }

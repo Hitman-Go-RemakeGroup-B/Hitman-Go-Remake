@@ -5,10 +5,7 @@ using UnityEngine;
 public class BishopEntity : BaseEntity
 {
     Node _endNode;
-    Vector2Int[] _directions = new Vector2Int[4] { new(1, 1), new(-1, -1), new(-1, 1), new(1, -1) };
-    Vector2Int _dirToPreviousNode;
-    int _checkedDirectionsNum;
-    int _index;
+
 
     public BishopEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform, float rayDistance) : base(startNode, dir, gridSize, onDeath, entityTransform, rayDistance)
     {
@@ -24,6 +21,8 @@ public class BishopEntity : BaseEntity
         _timer = 0;
         _path = new List<Node>();
         _path = NpcPath();
+
+        _directions = new Vector2Int[4] { new(1, 1), new(-1, -1), new(-1, 1), new(1, -1) };
 
         for (int i = 0; i < _directions.Length; i++)
         {
@@ -68,29 +67,32 @@ public class BishopEntity : BaseEntity
         return newPath;
         //RetracePath(_currentNode, _endNode); this would make it go 1 node at a time
 
-        Node findNodesInLine(Node node)
-        {
-            Node nextNode = null;
-
-            foreach (Line connection in node.Connections)
-            {
-                if (connection == null) continue;
-
-                if (DirectionToNode(node, connection.EndNode) == _dir)
-                {
-                    connection.EndNode.PreviousNode = node;
-                    nextNode = findNodesInLine(connection.EndNode);
-                    //Debug.Log(nextNode);
-                    if (nextNode != null)
-                        return nextNode;
-                    else
-                        return connection.EndNode;
-                }
-            }
-            return null;
-        }
+        
 
     }
+
+    override public Node findNodesInLine(Node node)
+    {
+        Node nextNode = null;
+
+        foreach (Line connection in node.Connections)
+        {
+            if (connection == null) continue;
+
+            if (DirectionToNode(node, connection.EndNode) == _dir)
+            {
+                connection.EndNode.PreviousNode = node;
+                nextNode = findNodesInLine(connection.EndNode);
+                //Debug.Log(nextNode);
+                if (nextNode != null)
+                    return nextNode;
+                else
+                    return connection.EndNode;
+            }
+        }
+        return null;
+    }
+
     public override bool Move()
     {
         if (_timer < _moveDuration)
@@ -144,7 +146,7 @@ public class BishopEntity : BaseEntity
         return false;
     }
 
-    void ChangeDir()
+    override protected void ChangeDir()
     {
 
         // so when 

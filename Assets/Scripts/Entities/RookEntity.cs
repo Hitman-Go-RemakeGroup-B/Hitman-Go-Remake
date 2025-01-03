@@ -7,10 +7,6 @@ using UnityEngine;
 public class RookEntity : BaseEntity
 {
     Node _endNode;
-    Vector2Int[] _directions = new Vector2Int[4] { new(1, 0), new(0, 1), new(-1, 0), new(0, -1) };
-    Vector2Int _dirToPreviousNode;
-    int _checkedDirections;
-    int _index;
 
     //List<Node> debugPath = new List<Node>();
     public RookEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform, float rayDistance) : base(startNode, dir, gridSize, onDeath, entityTransform, rayDistance)
@@ -22,12 +18,12 @@ public class RookEntity : BaseEntity
         _onDeath += onDeath;
         _entityTransform = entityTransform;
 
-        _checkedDirections = 0;
+        _checkedDirectionsNum = 0;
         _moveDuration = TurnsManager.MoveDuration;
         _timer = 0;
         _path = new List<Node>();
         _path = NpcPath();
-
+        _directions = new Vector2Int[4] { new(1, 0), new(0, 1), new(-1, 0), new(0, -1) };
         for (int i = 0; i < _directions.Length; i++)
         {
             if (_directions[i] == _dir)
@@ -56,45 +52,43 @@ public class RookEntity : BaseEntity
         List<Node> newPath = new List<Node>();
         _endNode = findNodesInLine(_currentNode);
 
-
-
         if (_endNode == null)
         {
-            _checkedDirections++;
+            _checkedDirectionsNum++;
             ChangeDir();
 
             //Debug.LogError(_dir);
             return NpcPath();
         }
         _dirToPreviousNode = -_dir;
-        _checkedDirections = 0;
+        _checkedDirectionsNum = 0;
         newPath.Add(_endNode);
         return newPath;
         //RetracePath(_currentNode, _endNode); this would make it go 1 node at a time
-
-        Node findNodesInLine(Node node)
-        {
-            Node nextNode = null;
-
-            foreach (Line connection in node.Connections)
-            {
-                if (connection == null) continue;
-
-                if (DirectionToNode(node, connection.EndNode) == _dir)
-                {
-                    connection.EndNode.PreviousNode = node;
-                    nextNode = findNodesInLine(connection.EndNode);
-                    //Debug.Log(nextNode);
-                    if (nextNode != null)
-                        return nextNode;
-                    else
-                        return connection.EndNode;
-                }
-            }
-            return null;
-        }
-
     }
+
+    override public Node findNodesInLine(Node node)
+    {
+        Node nextNode = null;
+
+        foreach (Line connection in node.Connections)
+        {
+            if (connection == null) continue;
+
+            if (DirectionToNode(node, connection.EndNode) == _dir)
+            {
+                connection.EndNode.PreviousNode = node;
+                nextNode = findNodesInLine(connection.EndNode);
+                //Debug.Log(nextNode);
+                if (nextNode != null)
+                    return nextNode;
+                else
+                    return connection.EndNode;
+            }
+        }
+        return null;
+    }
+
     public override bool Move()
     {
         if (_timer < _moveDuration)
@@ -148,7 +142,7 @@ public class RookEntity : BaseEntity
         return false;
     }
 
-    void ChangeDir()
+    override protected void ChangeDir()
     {
 
         // so when 
@@ -167,7 +161,7 @@ public class RookEntity : BaseEntity
             return;
         }
 
-        if (_checkedDirections >= _directions.Length)
+        if (_checkedDirectionsNum >= _directions.Length)
         {
             _dir = _dirToPreviousNode;
 

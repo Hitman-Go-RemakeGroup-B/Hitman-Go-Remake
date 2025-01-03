@@ -4,12 +4,8 @@ using UnityEngine;
 
 public class KnightEntity : BaseEntity
 {
-
     Node _endNode;
-    Vector2Int[] _directions = new Vector2Int[4] { new(2, 1), new(-2, -1), new(-1, 2), new(1, -2) };
-    Vector2Int _dirToPreviousNode;
-    int _checkedDirectionsNum;
-    int _index;
+
     public KnightEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform, float rayDistance) : base(startNode, dir, gridSize, onDeath, entityTransform, rayDistance)
     {
         _currentNode = startNode;
@@ -25,6 +21,8 @@ public class KnightEntity : BaseEntity
         _path = new List<Node>();
         _path = NpcPath();
 
+
+        _directions = new Vector2Int[4] { new(2, 1), new(-2, -1), new(-1, 2), new(1, -2) };
         for (int i = 0; i < _directions.Length; i++)
         {
             if (_directions[i] == _dir)
@@ -34,11 +32,6 @@ public class KnightEntity : BaseEntity
             }
         }
     }
-
- 
-   
-
-   
 
     public override bool TakeTurn()
     {
@@ -56,8 +49,6 @@ public class KnightEntity : BaseEntity
     {
         List<Node> newPath = new List<Node>();
         _endNode = findNodesInLine(_currentNode);
-
-
 
         if (_endNode == null)
         {
@@ -149,7 +140,7 @@ public class KnightEntity : BaseEntity
         return false;
     }
 
-    void ChangeDir()
+    override protected void ChangeDir()
     {
 
         // so when 
