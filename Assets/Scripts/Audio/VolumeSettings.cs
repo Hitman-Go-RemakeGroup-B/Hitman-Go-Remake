@@ -5,97 +5,78 @@ public class VolumeSettings : MonoBehaviour
 {
     [SerializeField] AudioMixer audioMixer;
 
-    private int musicMute=1;
-    private int SFXMute=1;
+    [SerializeField]SaveDataJson dataJson;   
 
     private void Start()
     {
-        if (PlayerPrefs.HasKey("MusicVolume")){
-            LoadVolume();
-            LoadSFX();
-        }
-        else
-        {
-            SetMusicVolume();
-            SetSFXVolume();
-        }
+        LoadVolume(dataJson);
+        SetMusicVolume();
+        SetSFXVolume();
     }
 
     public void SwapMusicVolume()
     {
-        if (musicMute == 0)
+        if (!dataJson.data.Music)
         {
             audioMixer.SetFloat("Music", Mathf.Log10(1) * 20);
-            musicMute = 1;
-            PlayerPrefs.SetInt("MusicVolume", musicMute);
+            dataJson.data.Music = true;
+            SaveVolume(dataJson);
         }
         else
         {
             audioMixer.SetFloat("Music", Mathf.Log10(0.0001f) * 20);
-            musicMute = 0;
-            PlayerPrefs.SetInt("MusicVolume", musicMute);
+            dataJson.data.Music = false;
+            SaveVolume(dataJson);
         }
     }
 
     public void SwapSFXVolume()
     {
-        if (SFXMute==0)
+        if (!dataJson.data.SFX)
         {
             audioMixer.SetFloat("SFX", Mathf.Log10(1) * 20);
-            SFXMute=1;
-            PlayerPrefs.SetInt("SFXVolume", SFXMute);
+            dataJson.data.SFX = true;
+            SaveVolume(dataJson);
         }
         else
         {
             audioMixer.SetFloat("SFX", Mathf.Log10(0.0001f) * 20);
-            SFXMute =0;
-            PlayerPrefs.SetInt("SFXVolume", SFXMute);
+            dataJson.data.SFX = false;
+            SaveVolume(dataJson);
         }           
     }
 
-    private void SetMusicVolume()
+    public void SetMusicVolume()
     {
-        if (musicMute == 1)
+        if (dataJson.data.Music)
         {
             audioMixer.SetFloat("Music", Mathf.Log10(1) * 20);
-            musicMute = 1;
-            PlayerPrefs.SetInt("MusicVolume", musicMute);
         }
         else
         {
             audioMixer.SetFloat("Music", Mathf.Log10(0.0001f) * 20);
-            musicMute = 0;
-            PlayerPrefs.SetInt("MusicVolume", musicMute);
         }
     }
-    private void SetSFXVolume()
+
+    public void SetSFXVolume()
     {
-        if (SFXMute==1)
+        if (dataJson.data.SFX)
         {
             audioMixer.SetFloat("SFX", Mathf.Log10(1) * 20);
-            SFXMute = 1;
-            PlayerPrefs.SetInt("SFXVolume", SFXMute);
         }
         else
         {
             audioMixer.SetFloat("SFX", Mathf.Log10(0.0001f) * 20);
-            SFXMute = 0;
-            PlayerPrefs.SetInt("SFXVolume", SFXMute);
         }
     }
 
-    private void LoadVolume()
+    private void LoadVolume(SaveDataJson data)
     {
-        musicMute = PlayerPrefs.GetInt("MusicVolume");
-
-        SetMusicVolume();
+        data.LoadData();     
     }
-
-    private void LoadSFX()
+    private void SaveVolume(SaveDataJson data)
     {
-        SFXMute = PlayerPrefs.GetInt("SFXVolume");
-
-        SetSFXVolume();
+        data.SaveData();
     }
 
 }

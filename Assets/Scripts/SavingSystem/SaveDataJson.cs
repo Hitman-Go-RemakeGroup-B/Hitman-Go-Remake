@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class SaveDataJson : MonoBehaviour
 {
-    SaveData data;
+    public SaveData data;
     byte[] key = Encoding.ASCII.GetBytes("Picodead"); 
     byte[] iv = Encoding.ASCII.GetBytes("abcdefgh"); 
 
@@ -74,8 +74,7 @@ public class SaveDataJson : MonoBehaviour
             json=reader.ReadToEnd();
         }
         string decryptedString = Decrypt(json, key, iv);
-        SaveData data =JsonUtility.FromJson<SaveData>(decryptedString);
+        data =JsonUtility.FromJson<SaveData>(decryptedString);
         Debug.Log(decryptedString);
-        //data.setdata
     }
 }

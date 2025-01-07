@@ -131,6 +131,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 15815724}
+  - component: {fileID: 15815726}
   - component: {fileID: 15815725}
   m_Layer: 0
   m_Name: AudioManager
@@ -172,6 +173,20 @@ MonoBehaviour:
   SFXSource: {fileID: 1088397961}
   backgroundMusic: {fileID: 8300000, guid: b4727bb76d922b849b4d0e9111d667b5, type: 3}
   buttonSFX: {fileID: 0}
+--- !u!114 &15815726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15815723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d65a4bb612663fa44b8e9edcc87597e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioMixer: {fileID: 24100000, guid: 872ddca48543063409491de43df7e7cb, type: 2}
+  dataJson: {fileID: 33033544}
 --- !u!1 &23149144
 GameObject:
   m_ObjectHideFlags: 0
@@ -1243,7 +1258,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &433136671
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2431,7 +2446,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1652335997}
+      - m_Target: {fileID: 15815726}
         m_TargetAssemblyTypeName: VolumeSettings, Assembly-CSharp
         m_MethodName: SwapMusicVolume
         m_Mode: 1
@@ -3220,6 +3235,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 33033544}
+        m_TargetAssemblyTypeName: SaveDataJson, Assembly-CSharp
+        m_MethodName: LoadData
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4181,7 +4208,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1652335997}
+      - m_Target: {fileID: 15815726}
         m_TargetAssemblyTypeName: VolumeSettings, Assembly-CSharp
         m_MethodName: SwapSFXVolume
         m_Mode: 1
@@ -4714,7 +4741,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1630922907
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4784,7 +4811,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1652335996}
-  - component: {fileID: 1652335997}
   m_Layer: 5
   m_Name: Audio
   m_TagString: Untagged
@@ -4813,19 +4839,6 @@ RectTransform:
   m_AnchoredPosition: {x: 140, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1652335997
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1652335995}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d65a4bb612663fa44b8e9edcc87597e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioMixer: {fileID: 24100000, guid: 872ddca48543063409491de43df7e7cb, type: 2}
 --- !u!1 &1702662021
 GameObject:
   m_ObjectHideFlags: 0
