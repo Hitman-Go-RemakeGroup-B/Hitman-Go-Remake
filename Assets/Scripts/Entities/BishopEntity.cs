@@ -4,12 +4,9 @@ using UnityEngine;
 
 public class BishopEntity : BaseEntity
 {
-    Node _endNode;
-
-
-    public BishopEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform, float rayDistance) : base(startNode, dir, gridSize, onDeath, entityTransform, rayDistance)
+    public BishopEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform) : base(startNode, dir, gridSize, onDeath, entityTransform)
     {
-        _currentNode = startNode;
+        CurrentNode = startNode;
         _dir = dir;
         _gridSize = gridSize;
 
@@ -20,7 +17,7 @@ public class BishopEntity : BaseEntity
         _moveDuration = TurnsManager.MoveDuration;
         _timer = 0;
         _path = new List<Node>();
-        _path = NpcPath();
+
 
         _directions = new Vector2Int[4] { new(1, 1), new(-1, -1), new(-1, 1), new(1, -1) };
 
@@ -32,8 +29,12 @@ public class BishopEntity : BaseEntity
                 _dirToPreviousNode = _directions[i] * -1;
             }
         }
+        //_path = NpcPath();
     }
-
+    public override bool RayCheck()
+    {
+        return base.RayCheck();
+    }
     public override bool TakeTurn()
     {
         if (_isDead) return true;
@@ -49,9 +50,6 @@ public class BishopEntity : BaseEntity
     public override List<Node> NpcPath()
     {
         List<Node> newPath = new List<Node>();
-        _endNode = findNodesInLine(_currentNode);
-
-
 
         if (_endNode == null)
         {
@@ -67,7 +65,7 @@ public class BishopEntity : BaseEntity
         return newPath;
         //RetracePath(_currentNode, _endNode); this would make it go 1 node at a time
 
-        
+
 
     }
 
@@ -98,13 +96,13 @@ public class BishopEntity : BaseEntity
         if (_timer < _moveDuration)
         {
             _timer += Time.deltaTime;
-            _entityTransform.position = Vector3.Lerp(_currentNode.transform.position, _path[0].transform.position, _timer / _moveDuration);
+            _entityTransform.position = Vector3.Lerp(CurrentNode.transform.position, _path[0].transform.position, _timer / _moveDuration);
             return false;
         }
         else
         {
             _entityTransform.position = _path[0].transform.position;
-            _currentNode = _path[0];
+            CurrentNode = _path[0];
 
             if (_endNode == _path[0])
             {
@@ -136,7 +134,7 @@ public class BishopEntity : BaseEntity
 
     protected override bool WrongMoveCheck(Node neighbour, Node currentNode)
     {
-        int neighbourX = Mathf.Abs( neighbour.GridCoordinate.x);
+        int neighbourX = Mathf.Abs(neighbour.GridCoordinate.x);
         int neighbourY = Mathf.Abs(neighbour.GridCoordinate.y);
         int currentX = Mathf.Abs(currentNode.GridCoordinate.x);
         int currentY = Mathf.Abs(currentNode.GridCoordinate.y);
@@ -148,7 +146,6 @@ public class BishopEntity : BaseEntity
 
     override protected void ChangeDir()
     {
-
         // so when 
 
         _index += 1;
@@ -188,7 +185,7 @@ public class BishopEntity : BaseEntity
 
     protected override List<Node> FindPath(Node endNode)
     {
-        Node startNode = _currentNode;
+        Node startNode = CurrentNode;
 
         List<Node> openSet = new List<Node>();
         HashSet<Node> closedSet = new HashSet<Node>();

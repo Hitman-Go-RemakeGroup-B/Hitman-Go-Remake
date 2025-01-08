@@ -1,19 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 
 
 public class BaseEntity
 {
     // given
-    protected Node _currentNode;
+    public Node CurrentNode;
     protected Vector2Int _dir;
     protected Vector2Int _gridSize;
     protected Action _onDeath;
-    protected float _rayDistance;
     protected Vector2Int[] _directions;
-
     protected Transform _entityTransform;
 
     // calculated
@@ -24,17 +21,17 @@ public class BaseEntity
     protected int _index;
     protected int _checkedDirectionsNum;
     protected Vector2Int _dirToPreviousNode;
+    protected Node _endNode;
 
     //protected SpriteRenderer _sprite;
     //protected Node _spriteNode;
 
 
-    public BaseEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform, float rayDistance)
+    public BaseEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform)
     {
-        _currentNode = startNode;
+        CurrentNode = startNode;
         _dir = dir;
         _gridSize = gridSize;
-        _rayDistance = rayDistance;
 
         _onDeath += onDeath;
         _entityTransform = entityTransform;
@@ -54,7 +51,7 @@ public class BaseEntity
     // while Turn()
     public virtual bool TakeTurn()
     {
-        if (_isDead) return true;
+       
 
         if (_path.Count <= 0)
         {
@@ -67,27 +64,29 @@ public class BaseEntity
 
     public virtual bool RayCheck()
     {
-        Node nextEnd = findNodesInLine(_currentNode);
+        _endNode = findNodesInLine(CurrentNode);
 
-        if (nextEnd == null)
+        if (_endNode == null)
         {
             _checkedDirectionsNum++;
             ChangeDir();
             return RayCheck();
         }
         _checkedDirectionsNum = 0;
-        Vector2Int directionV2 = DirectionToNode(_currentNode, nextEnd);
 
-        Vector3 direction = new(directionV2.x, 0, directionV2.y);
+        Vector3 direction = _endNode.transform.position - _entityTransform.position;
+        direction.y = 0;
+        float distance = direction.magnitude;
+        direction = direction.normalized;
         Ray ray = new(_entityTransform.position, direction);
-        Debug.DrawRay(_entityTransform.position, direction, Color.red, 999f);
-        if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance))
+        Debug.DrawRay(_entityTransform.position, direction*distance, Color.red, 999f);
+        if (Physics.Raycast(ray, out RaycastHit hit, distance))
         {
             if (hit.transform.TryGetComponent<PlayerController>(out var player))
             {
                 player.Death();
                 _path.Clear();
-                _path.Add(player.BoardPice._currentNode);
+                _path.Add(player.BoardPice.CurrentNode);
                 return true;
             }
         }
@@ -99,7 +98,6 @@ public class BaseEntity
 
     virtual protected void ChangeDir()
     {
-
         // so when 
 
         _index += 1;
@@ -152,13 +150,13 @@ public class BaseEntity
         if (_timer < _moveDuration)
         {
             _timer += Time.deltaTime;
-            _entityTransform.position = Vector3.Lerp(_currentNode.transform.position, _path[0].transform.position, _timer / _moveDuration);
+            _entityTransform.position = Vector3.Lerp(CurrentNode.transform.position, _path[0].transform.position, _timer / _moveDuration);
             return false;
         }
         else
         {
             _entityTransform.position = _path[0].transform.position;
-            _currentNode = _path[0];
+            CurrentNode = _path[0];
             _path.RemoveAt(0);
             _timer = 0;
 

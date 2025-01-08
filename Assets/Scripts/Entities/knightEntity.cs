@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class KnightEntity : BaseEntity
 {
-    Node _endNode;
-
-    public KnightEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform, float rayDistance) : base(startNode, dir, gridSize, onDeath, entityTransform, rayDistance)
+    bool _isMoving;
+    public KnightEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform) : base(startNode, dir, gridSize, onDeath, entityTransform)
     {
-        _currentNode = startNode;
+        CurrentNode = startNode;
         _dir = dir;
         _gridSize = gridSize;
 
@@ -19,7 +18,7 @@ public class KnightEntity : BaseEntity
         _moveDuration = TurnsManager.MoveDuration;
         _timer = 0;
         _path = new List<Node>();
-        _path = NpcPath();
+        
 
 
         _directions = new Vector2Int[4] { new(2, 1), new(-2, -1), new(-1, 2), new(1, -2) };
@@ -35,20 +34,24 @@ public class KnightEntity : BaseEntity
 
     public override bool TakeTurn()
     {
-        if (_isDead) return true;
-
-        if (_path.Count <= 0)
-        {
-            _path = NpcPath();
-        }
+        if (_isDead || !_isMoving || _path.Count <= 0) return true;
 
         return !Move();// this will go in a while loop that's why i use the !
     }
 
+
+    public override bool RayCheck()
+    {
+        //ToDo
+
+        return false;
+    }
+
+
     public override List<Node> NpcPath()
     {
         List<Node> newPath = new List<Node>();
-        _endNode = findNodesInLine(_currentNode);
+        _endNode = findNodesInLine(CurrentNode);
 
         if (_endNode == null)
         {
@@ -64,41 +67,27 @@ public class KnightEntity : BaseEntity
         return newPath;
         //RetracePath(_currentNode, _endNode); this would make it go 1 node at a time
 
-        Node findNodesInLine(Node node)
-        {
-            Node nextNode = null;
-
-            foreach (Line connection in node.Connections)
-            {
-                if (connection == null) continue;
-
-                if (DirectionToNode(node, connection.EndNode) == _dir)
-                {
-                    connection.EndNode.PreviousNode = node;
-                    nextNode = findNodesInLine(connection.EndNode);
-                    //Debug.Log(nextNode);
-                    if (nextNode != null)
-                        return nextNode;
-                    else
-                        return connection.EndNode;
-                }
-            }
-            return null;
-        }
+        
 
     }
+
+    public override Node findNodesInLine(Node node)
+    {
+        return base.findNodesInLine(node);
+    }
+
     public override bool Move()
     {
         if (_timer < _moveDuration)
         {
             _timer += Time.deltaTime;
-            _entityTransform.position = Vector3.Lerp(_currentNode.transform.position, _path[0].transform.position, _timer / _moveDuration);
+            _entityTransform.position = Vector3.Lerp(CurrentNode.transform.position, _path[0].transform.position, _timer / _moveDuration);
             return false;
         }
         else
         {
             _entityTransform.position = _path[0].transform.position;
-            _currentNode = _path[0];
+            CurrentNode = _path[0];
 
             if (_endNode == _path[0])
             {
@@ -143,8 +132,6 @@ public class KnightEntity : BaseEntity
     override protected void ChangeDir()
     {
 
-        // so when 
-
         _index += 1;
         if (_index >= _directions.Length)
         {
@@ -182,7 +169,7 @@ public class KnightEntity : BaseEntity
 
     protected override List<Node> FindPath(Node endNode)
     {
-        Node startNode = _currentNode;
+        Node startNode = CurrentNode;
 
         List<Node> openSet = new List<Node>();
         HashSet<Node> closedSet = new HashSet<Node>();

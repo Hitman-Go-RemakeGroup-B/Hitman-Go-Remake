@@ -17,7 +17,16 @@ public class AiController : MonoBehaviour
     private void Awake()
     {
         path = FindObjectOfType<Path>();
+        
+    }
+
+    private void OnEnable()
+    {
         TurnsManager.OnEnemiesTurnStart += StartTurnCorutine;
+    }
+    private void OnDisable()
+    {
+        TurnsManager.OnEnemiesTurnStart -= StartTurnCorutine;
     }
 
     private void Start()
@@ -26,19 +35,19 @@ public class AiController : MonoBehaviour
         switch (_entityType)
         {
             case EntityType.Pawn:
-                BoardPice = new PawnEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform, _raycastDistance);
+                BoardPice = new PawnEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
                 break;
 
             case EntityType.Rook:
-                BoardPice = new RookEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform, _raycastDistance);
+                BoardPice = new RookEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
                 break;
 
             case EntityType.Bishop:
-                BoardPice = new BishopEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform, _raycastDistance);
+                BoardPice = new BishopEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
                 break;
 
             case EntityType.Knight:
-                BoardPice = new KnightEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform, _raycastDistance);
+                BoardPice = new KnightEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
                 break;
         }
     }

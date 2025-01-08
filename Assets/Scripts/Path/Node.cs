@@ -9,9 +9,7 @@ public class Node : MonoBehaviour
     [HideInInspector] public int HCost;
     [HideInInspector] public int GCost;
     [HideInInspector] public Node PreviousNode;
-    [HideInInspector] public Color Higlight;
-    public int FCost => HCost+GCost;
     
-
+    public int FCost => HCost+GCost;
 
 }

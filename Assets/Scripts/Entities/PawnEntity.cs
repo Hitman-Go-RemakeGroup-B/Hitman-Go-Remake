@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PawnEntity : BaseEntity
 {
-    public PawnEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform, float rayDistance) : base(startNode, dir, gridSize, onDeath, entityTransform, rayDistance)
+    public PawnEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform) : base(startNode, dir, gridSize, onDeath, entityTransform)
     {
     }
 
@@ -13,8 +13,6 @@ public class PawnEntity : BaseEntity
     {
         return base.TakeTurn();
     }
-
-
 
     public override bool Move()
     {
@@ -52,7 +50,7 @@ public class PawnEntity : BaseEntity
     {
         List<Node> newPath = new List<Node>();
 
-        Vector2Int newCoordinates = _currentNode.GridCoordinate + _dir;
+        Vector2Int newCoordinates = CurrentNode.GridCoordinate + _dir;
 
 
         if ((newCoordinates.x < 0 || newCoordinates.x >= _gridSize.x) || (newCoordinates.y < 0 || newCoordinates.y >= _gridSize.y))
@@ -64,13 +62,13 @@ public class PawnEntity : BaseEntity
         Node targetNode = Path.NodeArray[newCoordinates.x, newCoordinates.y];
 
 
-        if (WrongMoveCheck(targetNode, _currentNode))
+        if (WrongMoveCheck(targetNode, CurrentNode))
         {
             newPath = FindPath(targetNode);
             return newPath;
         }
 
-        if (!HasConnection(_currentNode, targetNode, _dir))
+        if (!HasConnection(CurrentNode, targetNode, _dir))
         {
             _dir *= -1;
             return NpcPath();
@@ -93,7 +91,7 @@ public class PawnEntity : BaseEntity
 
     protected override List<Node> FindPath(Node endNode)
     {
-        Node startNode = _currentNode;
+        Node startNode = CurrentNode;
 
         List<Node> openSet = new List<Node>();
         HashSet<Node> closedSet = new HashSet<Node>();
