@@ -45,6 +45,16 @@ public class PawnEntity : BaseEntity
             return true;
         return false;
     }
+    protected override void ChangeDir()
+    {
+        base.ChangeDir();
+    }
+    public override bool RayCheck()
+    {
+        return base.RayCheck();
+    }
+
+    
 
     public override List<Node> NpcPath()
     {

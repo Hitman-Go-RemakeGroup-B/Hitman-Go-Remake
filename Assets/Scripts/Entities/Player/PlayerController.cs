@@ -6,5 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     public BaseEntity BoardPice;
 
-    public void Death() { }
+    public void Death() 
+    {
+        // ToDo: send you lost action?
+    }
 }

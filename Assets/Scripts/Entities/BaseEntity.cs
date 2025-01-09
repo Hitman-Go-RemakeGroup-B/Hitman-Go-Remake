@@ -87,14 +87,13 @@ public class BaseEntity
                 player.Death();
                 _path.Clear();
                 _path.Add(player.BoardPice.CurrentNode);
+                
                 return true;
             }
         }
 
         return false;
     }
-
-
 
     virtual protected void ChangeDir()
     {

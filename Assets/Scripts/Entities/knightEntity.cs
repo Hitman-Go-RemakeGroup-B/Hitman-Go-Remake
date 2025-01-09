@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class KnightEntity : BaseEntity
@@ -18,8 +19,6 @@ public class KnightEntity : BaseEntity
         _moveDuration = TurnsManager.MoveDuration;
         _timer = 0;
         _path = new List<Node>();
-        
-
 
         _directions = new Vector2Int[4] { new(2, 1), new(-2, -1), new(-1, 2), new(1, -2) };
         for (int i = 0; i < _directions.Length; i++)
@@ -39,14 +38,38 @@ public class KnightEntity : BaseEntity
         return !Move();// this will go in a while loop that's why i use the !
     }
 
-
     public override bool RayCheck()
     {
         //ToDo
+        int checkX = CurrentNode.GridCoordinate.x + _dir.x;
+        int checkY = CurrentNode.GridCoordinate.y + _dir.y;
+        Node checkNode = null;
+
+        if (checkX < 0 || checkX >= _gridSize.x) return false;
+        if (checkY < 0 || checkY >= _gridSize.y) return false;
+
+
+        checkNode = Path.NodeArray[checkX, checkY];
+        if (checkNode == null) return false;
+//#if UNITY_EDITOR
+//        Handles.color = Color.red;
+//        Handles.DrawWireCube(checkNode.transform.position, Vector3.one * 0.5f);
+//#endif
+        foreach (Collider col in Physics.OverlapBox(checkNode.transform.position, Vector3.one * 0.5f))
+        {
+            if (col.TryGetComponent(out PlayerController player))
+            {
+                _path.Add(player.BoardPice.CurrentNode);
+                return true;
+            }
+        }
+
+
+
+
 
         return false;
     }
-
 
     public override List<Node> NpcPath()
     {
@@ -66,9 +89,6 @@ public class KnightEntity : BaseEntity
         newPath.Add(_endNode);
         return newPath;
         //RetracePath(_currentNode, _endNode); this would make it go 1 node at a time
-
-        
-
     }
 
     public override Node findNodesInLine(Node node)
