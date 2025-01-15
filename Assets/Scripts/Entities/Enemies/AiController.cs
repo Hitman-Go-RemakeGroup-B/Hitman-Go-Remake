@@ -31,6 +31,7 @@ public class AiController : MonoBehaviour
 
     private void Start()
     {
+
         _startNode = path.NodeFromWorldPos(transform.position);
         switch (_entityType)
         {

@@ -51,10 +51,10 @@ public class KnightEntity : BaseEntity
 
         checkNode = Path.NodeArray[checkX, checkY];
         if (checkNode == null) return false;
-//#if UNITY_EDITOR
-//        Handles.color = Color.red;
-//        Handles.DrawWireCube(checkNode.transform.position, Vector3.one * 0.5f);
-//#endif
+
+#if UNITY_EDITOR
+        DebugExtensions.DrawBox(checkNode.transform.position, checkNode.transform.rotation, Vector3.one * 0.5f, Color.red,99f);
+#endif
         foreach (Collider col in Physics.OverlapBox(checkNode.transform.position, Vector3.one * 0.5f))
         {
             if (col.TryGetComponent(out PlayerController player))
@@ -64,17 +64,13 @@ public class KnightEntity : BaseEntity
             }
         }
 
-
-
-
-
         return false;
     }
 
     public override List<Node> NpcPath()
     {
         List<Node> newPath = new List<Node>();
-        _endNode = findNodesInLine(CurrentNode);
+        _endNode = FindNextNodes(CurrentNode);
 
         if (_endNode == null)
         {
@@ -91,9 +87,9 @@ public class KnightEntity : BaseEntity
         //RetracePath(_currentNode, _endNode); this would make it go 1 node at a time
     }
 
-    public override Node findNodesInLine(Node node)
+    public override Node FindNextNodes(Node node)
     {
-        return base.findNodesInLine(node);
+        return base.FindNextNodes(node);
     }
 
     public override bool Move()
@@ -175,8 +171,6 @@ public class KnightEntity : BaseEntity
 
         _dir = direction;
     }
-
-
 
     protected override Vector2Int DirectionToNode(Node currentNode, Node targetNode)
     {

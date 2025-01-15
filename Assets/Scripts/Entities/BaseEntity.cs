@@ -51,8 +51,6 @@ public class BaseEntity
     // while Turn()
     public virtual bool TakeTurn()
     {
-       
-
         if (_path.Count <= 0)
         {
             _path = NpcPath();
@@ -64,7 +62,7 @@ public class BaseEntity
 
     public virtual bool RayCheck()
     {
-        _endNode = findNodesInLine(CurrentNode);
+        _endNode = FindNextNodes(CurrentNode);
 
         if (_endNode == null)
         {
@@ -218,7 +216,7 @@ public class BaseEntity
     }
 
 
-    public virtual Node findNodesInLine(Node node)
+    public virtual Node FindNextNodes(Node node)
     {
         Node nextNode = null;
 
@@ -229,7 +227,7 @@ public class BaseEntity
             if (DirectionToNode(node, connection.EndNode) == _dir)
             {
                 connection.EndNode.PreviousNode = node;
-                nextNode = findNodesInLine(connection.EndNode);
+                nextNode = FindNextNodes(connection.EndNode);
                 //Debug.Log(nextNode);
                 if (nextNode != null)
                     return nextNode;

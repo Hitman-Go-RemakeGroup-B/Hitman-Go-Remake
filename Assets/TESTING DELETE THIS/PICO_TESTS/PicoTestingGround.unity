@@ -23372,7 +23372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveDir: {x: 2, y: 1}
-  _entityType: 3
+  _entityType: 1
   _raycastDistance: 0
 --- !u!65 &1173464622
 BoxCollider:
@@ -42639,7 +42639,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &2068888680
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -42720,7 +42720,7 @@ Transform:
   m_GameObject: {fileID: 2068888679}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 50.14, y: 0, z: 0.05}
+  m_LocalPosition: {x: 30.03, y: 0, z: 9.85}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []

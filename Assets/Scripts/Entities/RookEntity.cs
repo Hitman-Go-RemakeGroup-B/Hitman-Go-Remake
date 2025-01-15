@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class RookEntity : BaseEntity
 {
@@ -31,6 +32,9 @@ public class RookEntity : BaseEntity
                 _dirToPreviousNode = _directions[i] * -1;
             }
         }
+        // DEBUG:
+        PlayerController target = Object.FindObjectOfType<PlayerController>();
+        _path = FindPath(target.BoardPice.CurrentNode);
 
     }
 
@@ -71,7 +75,7 @@ public class RookEntity : BaseEntity
         //RetracePath(_currentNode, _endNode); this would make it go 1 node at a time
     }
 
-    override public Node findNodesInLine(Node node)
+    override public Node FindNextNodes(Node node)
     {
         Node nextNode = null;
 
@@ -82,7 +86,7 @@ public class RookEntity : BaseEntity
             if (DirectionToNode(node, connection.EndNode) == _dir)
             {
                 connection.EndNode.PreviousNode = node;
-                nextNode = findNodesInLine(connection.EndNode);
+                nextNode = FindNextNodes(connection.EndNode);
                 //Debug.Log(nextNode);
                 if (nextNode != null)
                     return nextNode;

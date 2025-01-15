@@ -69,7 +69,7 @@ public class BishopEntity : BaseEntity
 
     }
 
-    override public Node findNodesInLine(Node node)
+    override public Node FindNextNodes(Node node)
     {
         Node nextNode = null;
 
@@ -80,7 +80,7 @@ public class BishopEntity : BaseEntity
             if (DirectionToNode(node, connection.EndNode) == _dir)
             {
                 connection.EndNode.PreviousNode = node;
-                nextNode = findNodesInLine(connection.EndNode);
+                nextNode = FindNextNodes(connection.EndNode);
                 //Debug.Log(nextNode);
                 if (nextNode != null)
                     return nextNode;

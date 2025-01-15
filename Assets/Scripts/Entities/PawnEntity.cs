@@ -7,6 +7,7 @@ public class PawnEntity : BaseEntity
 {
     public PawnEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform) : base(startNode, dir, gridSize, onDeath, entityTransform)
     {
+        
     }
 
     public override bool TakeTurn()
@@ -45,48 +46,79 @@ public class PawnEntity : BaseEntity
             return true;
         return false;
     }
+
     protected override void ChangeDir()
     {
-        base.ChangeDir();
+        _checkedDirectionsNum++;
+        _dir *= -1;
+    }
+
+    public override Node FindNextNodes(Node node)
+    {
+        if (_checkedDirectionsNum >= 2) return null;
+
+        Vector2Int newCoordinates = node.GridCoordinate + _dir;
+
+        if ((newCoordinates.x < 0 || newCoordinates.x >= _gridSize.x) || (newCoordinates.y < 0 || newCoordinates.y >= _gridSize.y))
+        {
+            ChangeDir();
+            return FindNextNodes(node);
+        }
+
+        Node targetNode = Path.NodeArray[newCoordinates.x, newCoordinates.y];
+
+       
+
+        if (!HasConnection(CurrentNode, targetNode, _dir))
+        {
+            ChangeDir();
+            targetNode = FindNextNodes(CurrentNode);
+        }
+
+
+        _checkedDirectionsNum = 0;
+        return targetNode;
     }
     public override bool RayCheck()
     {
-        return base.RayCheck();
-    }
+        _endNode = FindNextNodes(CurrentNode);
 
-    
+        if (_endNode == null) return false;
+
+        Vector3 direction = _endNode.transform.position - _entityTransform.position;
+        direction.y = 0;
+        float distance = direction.magnitude;
+        direction = direction.normalized;
+        Ray ray = new(_entityTransform.position, direction);
+        Debug.DrawRay(_entityTransform.position, direction * distance, Color.red, 999f);
+        if (Physics.Raycast(ray, out RaycastHit hit, distance))
+        {
+            if (hit.transform.TryGetComponent<PlayerController>(out var player))
+            {
+                player.Death();
+                _path.Clear();
+                _path.Add(player.BoardPice.CurrentNode);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public override List<Node> NpcPath()
     {
         List<Node> newPath = new List<Node>();
 
-        Vector2Int newCoordinates = CurrentNode.GridCoordinate + _dir;
+        Node targetNode = FindNextNodes(CurrentNode);
 
-
-        if ((newCoordinates.x < 0 || newCoordinates.x >= _gridSize.x) || (newCoordinates.y < 0 || newCoordinates.y >= _gridSize.y))
-        {
-            _dir *= -1;
-            return NpcPath();
-        }
-
-        Node targetNode = Path.NodeArray[newCoordinates.x, newCoordinates.y];
-
-
-        if (WrongMoveCheck(targetNode, CurrentNode))
+        if (WrongMoveCheck(targetNode, CurrentNode)) // if the target node is oblique to the current node
         {
             newPath = FindPath(targetNode);
             return newPath;
         }
 
-        if (!HasConnection(CurrentNode, targetNode, _dir))
-        {
-            _dir *= -1;
-            return NpcPath();
-        }
-
-
         newPath.Add(targetNode);
-
         return newPath;
     }
 
