@@ -7,6 +7,8 @@ public class VolumeSettings : MonoBehaviour
 
     [SerializeField]SaveDataJson dataJson;   
 
+
+
     private void Start()
     {
         LoadVolume(dataJson);
@@ -16,39 +18,39 @@ public class VolumeSettings : MonoBehaviour
 
     public void SwapMusicVolume()
     {
-        if (!dataJson.data.Music)
+        if (!dataJson.Data.Music)
         {
             audioMixer.SetFloat("Music", Mathf.Log10(1) * 20);
-            dataJson.data.Music = true;
+            dataJson.Data.Music = true;
             SaveVolume(dataJson);
         }
         else
         {
             audioMixer.SetFloat("Music", Mathf.Log10(0.0001f) * 20);
-            dataJson.data.Music = false;
+            dataJson.Data.Music = false;
             SaveVolume(dataJson);
         }
     }
 
     public void SwapSFXVolume()
     {
-        if (!dataJson.data.SFX)
+        if (!dataJson.Data.SFX)
         {
             audioMixer.SetFloat("SFX", Mathf.Log10(1) * 20);
-            dataJson.data.SFX = true;
+            dataJson.Data.SFX = true;
             SaveVolume(dataJson);
         }
         else
         {
             audioMixer.SetFloat("SFX", Mathf.Log10(0.0001f) * 20);
-            dataJson.data.SFX = false;
+            dataJson.Data.SFX = false;
             SaveVolume(dataJson);
         }           
     }
 
     public void SetMusicVolume()
     {
-        if (dataJson.data.Music)
+        if (dataJson.Data.Music)
         {
             audioMixer.SetFloat("Music", Mathf.Log10(1) * 20);
         }
@@ -60,7 +62,7 @@ public class VolumeSettings : MonoBehaviour
 
     public void SetSFXVolume()
     {
-        if (dataJson.data.SFX)
+        if (dataJson.Data.SFX)
         {
             audioMixer.SetFloat("SFX", Mathf.Log10(1) * 20);
         }

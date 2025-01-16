@@ -4,7 +4,6 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] int sceneIndex;
 
     public TMP_Dropdown dropDown;
 
@@ -12,10 +11,20 @@ public class UIManager : MonoBehaviour
     {
         dropDown.value = QualitySettings.GetQualityLevel();
     }
-    public void PlayGame()
+    public void PlayLevel(int index)
     {
-        SceneManager.LoadScene(sceneIndex);
+        SceneManager.LoadScene(index);
     }
+    public void BackToMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+    public void RetryLevel()
+    {
+        string scene=SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(scene);
+    }
+
 
     public void ExitGame()
     {

@@ -24,8 +24,12 @@ public class SaveData
     public SaveData() {
         LevelIndex = 0;
         Music = true;
-        SFX = true;
-    
+        SFX = true;  
+        KillKing = new List<bool>();    
+        MinTurns = new List<bool>();
+        NoEnemy = new List<bool>();
+        EveryEnemy = new List<bool>();
+        QueenEnding = new List<bool>();
     }
 
 }
