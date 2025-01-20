@@ -32,8 +32,65 @@ Transform:
   - {fileID: 7536736446592511503}
   - {fileID: 7975578451510006799}
   - {fileID: 5433560799161081917}
+  - {fileID: 2259291511509976743}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2843630783505362207
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2259291511509976743}
+  - component: {fileID: 4622839906698327656}
+  m_Layer: 0
+  m_Name: AchievemnetManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2259291511509976743
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2843630783505362207}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 511812045242209035}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4622839906698327656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2843630783505362207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e59f478815f864648ad2535fb85c5479, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Data:
+    LevelIndex: 0
+    KillKing: 
+    MinTurns: 
+    NoEnemy: 
+    EveryEnemy: 
+    QueenEnding: 
+    Music: 0
+    SFX: 0
+  numberOfEnemy: 0
+  minTurn: 0
+  Nlevel: {fileID: 11400000, guid: f1553f90df969ea46a7bc1e152715981, type: 2}
 --- !u!1 &3607919896177516106
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,7 +283,7 @@ MonoBehaviour:
   musicSource: {fileID: 1340141881907196967}
   SFXSource: {fileID: 5941089275484282732}
   backgroundMusic: {fileID: 8300000, guid: b4727bb76d922b849b4d0e9111d667b5, type: 3}
-  buttonSFX: {fileID: 0}
+  buttonSFX: {fileID: 8300000, guid: 83da9559c30b6b44aad6897cf1eda946, type: 3}
 --- !u!1 &6974294856872580368
 GameObject:
   m_ObjectHideFlags: 0
@@ -271,6 +328,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fabdb64df7f1c643bcf6eade67252c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  level: {fileID: 11400000, guid: f1553f90df969ea46a7bc1e152715981, type: 2}
+  Data:
+    LevelIndex: 0
+    KillKing: 
+    MinTurns: 
+    NoEnemy: 
+    EveryEnemy: 
+    QueenEnding: 
+    Music: 0
+    SFX: 0
 --- !u!1 &8947703009801210841
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,5 +510,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bce6582008756b4c9f3a7dbb58a2e61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneIndex: 1
   dropDown: {fileID: 0}

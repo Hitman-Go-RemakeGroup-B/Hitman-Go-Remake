@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
-public class SaveLevel 
+public class SaveLevel
 {
 
     public int LevelIndex;
@@ -20,9 +20,9 @@ public class SaveLevel
 
     public SaveLevel() {
         LevelIndex = 0;
-        KillKing = false;
-        MinTurns = false;
-        NoEnemy = false;
+        KillKing = true;
+        MinTurns = true;
+        NoEnemy = true;
         EveryEnemy = false;
         QueenEnding = false;
     }
