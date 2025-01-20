@@ -6,8 +6,8 @@ using UnityEngine;
 public class AiController : MonoBehaviour
 {
     [SerializeField] Vector2Int _moveDir;
-    [SerializeField] EntityType entityType;
-
+    [SerializeField] EntityType _entityType;
+    [SerializeField] float _raycastDistance;
 
     Path path;
     public BaseEntity BoardPice;
@@ -15,21 +15,25 @@ public class AiController : MonoBehaviour
     private Node _startNode;
 
     private void Awake()
-    { 
+    {
         path = FindObjectOfType<Path>();
-        TurnsManager.OnEnemiesTurnStart += StartTurnCorutine;
+        
     }
 
-    private void Death()
+    private void OnEnable()
     {
-        isDead = true;
-        // trow it somewhere??
+        TurnsManager.OnEnemiesTurnStart += StartTurnCorutine;
+    }
+    private void OnDisable()
+    {
+        TurnsManager.OnEnemiesTurnStart -= StartTurnCorutine;
     }
 
     private void Start()
     {
+
         _startNode = path.NodeFromWorldPos(transform.position);
-        switch (entityType)
+        switch (_entityType)
         {
             case EntityType.Pawn:
                 BoardPice = new PawnEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
@@ -44,22 +48,37 @@ public class AiController : MonoBehaviour
                 break;
 
             case EntityType.Knight:
-                BoardPice = new knightEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
+                BoardPice = new KnightEntity(_startNode, _moveDir, new(path.CollumsX, path.RowsZ), Death, transform);
                 break;
         }
     }
 
-
+    private void Death()
+    {
+        isDead = true;
+        // trow it somewhere??
+    }
 
     private IEnumerator StartTurn()
     {
         if (isDead)
         {
-            TurnsManager.OnEnemiesTurnEnd?.Invoke(); 
+            TurnsManager.OnEnemiesTurnEnd?.Invoke();
             yield return null;
         }
 
-        while (BoardPice.TakeTurn()) 
+
+        if (BoardPice.RayCheck())
+        {
+            while (BoardPice.Move())
+            {
+                yield return null;
+            }
+            StopAllCoroutines();
+        }
+
+
+        while (BoardPice.TakeTurn())
         {
             yield return null;
         };

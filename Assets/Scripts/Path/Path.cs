@@ -30,24 +30,23 @@ public class Path : MonoBehaviour
 
     private void Awake()
     {
-        if (NodeArray == null)
-            NodeArrayInizalization();
+        PathInizalization();
     }
 
-
-
-    public void NodeArrayInizalization()
+    public void PathInizalization()
     {
         NodeArray = null;
         NodeArray = new Node[CollumsX, RowsZ];
+
+        
 
         for (int i = 0; i < transform.childCount; i++)
         {
             Node child = transform.GetChild(i).GetComponent<Node>();
             NodeArray[child.GridCoordinate.x, child.GridCoordinate.y] = child;
         }
-
     }
+
     public List<Node> FindPath(Vector2Int startCoordinate, Vector2Int endCoordinate)
     {
         Node startNode = GetNodeFromCoordinate(startCoordinate);
@@ -80,7 +79,7 @@ public class Path : MonoBehaviour
                 if (Connection == null)
                     continue;
 
-                Node neighbour = Connection.endNode;
+                Node neighbour = Connection.EndNode;
                 if (closedSet.Contains(neighbour))
                     continue;
 
@@ -97,7 +96,6 @@ public class Path : MonoBehaviour
 
             }
         }
-
         return null;
     }
 
@@ -128,7 +126,7 @@ public class Path : MonoBehaviour
     public List<Node> GetNeighboursNodes(Node node)
     {
         if (NodeArray == null)
-            NodeArrayInizalization();
+            PathInizalization();
 
         List<Node> neighbours = new List<Node>();
 
@@ -218,7 +216,7 @@ public class Path : MonoBehaviour
         if (_lineList != null) { DestroyLines(); }
 
         if (NodeArray == null)
-            NodeArrayInizalization();
+            PathInizalization();
 
         Debug.Log("generating Lines");
         List<Node> usedNodes = new List<Node>();
@@ -243,10 +241,11 @@ public class Path : MonoBehaviour
                 {
                     foreach (Line neighLines in neighbour.Connections)
                     {
-                        if (neighLines.endNode == node)
+                        if (neighLines.EndNode == node)
                         {
                             line = neighLines.AddComponent<Line>();
-                            line.endNode = neighbour;
+                            line.StartNode = node;
+                            line.EndNode = neighbour;
                             node.Connections[i] = line;
                         }
                     }
@@ -254,7 +253,7 @@ public class Path : MonoBehaviour
                 }
 
                 line = Instantiate(LinePrefab, nodePos, LinePrefab.transform.rotation, obj.transform);
-                line.endNode = neighbour;
+                line.EndNode = neighbour;
                 node.Connections[i] = line;
                 LineRenderer lineRend = line.GetComponent<LineRenderer>();
                 lineRend.positionCount = 2;
@@ -279,24 +278,6 @@ public class Path : MonoBehaviour
         _lineList = null;
     }
 
-    //bool TestDirection(int x, int z, int step, int direction)
-    //{
-    //    switch (direction)
-    //    {
-    //        case 1:
-    //            return z + 1 < Rows && GridArray[x, z + 1]?.GetComponent<Node>().Visited == step;
-
-    //        case 2:
-    //            return x + 1 < Collums && GridArray[x + 1, z]?.GetComponent<Node>().Visited == step;
-    //        case 3:
-    //            return z - 1 > -1 && GridArray[x, z - 1]?.GetComponent<Node>().Visited == step;
-    //        case 4:
-    //            return x - 1 > -1 && GridArray[x - 1, z]?.GetComponent<Node>().Visited == step;
-    //    }
-
-    //    return false;
-    //}
-
     public Node NodeFromWorldPos(Vector3 givenVector3)
     {
         foreach (Node node in NodeArray)
@@ -305,7 +286,7 @@ public class Path : MonoBehaviour
 
             if (Vector3.Distance(node.transform.position, givenVector3) <= UnitScale / 2)
             {
-                
+
                 return node;
             }
         }
@@ -313,6 +294,7 @@ public class Path : MonoBehaviour
         return null;
 
     }
+
     public Node GetNodeFromCoordinate(Vector2Int givenCoordinate)
     {
         if (NodeArray[givenCoordinate.x, givenCoordinate.y])
@@ -321,33 +303,4 @@ public class Path : MonoBehaviour
         Debug.LogError("No node found at " + givenCoordinate.ToString());
         return null;
     }
-
-
-
 }
-
-// public void GenerateLines()
-// {
-//      if (_gridArray == null) { Debug.LogWarning("Generate the grid first"); return; }
-//      if(_lines != null)  { DestroyLines(); return;}
-//      
-//      foreach(Node node in _gridArray )
-//      {
-//          for (int x = -1; x <= 1; x++)
-//{
-//    for (int z = -1; z <= 1; z++)
-//    {
-//        if (x == 0 && z == 0) // this is pawn 
-//            continue;
-//        int checkX = node.GridCoordinate.x + x;
-//        int checkZ = node.GridCoordinate.y + z;
-
-//        if (checkX >= 0 && checkX < CollumsX && checkZ >= 0 && checkZ > RowsZ)
-//        {
-//            neighbours.Add(node);
-//        }
-
-//    }
-//}
-//      }
-// }

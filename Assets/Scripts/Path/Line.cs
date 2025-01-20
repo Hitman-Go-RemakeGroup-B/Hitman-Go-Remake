@@ -3,6 +3,7 @@
 [System.Serializable]
 public class Line : MonoBehaviour
 {
-    [HideInInspector]public Node endNode;
+    public Node EndNode;
+    public Node StartNode;
 
 }

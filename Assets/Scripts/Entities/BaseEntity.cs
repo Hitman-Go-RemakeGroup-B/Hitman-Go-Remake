@@ -6,11 +6,11 @@ using UnityEngine;
 public class BaseEntity
 {
     // given
-    protected Node _currentNode;
+    public Node CurrentNode;
     protected Vector2Int _dir;
     protected Vector2Int _gridSize;
     protected Action _onDeath;
-
+    protected Vector2Int[] _directions;
     protected Transform _entityTransform;
 
     // calculated
@@ -18,17 +18,18 @@ public class BaseEntity
     protected float _timer;
     protected float _moveDuration;
     protected bool _isDead;
-  
+    protected int _index;
+    protected int _checkedDirectionsNum;
+    protected Vector2Int _dirToPreviousNode;
+    protected Node _endNode;
+
     //protected SpriteRenderer _sprite;
     //protected Node _spriteNode;
- 
 
-    /// <param name="startNode"></param>
-    /// <param name="color">color used to higlight nodes</param>
-    /// <param name="onDeath">what happends when this entity dies</param>
+
     public BaseEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform)
     {
-        _currentNode = startNode;
+        CurrentNode = startNode;
         _dir = dir;
         _gridSize = gridSize;
 
@@ -38,7 +39,7 @@ public class BaseEntity
         _moveDuration = TurnsManager.MoveDuration;
         _timer = 0;
         _path = new List<Node>();
-       
+
     }
 
 
@@ -50,8 +51,6 @@ public class BaseEntity
     // while Turn()
     public virtual bool TakeTurn()
     {
-        if (_isDead) return true;
-
         if (_path.Count <= 0)
         {
             _path = NpcPath();
@@ -59,6 +58,69 @@ public class BaseEntity
 
         return !Move();
     }
+
+
+    public virtual bool RayCheck()
+    {
+        _endNode = FindNextNodes(CurrentNode);
+
+        if (_endNode == null)
+        {
+            _checkedDirectionsNum++;
+            ChangeDir();
+            return RayCheck();
+        }
+        _checkedDirectionsNum = 0;
+
+        Vector3 direction = _endNode.transform.position - _entityTransform.position;
+        direction.y = 0;
+        float distance = direction.magnitude;
+        direction = direction.normalized;
+        Ray ray = new(_entityTransform.position, direction);
+        Debug.DrawRay(_entityTransform.position, direction*distance, Color.red, 999f);
+        if (Physics.Raycast(ray, out RaycastHit hit, distance))
+        {
+            if (hit.transform.TryGetComponent<PlayerController>(out var player))
+            {
+                player.Death();
+                _path.Clear();
+                _path.Add(player.BoardPice.CurrentNode);
+                
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    virtual protected void ChangeDir()
+    {
+        // so when 
+
+        _index += 1;
+        if (_index >= _directions.Length)
+        {
+            _index = 0;
+        }
+
+        Vector2Int direction = _directions[_index];
+
+        if (direction == _dirToPreviousNode)
+        {
+            ChangeDir();
+            return;
+        }
+
+        if (_checkedDirectionsNum >= _directions.Length)
+        {
+            _dir = _dirToPreviousNode;
+
+            return;
+        }
+
+        _dir = direction;
+    }
+
 
     /// <summary>
     /// finds the next node to move twoards
@@ -74,31 +136,28 @@ public class BaseEntity
         return newPath;
     }
 
-    protected virtual Node FindNextMove(Vector2Int direction, Node nextNode)
-    {
-        Node node = null;
-        return node;
-    }
+    //protected virtual Node FindNextMove(Vector2Int direction, Node nextNode)
+    //{
+    //    Node node = null;
+    //    return node;
+    //}
 
     public virtual bool Move()
     {
-       
-
-
         if (_timer < _moveDuration)
         {
             _timer += Time.deltaTime;
-            _entityTransform.position = Vector3.Lerp(_currentNode.transform.position, _path[0].transform.position, _timer / _moveDuration);
+            _entityTransform.position = Vector3.Lerp(CurrentNode.transform.position, _path[0].transform.position, _timer / _moveDuration);
             return false;
         }
         else
         {
             _entityTransform.position = _path[0].transform.position;
-            _currentNode = _path[0];
+            CurrentNode = _path[0];
             _path.RemoveAt(0);
             _timer = 0;
 
-            
+
             return true;
         }
     }
@@ -140,15 +199,15 @@ public class BaseEntity
             if (connection == null)
                 continue;
 
-            if (DirectionToNode(currentNode, connection.endNode) == direction)
+            if (DirectionToNode(currentNode, connection.EndNode) == direction)
                 return true;
         }
         return false;
     }
 
-    protected virtual Vector2Int DirectionToNode(Node nodeA, Node nodeB)
+    protected virtual Vector2Int DirectionToNode(Node currentNode, Node targetNode)
     {
-        return nodeB.GridCoordinate - nodeA.GridCoordinate;
+        return targetNode.GridCoordinate - currentNode.GridCoordinate;
     }
 
     protected virtual bool WrongMoveCheck(Node neighbour, Node currentNode)
@@ -156,4 +215,26 @@ public class BaseEntity
         return false;
     }
 
+
+    public virtual Node FindNextNodes(Node node)
+    {
+        Node nextNode = null;
+
+        foreach (Line connection in node.Connections)
+        {
+            if (connection == null) continue;
+
+            if (DirectionToNode(node, connection.EndNode) == _dir)
+            {
+                connection.EndNode.PreviousNode = node;
+                nextNode = FindNextNodes(connection.EndNode);
+                //Debug.Log(nextNode);
+                if (nextNode != null)
+                    return nextNode;
+                else
+                    return connection.EndNode;
+            }
+        }
+        return null;
+    }
 }

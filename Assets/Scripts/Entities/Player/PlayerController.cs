@@ -1,18 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public BaseEntity BoardPice;
+
+    private void Awake()
     {
-        
+        Path path = FindObjectOfType<Path>();
+        BoardPice = new(path.NodeFromWorldPos(transform.position),new(0,0),new(path.CollumsX,path.RowsZ),Death,transform);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Death() 
     {
-        
+        // ToDo: send you lost action?
     }
 }

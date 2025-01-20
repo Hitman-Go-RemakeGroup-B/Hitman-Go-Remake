@@ -7,6 +7,7 @@ public class PawnEntity : BaseEntity
 {
     public PawnEntity(Node startNode, Vector2Int dir, Vector2Int gridSize, Action onDeath, Transform entityTransform) : base(startNode, dir, gridSize, onDeath, entityTransform)
     {
+        
     }
 
     public override bool TakeTurn()
@@ -46,75 +47,79 @@ public class PawnEntity : BaseEntity
         return false;
     }
 
-    public override List<Node> NpcPath()
+    protected override void ChangeDir()
     {
-        List<Node> newPath = new List<Node>();
+        _checkedDirectionsNum++;
+        _dir *= -1;
+    }
 
-        Vector2Int newCoordinates = _currentNode.GridCoordinate + _dir;
+    public override Node FindNextNodes(Node node)
+    {
+        if (_checkedDirectionsNum >= 2) return null;
 
+        Vector2Int newCoordinates = node.GridCoordinate + _dir;
 
         if ((newCoordinates.x < 0 || newCoordinates.x >= _gridSize.x) || (newCoordinates.y < 0 || newCoordinates.y >= _gridSize.y))
         {
-            _dir *= -1;
-            return NpcPath();
+            ChangeDir();
+            return FindNextNodes(node);
         }
 
         Node targetNode = Path.NodeArray[newCoordinates.x, newCoordinates.y];
 
+       
 
-        if (WrongMoveCheck(targetNode, _currentNode))
+        if (!HasConnection(CurrentNode, targetNode, _dir))
+        {
+            ChangeDir();
+            targetNode = FindNextNodes(CurrentNode);
+        }
+
+
+        _checkedDirectionsNum = 0;
+        return targetNode;
+    }
+    public override bool RayCheck()
+    {
+        _endNode = FindNextNodes(CurrentNode);
+
+        if (_endNode == null) return false;
+
+        Vector3 direction = _endNode.transform.position - _entityTransform.position;
+        direction.y = 0;
+        float distance = direction.magnitude;
+        direction = direction.normalized;
+        Ray ray = new(_entityTransform.position, direction);
+        Debug.DrawRay(_entityTransform.position, direction * distance, Color.red, 999f);
+        if (Physics.Raycast(ray, out RaycastHit hit, distance))
+        {
+            if (hit.transform.TryGetComponent<PlayerController>(out var player))
+            {
+                player.Death();
+                _path.Clear();
+                _path.Add(player.BoardPice.CurrentNode);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public override List<Node> NpcPath()
+    {
+        List<Node> newPath = new List<Node>();
+
+        Node targetNode = FindNextNodes(CurrentNode);
+
+        if (WrongMoveCheck(targetNode, CurrentNode)) // if the target node is oblique to the current node
         {
             newPath = FindPath(targetNode);
             return newPath;
         }
 
-        if (!HasConnection(_currentNode, targetNode, _dir))
-        {
-            _dir *= -1;
-            return NpcPath();
-        }
-
-
         newPath.Add(targetNode);
-
         return newPath;
-    }
-
-    protected override Node FindNextMove(Vector2Int direction,Node nextNode)
-    {
-        Vector2Int newCoordinates = nextNode.GridCoordinate + direction;
-
-
-        if ((newCoordinates.x < 0 || newCoordinates.x >= _gridSize.x) || (newCoordinates.y < 0 || newCoordinates.y >= _gridSize.y))
-        {
-            direction *= -1;
-            return FindNextMove(direction,nextNode);
-        }
-
-        Node targetNode = Path.NodeArray[newCoordinates.x, newCoordinates.y];
-
-
-        if (WrongMoveCheck(targetNode, nextNode))
-        {
-            if (_path.Count > 0)
-            {
-                if (_path.Count > 1)
-                    return _path[0];
-                return _path[0];
-            }
-
-            var testPath = FindPath(targetNode);
-
-            return testPath[0];
-        }
-
-        if (!HasConnection(nextNode, targetNode, direction))
-        {
-            direction *= -1;
-            return FindNextMove(direction, nextNode);
-        }
-
-        return targetNode;
     }
 
     protected override Vector2Int DirectionToNode(Node nodeA, Node nodeB)
@@ -128,7 +133,7 @@ public class PawnEntity : BaseEntity
 
     protected override List<Node> FindPath(Node endNode)
     {
-        Node startNode = _currentNode;
+        Node startNode = CurrentNode;
 
         List<Node> openSet = new List<Node>();
         HashSet<Node> closedSet = new HashSet<Node>();
@@ -157,7 +162,7 @@ public class PawnEntity : BaseEntity
                 if (Connection == null)
                     continue;
 
-                Node neighbour = Connection.endNode;
+                Node neighbour = Connection.EndNode;
                 if (closedSet.Contains(neighbour))
                     continue;
 
