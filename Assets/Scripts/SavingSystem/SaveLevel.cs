@@ -20,9 +20,9 @@ public class SaveLevel
 
     public SaveLevel() {
         LevelIndex = 0;
-        KillKing = true;
-        MinTurns = true;
-        NoEnemy = true;
+        KillKing = false;
+        MinTurns = false;
+        NoEnemy = false;
         EveryEnemy = false;
         QueenEnding = false;
     }
