@@ -1,3 +1,4 @@
+using Palmmedia.ReportGenerator.Core.Common;
 using System;
 using System.IO;
 using System.Security.Cryptography;
@@ -6,19 +7,26 @@ using UnityEngine;
 
 public class SaveDataJson : MonoBehaviour
 {
+
+    [SerializeField]LevelScriptableObject level;
+    public static Action<SaveLevel> levelAction;
     public SaveData Data;
-    public SaveLevel Level;
     byte[] key = Encoding.ASCII.GetBytes("Picodead"); 
     byte[] iv = Encoding.ASCII.GetBytes("abcdefgh"); 
 
-    void Start()
+    private void OnEnable()
     {
-        Data= new SaveData();
+        levelAction += SaveLevel;
+    }
+
+    private void OnDisable()
+    {
+        levelAction  -= SaveLevel;
     }
 
     public void RestoreGame()
     {
-        Data = new SaveData();
+        Data = new SaveData(level.Nlevel);
         Debug.Log(JsonUtility.ToJson(Data));
     }
 
@@ -61,7 +69,8 @@ public class SaveDataJson : MonoBehaviour
 
     public void SaveData()
     {
-        string json=JsonUtility.ToJson(Data);   
+        string json = JsonUtility.ToJson(Data);
+
         Debug.Log(json);
         string encryptedString = Encrypt(json, key, iv);
 
@@ -81,21 +90,22 @@ public class SaveDataJson : MonoBehaviour
         }
         string decryptedString = Decrypt(json, key, iv);
         Data =JsonUtility.FromJson<SaveData>(decryptedString);
-        Debug.Log(decryptedString);
+        Debug.Log(json);
     }
-
-    public void SaveLevel()
+    public void SaveLevel(SaveLevel level)
     {
-        SaveLevel level=this.Level;
-        if (level.LevelIndex>=Data.LevelIndex)
+        if (Data==null||level.LevelIndex >= Data.LevelIndex)
         {
+            Data = new SaveData(this.level.Nlevel);
             Data.LevelIndex = level.LevelIndex;
         }
         Data.KillKing[level.LevelIndex] = level.KillKing;
-        Data.MinTurns[level.LevelIndex] =level.MinTurns;
+        Data.MinTurns[level.LevelIndex] = level.MinTurns;
         Data.NoEnemy[level.LevelIndex] = level.NoEnemy;
         Data.EveryEnemy[level.LevelIndex] = level.EveryEnemy;
-        Data.QueenEnding[level.LevelIndex]=level.QueenEnding;
+        Data.QueenEnding[level.LevelIndex] = level.QueenEnding;
+        //Debug.Log(Data.ToString());
+        SaveData();
     }
 
 }

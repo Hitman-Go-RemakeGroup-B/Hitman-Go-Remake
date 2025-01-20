@@ -1,35 +1,44 @@
 using System.Collections.Generic;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
+using UnityEditor.Experimental.GraphView;
 
+[System.Serializable]
 public class SaveData
 {
 
-    private int NLevel;
-
     public int LevelIndex;
 
-    public List<bool> KillKing { get; set; }
+    public List<bool> KillKing;
 
-    public List<bool> MinTurns { get; set; }
+    public List<bool> MinTurns;
 
-    public List<bool> NoEnemy{ get; set; }
+    public List<bool> NoEnemy;
 
-    public List<bool> EveryEnemy{ get; set; }
+    public List<bool> EveryEnemy;
 
-    public List<bool> QueenEnding { get; set; }
+    public List<bool> QueenEnding;
 
     public bool Music;
 
     public bool SFX;
 
-    public SaveData() {
+    public SaveData(int nLevel) {
         LevelIndex = 0;
         Music = true;
-        SFX = true;  
-        KillKing = new List<bool>();    
+        SFX = true;
+        KillKing = new List<bool>();
         MinTurns = new List<bool>();
         NoEnemy = new List<bool>();
         EveryEnemy = new List<bool>();
         QueenEnding = new List<bool>();
+        for (int i = 0; i < nLevel; i++)
+        {
+            KillKing.Add(false);
+            MinTurns.Add(false);
+            NoEnemy.Add(false);
+            EveryEnemy.Add(false);
+            QueenEnding.Add(false);
+        }
     }
 
 }
