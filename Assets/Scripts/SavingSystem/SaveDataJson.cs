@@ -31,7 +31,6 @@ public class SaveDataJson : MonoBehaviour
     {
         Data = new SaveData(level.Nlevel);
         SaveData();
-        Debug.Log(JsonUtility.ToJson(Data));
     }
 
     public static string Encrypt(string plainText, byte[] key, byte[] iv)
@@ -74,14 +73,11 @@ public class SaveDataJson : MonoBehaviour
     public void SaveData()
     {
         string json = JsonUtility.ToJson(Data);
-
-        Debug.Log(json);
         string encryptedString = Encrypt(json, key, iv);
 
         using (StreamWriter writer= new StreamWriter(Application.dataPath + "/" + "SaveData.json"))
         {
             writer.Write(encryptedString);
-            //writer.Write(json);
         }
 
     }
@@ -95,22 +91,20 @@ public class SaveDataJson : MonoBehaviour
         }
         string decryptedString = Decrypt(json, key, iv);
         Data =JsonUtility.FromJson<SaveData>(decryptedString);
-        //Data = JsonUtility.FromJson<SaveData>(json);
-        Debug.Log(decryptedString);
     }
     public void SaveLevel(SaveLevel level)
     {
-        if (Data==null||level.LevelIndex >= Data.LevelIndex)
+        if (Data==null||Data.LevelIndex<=level.LevelIndex)
         {
             Data = new SaveData(this.level.Nlevel);
-            Data.LevelIndex = level.LevelIndex;
+            SaveData();
+            Data.LevelIndex=level.LevelIndex;
         }
         Data.KillKing[level.LevelIndex] = level.KillKing;
         Data.MinTurns[level.LevelIndex] = level.MinTurns;
         Data.NoEnemy[level.LevelIndex] = level.NoEnemy;
         Data.EveryEnemy[level.LevelIndex] = level.EveryEnemy;
         Data.QueenEnding[level.LevelIndex] = level.QueenEnding;
-        //Debug.Log(Data.ToString());
         SaveData();
     }
 
