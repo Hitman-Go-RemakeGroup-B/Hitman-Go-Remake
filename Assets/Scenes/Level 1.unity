@@ -453,10 +453,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: WinScreenUI
       objectReference: {fileID: 0}
-    - target: {fileID: 3294944748757806436, guid: f0fc2a9f2e21c6f49a520554a2bff758, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5820539317534648023, guid: f0fc2a9f2e21c6f49a520554a2bff758, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
