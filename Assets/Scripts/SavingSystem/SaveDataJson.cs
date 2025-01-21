@@ -9,10 +9,13 @@ public class SaveDataJson : MonoBehaviour
 {
 
     [SerializeField]LevelScriptableObject level;
+
+    public int starCount=0;
+
     public static Action<SaveLevel> levelAction;
     public SaveData Data;
     byte[] key = Encoding.ASCII.GetBytes("Picodead"); 
-    byte[] iv = Encoding.ASCII.GetBytes("abcdefgh"); 
+    byte[] iv = Encoding.ASCII.GetBytes("abcdefgh");
 
     private void OnEnable()
     {
@@ -106,6 +109,34 @@ public class SaveDataJson : MonoBehaviour
         Data.QueenEnding[level.LevelIndex] = level.QueenEnding;
         //Debug.Log(Data.ToString());
         SaveData();
+    }
+
+    public void VisualizeStar(int i)
+    {
+        starCount = 0;
+        if (Data == null)
+        {
+            Data=new SaveData(this.level.Nlevel);
+        }
+        if (Data.EveryEnemy[i])
+        {
+            starCount++;
+        }else if (Data.KillKing[i])
+        {
+            starCount++; 
+        }else if (Data.QueenEnding[i])
+        {
+            starCount++;
+        }else if (Data.NoEnemy[i])
+        {
+            starCount++;
+        }else if (Data.MinTurns[i])
+        {
+            starCount++;
+        }
+
+
+
     }
 
 }

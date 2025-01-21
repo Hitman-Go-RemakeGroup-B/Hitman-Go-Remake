@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Test/GameTest.unity
     guid: af370bd1e5ecc5749ac9f29185bf1296
   - enabled: 0
-    path: Assets/TESTING DELETE THIS/PICO_TESTS/PicoTestingGround.unity
+    path: Assets/TESTING DELETE THIS/PICO_TESTS/Level 2.unity
     guid: 17d3658498364f540b9b4ab4c45b707f
   - enabled: 1
     path: Assets/Scenes/Level 1.unity
