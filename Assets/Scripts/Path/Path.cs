@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public delegate bool WrongMove(int x, int y);
+
 public class Path : MonoBehaviour
 {
-
-
     [Header("Setting")]
     public int RowsZ;
     public int CollumsX;
@@ -15,30 +15,42 @@ public class Path : MonoBehaviour
 
     [Header("Prefabs")]
     public Node NodePrefab;
-    public Line LinePrefab;
 
+    public Line LinePrefab;
 
     [Header("Data")]
     public static Node[,] NodeArray;
+
     private static List<GameObject> _lineList;
     private GameObject[,] _gridArray;
     private Vector3 _generateFromPosition;
 
-
-
+    private Controller[] _controllers;
     // public List<Line> Lines; viktor nation what are we feeling? jaybe!? jaybe not?
 
-    private void Awake()
+    private void OnEnable()
     {
         PathInizalization();
+        _controllers = FindObjectsOfType<Controller>();
+        foreach (Controller controller in _controllers)
+        {
+            controller.FindPath += FindPath;
+            controller.CurrentNode = NodeFromWorldPos(controller.transform.position);
+        }
+    }
+
+    private void OnDisable()
+    {
+        foreach (Controller controller in _controllers)
+        {
+            controller.FindPath -= FindPath;
+        }
     }
 
     public void PathInizalization()
     {
         NodeArray = null;
         NodeArray = new Node[CollumsX, RowsZ];
-
-        
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -47,7 +59,7 @@ public class Path : MonoBehaviour
         }
     }
 
-    public List<Node> FindPath(Vector2Int startCoordinate, Vector2Int endCoordinate)
+    public List<Node> FindPath(Vector2Int startCoordinate, Vector2Int endCoordinate, WrongMove wrongMove)
     {
         Node startNode = GetNodeFromCoordinate(startCoordinate);
         Node endNode = GetNodeFromCoordinate(endCoordinate);
@@ -93,13 +105,12 @@ public class Path : MonoBehaviour
                     neighbour.PreviousNode = currentNode;
                     openSet.Add(neighbour);
                 }
-
             }
         }
         return null;
     }
 
-    List<Node> RetracePath(Node startNode, Node endNode)
+    private List<Node> RetracePath(Node startNode, Node endNode)
     {
         List<Node> path = new List<Node>();
         Node currentNode = endNode;
@@ -138,7 +149,7 @@ public class Path : MonoBehaviour
             for (int z = -1; z <= 1; z++)
             {
                 // Knight = (x=0, z=0) & abs(x)+abs(z) != 3
-                if (x == 0 && z == 0) // this is pawn 
+                if (x == 0 && z == 0) // this is pawn
                     continue;
                 int checkX = node.GridCoordinate.x + x;
                 int checkZ = node.GridCoordinate.y + z;
@@ -148,7 +159,6 @@ public class Path : MonoBehaviour
                     if (NodeArray[checkX, checkZ] != null)
                         neighbours.Add(NodeArray[checkX, checkZ]);
                 }
-
             }
         }
         return neighbours;
@@ -173,7 +183,6 @@ public class Path : MonoBehaviour
                 node.gameObject.name = node.gameObject.name + " " + node.GridCoordinate.ToString();
                 _gridArray[x, z] = node.gameObject;
                 //* Debug.Log(node.GridCoordinate.ToString(),node.gameObject);
-
             }
         }
     }
@@ -191,9 +200,9 @@ public class Path : MonoBehaviour
         _gridArray = null;
         NodeArray = null;
     }
+
     public void DestroyNodeArray()
     {
-
         if (NodeArray == null) { Debug.LogWarning("don't press this button if there is no grid >:("); return; }
         if (_lineList != null) { DestroyLines(); }
 
@@ -263,7 +272,6 @@ public class Path : MonoBehaviour
                 _lineList.Add(lineRend.gameObject);
             }
         }
-
     }
 
     public void DestroyLines()
@@ -286,13 +294,11 @@ public class Path : MonoBehaviour
 
             if (Vector3.Distance(node.transform.position, givenVector3) <= UnitScale / 2)
             {
-
                 return node;
             }
         }
 
         return null;
-
     }
 
     public Node GetNodeFromCoordinate(Vector2Int givenCoordinate)

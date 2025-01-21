@@ -1,20 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Controller
 {
-    public BaseEntity BoardPice;
-
-    private void Awake()
+    protected override void TurnSetUp()
     {
-        Path path = FindObjectOfType<Path>();
-        BoardPice = new(path.NodeFromWorldPos(transform.position),new(0,0),new(path.CollumsX,path.RowsZ),Death,transform);
+        base.TurnSetUp();
     }
-
-    public void Death() 
+    protected override void PiceCange(BaseEntity newPice)
     {
-        // ToDo: send you lost action?
+        base.PiceCange(newPice);
+    }
+    public override void StartTurn()
+    {
+        base.StartTurn();
+    }
+    protected override IEnumerator TakeTurn()
+    {
+        return base.TakeTurn();
+    }
+    public override void Death()
+    {
+        base.Death();
     }
 }
