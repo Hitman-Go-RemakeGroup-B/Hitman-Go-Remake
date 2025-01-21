@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Test/TaraTest.unity
     guid: 1d2807b82d3b6bd4998fb8e6b70042aa
   - enabled: 0
-    path: Assets/Scenes/Test/GameTest.unity
+    path: Assets/Prefab/Scenes/Test/GameTest.unity
     guid: af370bd1e5ecc5749ac9f29185bf1296
   - enabled: 0
     path: Assets/TESTING DELETE THIS/PICO_TESTS/Level 2.unity
@@ -18,12 +18,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Level 1.unity
     guid: 2dcea4c0a4512b44082f36d80c567e07
   - enabled: 0
-    path: Assets/Scenes/Level 2.unity
+    path: Assets/Prefab/Scenes/Level 2.unity
     guid: a9375df2fcef34a4e98d39cf29e42ff3
   - enabled: 0
-    path: Assets/Scenes/Level 3.unity
+    path: Assets/Prefab/Scenes/Level 3.unity
     guid: 93badf457d8d2bb40b90bda97a181599
   - enabled: 0
-    path: Assets/Scenes/Level 4.unity
+    path: Assets/Prefab/Scenes/Level 4.unity
     guid: 55ca18daf38ac874387586f5ff8cff30
   m_configObjects: {}
