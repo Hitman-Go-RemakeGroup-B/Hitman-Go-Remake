@@ -11,7 +11,8 @@ public class VisualizeStar : MonoBehaviour
     [SerializeField] Image[] Star;
     void Start()
     {
-        saveDataJson.VisualizeStar(GetIndex());
+        saveDataJson.VisualizeStar(GetIndex()-1);
+        Debug.Log(saveDataJson.starCount);
         for (int i = 0;i<saveDataJson.starCount;i++)
         {
             var tempColor = Star[i].color;
@@ -22,6 +23,6 @@ public class VisualizeStar : MonoBehaviour
 
     public int GetIndex()
     {
-        return int.Parse(this.name.Split(' ')[0]);
+        return int.Parse(this.name.Split(' ')[1]);
     }
 }

@@ -30,6 +30,7 @@ public class SaveDataJson : MonoBehaviour
     public void RestoreGame()
     {
         Data = new SaveData(level.Nlevel);
+        SaveData();
         Debug.Log(JsonUtility.ToJson(Data));
     }
 
@@ -57,7 +58,7 @@ public class SaveDataJson : MonoBehaviour
         using (DESCryptoServiceProvider des = new DESCryptoServiceProvider())
         {
             ICryptoTransform decryptor = des.CreateDecryptor(key, iv);
-            using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(encryptedText)))
+            using (MemoryStream ms = new(Convert.FromBase64String(encryptedText)))
             {
                 using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
                 {
@@ -80,6 +81,7 @@ public class SaveDataJson : MonoBehaviour
         using (StreamWriter writer= new StreamWriter(Application.dataPath + "/" + "SaveData.json"))
         {
             writer.Write(encryptedString);
+            //writer.Write(json);
         }
 
     }
@@ -93,7 +95,8 @@ public class SaveDataJson : MonoBehaviour
         }
         string decryptedString = Decrypt(json, key, iv);
         Data =JsonUtility.FromJson<SaveData>(decryptedString);
-        Debug.Log(json);
+        //Data = JsonUtility.FromJson<SaveData>(json);
+        Debug.Log(decryptedString);
     }
     public void SaveLevel(SaveLevel level)
     {
@@ -117,7 +120,9 @@ public class SaveDataJson : MonoBehaviour
         if (Data == null)
         {
             Data=new SaveData(this.level.Nlevel);
+            SaveData();
         }
+        LoadData();
         if (Data.EveryEnemy[i])
         {
             starCount++;
