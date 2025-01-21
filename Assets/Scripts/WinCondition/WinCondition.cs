@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static UnityEngine.EventSystems.EventTrigger;
 
@@ -20,16 +21,16 @@ public class WinCondition : MonoBehaviour
     [SerializeField] GameObject panel;
     [SerializeField] int numberOfEnemy;
     [SerializeField] int minTurn;
-    [SerializeField]LevelScriptableObject Nlevel;
-    [SerializeField]Image[] Star;
+    [SerializeField] LevelScriptableObject Nlevel;
+    [SerializeField] Image[] Star;
     private void Awake()
     {
-        level=new SaveLevel();  
+        level = new SaveLevel();
     }
     private void Start()
     {
         Star = new Image[3];
-        starCount = 0;  
+        starCount = 0;
         if (Data == null)
         {
             Data = new SaveData(Nlevel.Nlevel);
@@ -61,9 +62,9 @@ public class WinCondition : MonoBehaviour
         if (Queen)
         {
             starCount++;
-            var tempColor = Star[starCount-1].color;
+            var tempColor = Star[starCount - 1].color;
             tempColor.a = 1f;
-            Star[starCount-1].color = tempColor;
+            Star[starCount - 1].color = tempColor;
         }
         level.QueenEnding = Queen;
     }
@@ -77,12 +78,12 @@ public class WinCondition : MonoBehaviour
             tempColor.a = 1f;
             Star[starCount - 1].color = tempColor;
         }
-        level.KillKing=King;
+        level.KillKing = King;
     }
 
     private void CalcolateTurn(int Turn)
     {
-        if (Turn<=minTurn)
+        if (Turn <= minTurn)
         {
             level.MinTurns = true;
             starCount++;
@@ -123,8 +124,15 @@ public class WinCondition : MonoBehaviour
             level.EveryEnemy = false;
         }
     }
+    private void GetIndex(){
+        string scene = SceneManager.GetActiveScene().name;
+        level.LevelIndex= int.Parse(scene.Split(' ')[1])-1;
+    }
+
+
     private void WinUI()
     {
+        GetIndex();
         SaveDataJson.levelAction?.Invoke(level);
         panel.SetActive(true);
     }
