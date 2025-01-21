@@ -79,7 +79,6 @@ public class SaveDataJson : MonoBehaviour
         {
             writer.Write(encryptedString);
         }
-
     }
 
     public void LoadData()

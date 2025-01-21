@@ -9,10 +9,19 @@ public class VisualizeStar : MonoBehaviour
 {
     [SerializeField]SaveDataJson saveDataJson;
     [SerializeField] Image[] Star;
-    void Start()
+    [SerializeField] float alpha;
+
+    private void OnEnable()
     {
-        saveDataJson.VisualizeStar(GetIndex()-1);
-        for (int i = 0;i<saveDataJson.starCount;i++)
+        for (int i = 0; i < Star.Length; i++)
+        {
+            var tempColor = Star[i].color;
+            tempColor.a = alpha / 255f;
+            Star[i].color = tempColor;
+        }
+
+        saveDataJson.VisualizeStar(GetIndex() - 1);
+        for (int i = 0; i < saveDataJson.starCount; i++)
         {
             var tempColor = Star[i].color;
             tempColor.a = 1f;
