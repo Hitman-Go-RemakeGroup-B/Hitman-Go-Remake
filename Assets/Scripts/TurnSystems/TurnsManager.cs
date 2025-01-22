@@ -1,29 +1,50 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class TurnsManager : MonoBehaviour
 {
-
-    public static Action OnPlayerTurnStart;
-    public static Action OnPlayerTurnEnd;
-    public static Action OnEnemiesTurnEnd;
-    public static Action OnEnemiesTurnStart;
+    public Action OnPlayerTurnStart;
+    public Action OnEnemiesTurnStart;
     public float _moveDuration = 1f;
+    public float MoveDuration;
 
-    public static float MoveDuration;
-    private static int _nOfEnemies = 0;
-    private static int _indexEnemiesTurnEnd;
+    private List<AiController> _enemies = new();
+    private PlayerController _playerController;
+    private int _nOfEnemies;
+    private int _indexEnemiesTurnEnd;
 
     private void Awake()
     {
         MoveDuration = _moveDuration;
-        OnPlayerTurnEnd += PlayerTurnEnd;
-        OnEnemiesTurnEnd += EnemyTurnEnd;
-        List<AiController> enemies = FindObjectsByType<AiController>(FindObjectsSortMode.None).ToList();
-        _nOfEnemies = enemies.Count-1;
+        _playerController = FindObjectOfType<PlayerController>();
+        _enemies = FindObjectsOfType<AiController>().ToList();
+        _nOfEnemies = _enemies.Count;
+        _playerController.OnTurnSetupDone += StartGame;
+        OnPlayerTurnStart += _playerController.StartTurn;
+        _playerController.OnTurnEnd += PlayerTurnEnd;
+        foreach (var enemy in _enemies)
+        {
+            enemy.OnTurnEnd += EnemyTurnEnd;
+            OnEnemiesTurnStart += enemy.StartTurn;
+            enemy.OnDeath += OnEnemyDeath;
+        }
+
+    }
+
+    private void StartGame()
+    {
+        OnPlayerTurnStart?.Invoke();
+    }
+   
+
+    private void OnEnemyDeath(AiController controller)
+    {
+        controller.OnTurnEnd -= EnemyTurnEnd;
+        controller.OnDeath -= OnEnemyDeath;
+        OnEnemiesTurnStart -= controller.StartTurn;
+        _nOfEnemies--;
     }
 
     private void EnemyTurnEnd()
@@ -35,12 +56,23 @@ public class TurnsManager : MonoBehaviour
         _indexEnemiesTurnEnd = 0;
 
         // start player's turn:
-         OnPlayerTurnStart?.Invoke();
+        OnPlayerTurnStart?.Invoke();
     }
 
     public void PlayerTurnEnd()
     {
         // startEnemiesTurn
-        OnEnemiesTurnStart?.Invoke(); // says to all enemies to start taking their turn 
+        OnEnemiesTurnStart?.Invoke(); // says to all enemies to start taking their turn
+    }
+
+    private void OnDisable()
+    {
+        _playerController.OnTurnEnd -= PlayerTurnEnd;
+        OnPlayerTurnStart -= _playerController.StartTurn;
+
+        foreach (var enemy in _enemies)
+        {
+            OnEnemyDeath(enemy);
+        }
     }
 }
