@@ -1,10 +1,6 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Scripts/BehaviorTree.meta
 guid: d00195c49ff736e46b28010dfa36444d
 folderAsset: yes
-========
-guid: 6581f2a5703bc414d871aaff24ac36d9
->>>>>>>> feature/GameUI:Assets/Scenes/Level 2.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
