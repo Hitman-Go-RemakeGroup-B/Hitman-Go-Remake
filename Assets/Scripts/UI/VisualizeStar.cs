@@ -23,6 +23,15 @@ public class VisualizeStar : MonoBehaviour
             tempColor.a = 1f;
             Star[i].color = tempColor;
         }
+        if (saveDataJson.Data.LevelIndex >= GetIndex())
+        {
+            this.GetComponent<Button>().interactable = true;
+        }
+        else
+        {
+            this.GetComponent<Button>().interactable = false;
+        }
+
     }
 
     public int GetIndex()

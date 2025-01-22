@@ -19,6 +19,14 @@ public class SaveDataJson : MonoBehaviour
 
     private void OnEnable()
     {
+        if (Data == null)
+        {
+            Data=new SaveData(level.Nlevel);
+        }
+        else
+        {
+            LoadData();
+        }
         levelAction += SaveLevel;
     }
 
@@ -93,12 +101,11 @@ public class SaveDataJson : MonoBehaviour
     }
     public void SaveLevel(SaveLevel level)
     {
-        if (Data==null||Data.LevelIndex<=level.LevelIndex)
+        if (Data.LevelIndex<level.LevelIndex)
         {
-            Data = new SaveData(this.level.Nlevel);
-            SaveData();
             Data.LevelIndex=level.LevelIndex;
         }
+
         Data.KillKing[level.LevelIndex] = level.KillKing;
         Data.MinTurns[level.LevelIndex] = level.MinTurns;
         Data.NoEnemy[level.LevelIndex] = level.NoEnemy;

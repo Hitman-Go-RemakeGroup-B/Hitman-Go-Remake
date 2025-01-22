@@ -16,7 +16,7 @@ public class WinCondition : MonoBehaviour
 
     private SaveLevel level;
     private int starCount;
-    public SaveData Data;
+    public SaveDataJson Data;
 
     [SerializeField] GameObject panel;
     [SerializeField] int numberOfEnemy;
@@ -31,9 +31,13 @@ public class WinCondition : MonoBehaviour
     {
         Star = new Image[3];
         starCount = 0;
-        if (Data == null)
+        if (Data.Data== null)
         {
-            Data = new SaveData(Nlevel.Nlevel);
+            Data = new SaveDataJson();
+        }
+        else
+        {
+            Data.LoadData();
         }
     }
 
@@ -126,13 +130,12 @@ public class WinCondition : MonoBehaviour
     }
     private void GetIndex(){
         string scene = SceneManager.GetActiveScene().name;
-        level.LevelIndex= int.Parse(scene.Split(' ')[1])-1;
+        level.LevelIndex= int.Parse(scene.Split(' ')[1]);
     }
 
 
     private void WinUI()
     {
-        GetIndex();
         SaveDataJson.levelAction?.Invoke(level);
         panel.SetActive(true);
     }
