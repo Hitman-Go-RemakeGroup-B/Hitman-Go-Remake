@@ -41,7 +41,7 @@ public class PlayerController : Controller
         _behaviourTree.AddChild(checkInteractables);
         OnTurnSetupDone?.Invoke();
     }
-    protected override void PiceCange(BaseEntity newPice)
+    public override void PiceCange(BaseEntity newPice)
     {
         base.PiceCange(newPice);
     }
@@ -79,10 +79,13 @@ public class PlayerController : Controller
     public BT_Node.Status CheckIInteractable()
     {
         Collider[] hitColliders = Physics.OverlapBox(transform.position, Vector3.one);
+#if UNITY_EDITOR
+        DebugExtensions.DrawBox(transform.position,transform.rotation,Vector3.one,Color.red,99f);
+#endif
         foreach (Collider collider in hitColliders)
         {
             if (collider.TryGetComponent(out IInteractable interactable))
-                interactable.Interact();
+                interactable.Interact(this);
         }
 
         return BT_Node.Status.Success;

@@ -9,7 +9,7 @@ using UnityEngine;
 public class AiController : Controller, IInteractable
 {
     public EntityType BoardPiceType;
-    public bool PlayerCanTransformIntoMe;
+    [SerializeField] private bool _isPlayerAbleToTransformIntoMe;
     [SerializeField] Node deathPosition;
     BT_Sequence _deathSequence;
     public Action<AiController> OnDeath;
@@ -115,14 +115,17 @@ public class AiController : Controller, IInteractable
         return BT_Node.Status.Success;
     }
 
-    protected override void PiceCange(BaseEntity newPice)
+    public override void PiceCange(BaseEntity newPice)
     {
-        base.PiceCange(newPice);
+
     }
 
-    public void Interact()
+    public void Interact(PlayerController player)
     {
         IsDead = true;
+
+        if (_isPlayerAbleToTransformIntoMe)
+            player.PiceCange(BoardPice);
     }
 
     private BT_Node.Status Die()

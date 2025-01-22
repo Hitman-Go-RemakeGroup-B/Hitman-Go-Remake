@@ -43,8 +43,10 @@ public class Controller : MonoBehaviour
        StartPos = transform.position;
     }
 
-    protected virtual void PiceCange(BaseEntity newPice)
+    public virtual void PiceCange(BaseEntity newPice)
     {
+        BaseEntity newOne = newPice;
+        newPice.controller = BoardPice.controller;        
         BoardPice = newPice;
         TurnSetUp();
     }
