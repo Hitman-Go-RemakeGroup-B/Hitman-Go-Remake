@@ -861,7 +861,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a00d3e5c79ffa4a4ca6d339c760aaaa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveDataJson: {fileID: 0}
+  saveDataJson: {fileID: 33033544}
   Star:
   - {fileID: 57663061}
   - {fileID: 1614586502}
@@ -1260,7 +1260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a00d3e5c79ffa4a4ca6d339c760aaaa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveDataJson: {fileID: 0}
+  saveDataJson: {fileID: 33033544}
   Star:
   - {fileID: 1776203030}
   - {fileID: 339639432}
@@ -3014,7 +3014,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &433136671
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12246,6 +12246,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Managers
       objectReference: {fileID: 0}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: Data
+      value: 
+      objectReference: {fileID: 33033544}
     - target: {fileID: 7964027923590088794, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
       propertyPath: dropDown
       value: 
