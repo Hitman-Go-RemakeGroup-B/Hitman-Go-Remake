@@ -120,7 +120,7 @@ public class AiController : Controller, IInteractable
         base.PiceCange(newPice);
     }
 
-    public void PlayerCollision()
+    public void Interact()
     {
         IsDead = true;
     }

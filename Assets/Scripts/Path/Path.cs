@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -45,6 +46,7 @@ public class Path : MonoBehaviour
         foreach (Controller controller in _controllers)
         {
             controller.FindPath -= FindPath;
+            controller.NodeFromCoordinates -= GetNodeFromCoordinate;
         }
     }
 
@@ -56,6 +58,7 @@ public class Path : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
         {
             Node child = transform.GetChild(i).GetComponent<Node>();
+            child.OnColorChange += ChangeColor;
             NodeArray[child.GridCoordinate.x, child.GridCoordinate.y] = child;
         }
     }
@@ -186,6 +189,18 @@ public class Path : MonoBehaviour
                 //* Debug.Log(node.GridCoordinate.ToString(),node.gameObject);
             }
         }
+    }
+
+    private void ChangeColor(Node node, Color color, bool isHiglighting)
+    {
+        if (isHiglighting)
+        {
+            node.oldColor = node.NodeSpriteRenderer.color;
+            node.NodeSpriteRenderer.color = color;
+            return;
+        }
+
+        node.NodeSpriteRenderer.color = node.oldColor;
     }
 
     public void DestroyGridArray()

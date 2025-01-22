@@ -4,6 +4,7 @@ using UnityEngine;
 public class BaseEntity
 {
     protected Controller _controller;
+
     protected Touch _touch;
 
     protected Vector2Int DirToNode(Node from, Node to)
@@ -77,7 +78,6 @@ public class BaseEntity
     /// <returns>the status of the process</returns>
     public virtual BT_Node.Status FindPossibleNodes(Node from, Vector2Int direction)
     {
-        _controller.StartPos = _controller.transform.position;
         Node node = null;
 
         foreach (Line connection in from.Connections)
@@ -157,33 +157,47 @@ public class BaseEntity
     /// <returns>the pressed end node</returns>
     public virtual BT_Node.Status ChooseEndNode()
     {
-        if (Input.touchCount < 0)
+        if (Input.touchCount <= 0)
             return BT_Node.Status.Running;
+
         Vector3 touchPos;
-        Vector3 touchBox;
-        float touchMagnitude;
         _touch = Input.GetTouch(0);
 
         if (_touch.phase != TouchPhase.Began)
             return BT_Node.Status.Running;
 
         touchPos = Camera.main.ScreenToWorldPoint(_touch.position);
-        touchBox = new(1, 0, 1);
-        touchMagnitude = touchPos.x + touchPos.y;
+#if UNITY_EDITOR
+        DebugExtensions.DrawBox(Camera.main.ScreenToWorldPoint(_touch.position),_controller.transform.rotation,Vector3.one,Color.green,99f);
+#endif
+
+        Collider[] shpereCast = Physics.OverlapSphere(touchPos,1);
+        Node hitNode = null;
+        float distance = -99f;
+
+        foreach (Collider collider in shpereCast)
+        {
+            if(collider.TryGetComponent(out Node node))
+            {
+                var dist = (node.transform.position - touchPos).magnitude;
+                if(distance > dist)
+                {
+                    distance = dist;
+                    hitNode = node;
+                }
+            }
+        }
 
         foreach (Node node in _controller.PossibleNodes)
         {
-            Vector3 nodePos = (node.transform.position + touchBox);
-            Vector3 nodeNegative = node.transform.position - touchBox;
-            float nodeMagnitude = nodePos.x + nodePos.y;
-            float nodeNegativeMagnitude = nodeNegative.x + nodeNegative.y;
+            if (node == null) continue;
 
-            if (touchMagnitude <= nodeMagnitude || touchMagnitude >= nodeNegativeMagnitude)
+            if(hitNode == node)
             {
-                _controller.EndNode = node;
-                _controller.PossibleNodes.Clear();
+                _controller.enabled = node;
                 return BT_Node.Status.Success;
             }
+            
         }
 
         return BT_Node.Status.Running;
@@ -209,6 +223,7 @@ public class BaseEntity
         _controller.Timer = 0;
         _controller.DirIndex = 0;
         _controller.transform.position = _controller.EndNode.transform.position;
+        _controller.StartPos = _controller.transform.position;
         _controller.CurrentNode = _controller.EndNode;
 
         return BT_Node.Status.Success;
@@ -223,7 +238,7 @@ public class PawnEntity : BaseEntity
 
     protected override bool WrongDirection(int dirX, int dirY)
     {
-        if (new Vector2Int(dirX, dirY) == _controller.Dir)
+        if (Mathf.Abs(dirX) != Mathf.Abs(dirY))
             return false;
         return true;
     }
@@ -261,7 +276,6 @@ public class PawnEntity : BaseEntity
 
 public class RookEntity : BaseEntity
 {
-    private int _indexConnections;
 
     private int debug;
 
@@ -271,7 +285,7 @@ public class RookEntity : BaseEntity
 
     protected override bool WrongDirection(int dirX, int dirY)
     {
-        if (!base.WrongDirection(dirX, dirY) || Mathf.Abs(dirX) != Mathf.Abs(dirY))
+        if (Mathf.Abs(dirX) != Mathf.Abs(dirY))
             return false;
         return true;
     }
@@ -283,7 +297,6 @@ public class RookEntity : BaseEntity
 
     public override BT_Node.Status FindPossibleNodes(Node from, Vector2Int direction)
     {
-        _controller.StartPos = _controller.transform.position;
         Node node = null;
 
         foreach (Line connection in from.Connections)
@@ -365,7 +378,7 @@ public class BishopEntity : BaseEntity
 
     protected override bool WrongDirection(int dirX, int dirY)
     {
-        if (!base.WrongDirection(dirX, dirY) || Mathf.Abs(dirX) == Mathf.Abs(dirY))
+        if (Mathf.Abs(dirX) == Mathf.Abs(dirY))
             return false;
         return true;
     }
@@ -377,7 +390,6 @@ public class BishopEntity : BaseEntity
 
     public override BT_Node.Status FindPossibleNodes(Node from, Vector2Int direction)
     {
-        _controller.StartPos = _controller.transform.position;
         Node node = null;
 
         foreach (Line connection in from.Connections)
@@ -388,7 +400,7 @@ public class BishopEntity : BaseEntity
 
             if (WrongDirection(directionToEndNode.x, directionToEndNode.y)
                 || (_controller.Dir != directionToEndNode
-                && _controller.Dir != Vector2Int.zero))
+                && _controller.Dir != Vector2Int.zero) || base.WrongDirection(directionToEndNode.x, directionToEndNode.y))
                 continue;
 
             node = connection.EndNode;
@@ -453,8 +465,13 @@ public class BishopEntity : BaseEntity
 public class KnightEntity : BaseEntity
 {
     private float _timeToReachEndPos;
+
     private float _timer;
-    Node GetNodeFromDirection(Vector2Int dir) => _controller.NodeFromCoordinates?.Invoke(dir);
+
+    private int _index = 0;
+    Vector3[] _directions = new Vector3[2];
+    private Node GetNodeFromDirection(Vector2Int dir) => _controller.NodeFromCoordinates?.Invoke(dir);
+
     public KnightEntity(Controller controller) : base(controller)
     {
         _timeToReachEndPos = _controller.TimeToReachNextNode / 2;
@@ -463,7 +480,7 @@ public class KnightEntity : BaseEntity
 
     protected override bool WrongDirection(int dirX, int dirY)
     {
-        if (!base.WrongDirection(dirX, dirY) || Mathf.Abs(dirX) + Mathf.Abs(dirY) == 3)
+        if (Mathf.Abs(dirX) + Mathf.Abs(dirY) == 3)
             return false;
         return true;
     }
@@ -494,7 +511,6 @@ public class KnightEntity : BaseEntity
         Vector2Int direction = _controller.Dir;
         int x = Mathf.Abs(direction.x);
         int y = Mathf.Abs(direction.y);
-       
 
         for (int i = 0; i < 2; i++)
         {
@@ -503,7 +519,6 @@ public class KnightEntity : BaseEntity
             if (rayNode == null) continue;
 
             Collider[] overlapBox = Physics.OverlapBox(rayNode.transform.position, Vector3.one);
-            Debug.Log("wow", rayNode.transform);
 
 #if UNITY_EDITOR
             DebugExtensions.DrawBox(rayNode.transform.position, rayNode.transform.rotation, Vector3.one, Color.red, 99f);
@@ -514,11 +529,21 @@ public class KnightEntity : BaseEntity
                 {
                     _controller.EndNode = playerController.CurrentNode;
                     _controller.IsKilling = true;
+
+                    if (direction.x > direction.y)
+                    {
+                        _directions[0] = new(_controller.EndNode.transform.position.x, 0, _controller.transform.position.z);
+                    }
+                    else
+                    {
+                        _directions[0] = new(_controller.transform.position.x, 0, _controller.EndNode.transform.position.z);
+                    }
+                    _directions[1] = _controller.EndNode.transform.position;
                     return BT_Node.Status.Success;
                 }
             }
 
-            if(x <2)
+            if (x < 2)
             {
                 direction.x *= -1;
                 continue;
@@ -534,54 +559,28 @@ public class KnightEntity : BaseEntity
     {
         if (_controller.IsImmobile && !_controller.IsKilling && !_controller.IsDistracted)
             return BT_Node.Status.Success;
-        Node endNode = _controller.EndNode;
-        Node currentNode = _controller.CurrentNode;
-        Vector2Int directionToEndnode = DirToNode(currentNode, endNode);
-        Debug.Log("directionToEndNode = " + directionToEndnode);
 
-        Vector3 endPosX = GetNodeFromDirection(new(currentNode.GridCoordinate.x + directionToEndnode.x, currentNode.GridCoordinate.y)).transform.position;
-        Vector3 endPosZ = GetNodeFromDirection(new(currentNode.GridCoordinate.x, currentNode.GridCoordinate.y + directionToEndnode.y)).transform.position;
-       
-        Vector3[] endPositions = new Vector3[2];
-
-        if (Mathf.Abs(directionToEndnode.x) > Mathf.Abs(directionToEndnode.y))
+        if (_index >= _directions.Length)
         {
-            endPositions[0] = endPosX;
-            endPositions[1] = endPosZ;
-        }
-        else
-        {
-            endPositions[0] = endPosZ;
-            endPositions[1] = endPosX;
+            _index = 0;
+            _controller.StartPos = _controller.transform.position;
+            _controller.CurrentNode = _controller.EndNode;
+            _controller.IsKilling = false;
+            return BT_Node.Status.Success;
         }
 
-        if (!MoveTo(endPositions, 0))
+        if (_timer < _timeToReachEndPos)
         {
+            float deltaTime = _timer / _timeToReachEndPos;
+            _controller.transform.position = Vector3.Lerp(_controller.StartPos, _directions[_index], deltaTime);
+            _timer += Time.deltaTime;
             return BT_Node.Status.Running;
         }
 
-        _controller.CurrentNode = _controller.EndNode;
-        return BT_Node.Status.Success;
-
-        bool MoveTo(Vector3[] endPos, int index)
-        {
-            if (index > endPos.Length - 1)
-                return true;
-
-            Vector3 pos = _controller.transform.position;
-            if (_controller.Timer < _controller.TimeToReachNextNode)
-            {
-                float deltaTime = _timer / _timeToReachEndPos;
-                _controller.transform.position = Vector3.Lerp(_controller.StartPos, endPos[index], deltaTime);
-                _timer += Time.deltaTime;
-                return false;
-            }
-            else
-            {
-                _timer = 0;
-                _controller.transform.position = endPos[index];
-                return MoveTo(endPos, index + 1);
-            }
-        }
+        _controller.transform.position = _directions[_index];
+        _controller.StartPos = _controller.transform.position;
+        _timer = 0;
+        _index++;
+        return BT_Node.Status.Running;
     }
 }

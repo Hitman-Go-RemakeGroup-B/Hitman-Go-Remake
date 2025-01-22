@@ -14,7 +14,6 @@ public class Controller : MonoBehaviour
 
     // hidden:
     [HideInInspector] public bool IsDead = false;
-
     [HideInInspector] public bool IsDistracted = false;
     [HideInInspector] public bool IsKilling = false;
     [HideInInspector] public Path Path;
@@ -38,6 +37,11 @@ public class Controller : MonoBehaviour
 
     public GetNode NodeFromCoordinates;
     public PathFinding FindPath;
+
+    private void Awake()
+    {
+       StartPos = transform.position;
+    }
 
     protected virtual void PiceCange(BaseEntity newPice)
     {

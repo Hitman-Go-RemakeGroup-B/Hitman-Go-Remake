@@ -21,6 +21,7 @@ public class TurnsManager : MonoBehaviour
         _playerController = FindObjectOfType<PlayerController>();
         _enemies = FindObjectsOfType<AiController>().ToList();
         _nOfEnemies = _enemies.Count;
+        _playerController.OnTurnSetupDone += StartGame;
         OnPlayerTurnStart += _playerController.StartTurn;
         _playerController.OnTurnEnd += PlayerTurnEnd;
         foreach (var enemy in _enemies)
@@ -32,10 +33,11 @@ public class TurnsManager : MonoBehaviour
 
     }
 
-    private void Start()
+    private void StartGame()
     {
         OnPlayerTurnStart?.Invoke();
     }
+   
 
     private void OnEnemyDeath(AiController controller)
     {
