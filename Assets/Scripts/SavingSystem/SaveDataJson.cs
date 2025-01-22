@@ -16,12 +16,12 @@ public class SaveDataJson : MonoBehaviour
     public SaveData Data;
     byte[] key = Encoding.ASCII.GetBytes("Picodead"); 
     byte[] iv = Encoding.ASCII.GetBytes("abcdefgh");
-
+    //
     private void OnEnable()
     {
         if (Data == null)
         {
-            Data=new SaveData(level.Nlevel);
+            Data=new SaveData(level.Nlevel);           
         }
         else
         {
