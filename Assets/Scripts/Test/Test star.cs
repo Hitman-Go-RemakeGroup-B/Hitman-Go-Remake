@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 public class Teststar : MonoBehaviour
@@ -10,7 +9,6 @@ public class Teststar : MonoBehaviour
         WinCondition.KillEnemy?.Invoke(0);
         WinCondition.Win?.Invoke();
     }
-
 
 
 }

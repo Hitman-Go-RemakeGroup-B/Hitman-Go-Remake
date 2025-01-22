@@ -7,14 +7,13 @@ public class VolumeSettings : MonoBehaviour
 
     [SerializeField]SaveDataJson dataJson;   
 
-
-
     private void Start()
     {
         LoadVolume(dataJson);
         SetMusicVolume();
         SetSFXVolume();
     }
+
 
     public void SwapMusicVolume()
     {

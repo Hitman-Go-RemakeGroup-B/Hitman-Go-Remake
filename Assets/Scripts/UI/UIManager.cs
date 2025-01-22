@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     {
         SceneManager.LoadScene(index);
     }
+
     public void BackToMenu()
     {
         SceneManager.LoadScene(0);
