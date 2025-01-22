@@ -23,6 +23,7 @@ public class WinCondition : MonoBehaviour
     [SerializeField] int minTurn;
     [SerializeField] LevelScriptableObject Nlevel;
     [SerializeField] Image[] Star;
+    //
     private void Awake()
     {
         level = new SaveLevel();

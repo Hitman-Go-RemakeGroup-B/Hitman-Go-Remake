@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Teststar : MonoBehaviour
 {
-    private void Start()
+    private void Start()//
     {
         WinCondition.King?.Invoke(false);
         WinCondition.MinTurns(5);

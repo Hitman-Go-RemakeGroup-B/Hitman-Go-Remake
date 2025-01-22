@@ -16,9 +16,17 @@ public class SaveDataJson : MonoBehaviour
     public SaveData Data;
     byte[] key = Encoding.ASCII.GetBytes("Picodead"); 
     byte[] iv = Encoding.ASCII.GetBytes("abcdefgh");
-
+    //
     private void OnEnable()
     {
+        if (Data == null)
+        {
+            Data=new SaveData(level.Nlevel);           
+        }
+        else
+        {
+            LoadData();
+        }
         levelAction += SaveLevel;
     }
 
@@ -93,17 +101,16 @@ public class SaveDataJson : MonoBehaviour
     }
     public void SaveLevel(SaveLevel level)
     {
-        if (Data==null||Data.LevelIndex<=level.LevelIndex)
+        if (Data.LevelIndex<level.LevelIndex)
         {
-            Data = new SaveData(this.level.Nlevel);
-            SaveData();
             Data.LevelIndex=level.LevelIndex;
         }
-        Data.KillKing[level.LevelIndex] = level.KillKing;
-        Data.MinTurns[level.LevelIndex] = level.MinTurns;
-        Data.NoEnemy[level.LevelIndex] = level.NoEnemy;
-        Data.EveryEnemy[level.LevelIndex] = level.EveryEnemy;
-        Data.QueenEnding[level.LevelIndex] = level.QueenEnding;
+
+        Data.KillKing[level.LevelIndex-1] = level.KillKing;
+        Data.MinTurns[level.LevelIndex-1] = level.MinTurns;
+        Data.NoEnemy[level.LevelIndex-1] = level.NoEnemy;
+        Data.EveryEnemy[level.LevelIndex-1] = level.EveryEnemy;
+        Data.QueenEnding[level.LevelIndex - 1] = level.QueenEnding;
         SaveData();
     }
 

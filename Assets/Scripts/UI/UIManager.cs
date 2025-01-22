@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     {
         dropDown.value = QualitySettings.GetQualityLevel();
     }
+    //
     public void PlayLevel(int index)
     {
         SceneManager.LoadScene(index);

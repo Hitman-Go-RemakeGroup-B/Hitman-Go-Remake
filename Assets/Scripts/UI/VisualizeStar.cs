@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-
+//
 public class VisualizeStar : MonoBehaviour
 {
     [SerializeField]SaveDataJson saveDataJson;
