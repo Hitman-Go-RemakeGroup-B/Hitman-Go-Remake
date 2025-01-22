@@ -106,11 +106,11 @@ public class SaveDataJson : MonoBehaviour
             Data.LevelIndex=level.LevelIndex;
         }
 
-        Data.KillKing[level.LevelIndex] = level.KillKing;
-        Data.MinTurns[level.LevelIndex] = level.MinTurns;
-        Data.NoEnemy[level.LevelIndex] = level.NoEnemy;
-        Data.EveryEnemy[level.LevelIndex] = level.EveryEnemy;
-        Data.QueenEnding[level.LevelIndex] = level.QueenEnding;
+        Data.KillKing[level.LevelIndex-1] = level.KillKing;
+        Data.MinTurns[level.LevelIndex-1] = level.MinTurns;
+        Data.NoEnemy[level.LevelIndex-1] = level.NoEnemy;
+        Data.EveryEnemy[level.LevelIndex-1] = level.EveryEnemy;
+        Data.QueenEnding[level.LevelIndex - 1] = level.QueenEnding;
         SaveData();
     }
 

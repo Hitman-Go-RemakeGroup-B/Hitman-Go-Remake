@@ -136,6 +136,7 @@ public class WinCondition : MonoBehaviour
 
     private void WinUI()
     {
+        GetIndex();
         SaveDataJson.levelAction?.Invoke(level);
         panel.SetActive(true);
     }
