@@ -1,4 +1,4 @@
-using Palmmedia.ReportGenerator.Core.Common;
+
 using System;
 using System.IO;
 using System.Security.Cryptography;
@@ -75,7 +75,7 @@ public class SaveDataJson : MonoBehaviour
         string json = JsonUtility.ToJson(Data);
         string encryptedString = Encrypt(json, key, iv);
 
-        using (StreamWriter writer= new StreamWriter(Application.dataPath + "/" + "SaveData.json"))
+        using (StreamWriter writer= new StreamWriter(Application.persistentDataPath + "/" + "SaveData.json"))
         {
             writer.Write(encryptedString);
         }
@@ -84,7 +84,7 @@ public class SaveDataJson : MonoBehaviour
     public void LoadData()
     {
         string json=string.Empty;
-        using (StreamReader reader=new StreamReader(Application.dataPath+ "/" + "SaveData.json"))
+        using (StreamReader reader=new StreamReader(Application.persistentDataPath+ "/" + "SaveData.json"))
         {
             json=reader.ReadToEnd();
         }

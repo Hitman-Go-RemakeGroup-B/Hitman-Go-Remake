@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
-using UnityEditor.Experimental.GraphView;
 
 [System.Serializable]
 public class SaveData
