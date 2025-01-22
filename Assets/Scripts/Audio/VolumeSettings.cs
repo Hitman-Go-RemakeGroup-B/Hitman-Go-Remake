@@ -6,8 +6,6 @@ public class VolumeSettings : MonoBehaviour
     [SerializeField] AudioMixer audioMixer;
 
     [SerializeField]SaveDataJson dataJson;   
-    //
-
 
     private void Start()
     {
@@ -15,6 +13,7 @@ public class VolumeSettings : MonoBehaviour
         SetMusicVolume();
         SetSFXVolume();
     }
+
 
     public void SwapMusicVolume()
     {

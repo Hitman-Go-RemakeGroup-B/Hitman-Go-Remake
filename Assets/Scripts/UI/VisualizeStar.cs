@@ -17,6 +17,7 @@ public class VisualizeStar : MonoBehaviour
         }
 
         saveDataJson.VisualizeStar(GetIndex() - 1);
+
         for (int i = 0; i < saveDataJson.starCount; i++)
         {
             var tempColor = Star[i].color;
@@ -29,4 +30,6 @@ public class VisualizeStar : MonoBehaviour
     {
         return int.Parse(this.name.Split(' ')[1]);
     }
+
+
 }

@@ -3,9 +3,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-
 public class WinCondition : MonoBehaviour
 {
+
 
     public static Action<bool> Queen;
     public static Action<bool> King;
