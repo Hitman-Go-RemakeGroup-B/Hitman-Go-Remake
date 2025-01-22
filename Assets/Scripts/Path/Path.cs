@@ -35,6 +35,7 @@ public class Path : MonoBehaviour
         foreach (Controller controller in _controllers)
         {
             controller.FindPath += FindPath;
+            controller.NodeFromCoordinates += GetNodeFromCoordinate;
             controller.CurrentNode = NodeFromWorldPos(controller.transform.position);
         }
     }
