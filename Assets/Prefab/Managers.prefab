@@ -45,7 +45,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2259291511509976743}
   - component: {fileID: 4622839906698327656}
-  - component: {fileID: 1161792209246621264}
   m_Layer: 0
   m_Name: AchievemnetManager
   m_TagString: Untagged
@@ -80,35 +79,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e59f478815f864648ad2535fb85c5479, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Data:
-    LevelIndex: 0
-    KillKing: 
-    MinTurns: 
-    NoEnemy: 
-    EveryEnemy: 
-    QueenEnding: 
-    Music: 0
-    SFX: 0
+  Data: {fileID: 0}
+  wintext: []
+  variablename: []
+  text: []
   panel: {fileID: 0}
   numberOfEnemy: 5
+  noenemy: 0
   minTurn: 5
   Nlevel: {fileID: 11400000, guid: f1553f90df969ea46a7bc1e152715981, type: 2}
   Star:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
---- !u!114 &1161792209246621264
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2843630783505362207}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92f91818f5691da4fa2fec975afa36d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3607919896177516106
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,6 +330,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: {fileID: 11400000, guid: f1553f90df969ea46a7bc1e152715981, type: 2}
+  starCount: 0
   Data:
     LevelIndex: 0
     KillKing: 
