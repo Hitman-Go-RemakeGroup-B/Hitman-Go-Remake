@@ -31,6 +31,16 @@ public class UIManager : MonoBehaviour
         Application.Quit();
     }
 
+    public void Pause()
+    {
+        Time.timeScale =0;
+    }
+
+    public void UnPause()
+    {
+        Time.timeScale = 1f;
+    }
+
     public void ChangeQuality(int quality)
     {
         QualitySettings.SetQualityLevel(quality);
