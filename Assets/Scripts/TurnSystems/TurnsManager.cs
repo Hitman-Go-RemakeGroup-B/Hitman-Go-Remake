@@ -9,20 +9,26 @@ public class TurnsManager : MonoBehaviour
     public Action OnEnemiesTurnStart;
     public float _moveDuration = 1f;
     public float MoveDuration;
+    public Action<int> OnWinEnemies;
 
     private List<AiController> _enemies = new();
     private PlayerController _playerController;
     private int _nOfEnemies;
+    private int _nOfTurns =0;
     private int _indexEnemiesTurnEnd;
 
     private void Awake()
     {
+        _nOfTurns = 0;
         MoveDuration = _moveDuration;
         _playerController = FindObjectOfType<PlayerController>();
         _enemies = FindObjectsOfType<AiController>().ToList();
         _nOfEnemies = _enemies.Count;
         _playerController.OnTurnSetupDone += StartGame;
+        _playerController.GetRemainginEnemies = ()=> _nOfEnemies;
+        _playerController.GetNumberOfTurns = ()=> _nOfTurns;
         OnPlayerTurnStart += _playerController.StartTurn;
+        
         _playerController.OnTurnEnd += PlayerTurnEnd;
         foreach (var enemy in _enemies)
         {
@@ -62,7 +68,7 @@ public class TurnsManager : MonoBehaviour
     public void PlayerTurnEnd()
     {
         // startEnemiesTurn
-
+        _nOfTurns++;
         if (_nOfEnemies <= 0)
         {
             EnemyTurnEnd();

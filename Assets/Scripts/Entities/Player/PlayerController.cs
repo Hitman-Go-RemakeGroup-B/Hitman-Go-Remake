@@ -10,7 +10,12 @@ public class PlayerController : Controller
 {
     public Color HilightColor;
     public Action OnTurnSetupDone;
+    public delegate int GetInt();
+    public GetInt GetRemainginEnemies;
+    public GetInt GetNumberOfTurns;
 
+    [HideInInspector] public bool GotKing;
+    [HideInInspector] public bool GotQueen;
     private void Start()
     {
         BoardPice = new PawnEntity(this);
@@ -120,6 +125,12 @@ public class PlayerController : Controller
         if (CurrentNode.IsWinNode)
         {
             // you win pogchamp
+            WinCondition.noEnemy?.Invoke(GetRemainginEnemies.Invoke());
+            WinCondition.KillEnemy?.Invoke(GetRemainginEnemies.Invoke());
+            WinCondition.King?.Invoke(GotKing);
+            WinCondition.Queen?.Invoke(GotQueen);
+            WinCondition.MinTurns?.Invoke(GetNumberOfTurns.Invoke());
+            WinCondition.Win?.Invoke();
             Debug.Log("you win pogchampion");
             return BT_Node.Status.Success;
         }

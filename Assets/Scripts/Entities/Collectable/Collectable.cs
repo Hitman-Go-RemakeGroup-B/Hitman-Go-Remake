@@ -10,12 +10,12 @@ public class Collectable : MonoBehaviour, IInteractable
     public void Interact(PlayerController player)
     {
         if (IsQueen) 
-        { 
-            //TODO: call the queen thing from tara
+        {
+            player.GotQueen = true;
         }
         else
         {
-            //TODO: call the king thing from tara
+            player.GotKing = true;
         }
 
         gameObject.SetActive(false);
