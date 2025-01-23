@@ -362,13 +362,12 @@ public class PawnEntity : BaseEntity
             node = connection.EndNode;
 
             _controller.PossibleNodes.Add(node);
-
+            _index--;
 
             if (_index > 0)
             {
-                if (FindPossibleNodes(node, directionToEndNode) == BT_Node.Status.Failure)
+                if (FindPossibleNodes(node, directionToEndNode) != BT_Node.Status.Success)
                     continue;
-                _index--;
             }
 
         }
