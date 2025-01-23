@@ -327,17 +327,18 @@ public class PawnEntity : BaseEntity
 
     public override BT_Node.Status FindDirection()
     {
-        if (!_controller.IsFirstTurn)
-            return BT_Node.Status.Success;
-        return base.FindDirection();
+        if (_controller.IsFirstTurn)
+            return base.FindDirection();
+
+        return BT_Node.Status.Success;
     }
 
     public override BT_Node.Status ChooseDirection()
     {
-        if (!_controller.IsFirstTurn)
-            return BT_Node.Status.Success;
-        return base.ChooseDirection();
+        if (_controller.IsFirstTurn)
+            return base.ChooseDirection();
 
+        return BT_Node.Status.Success;
     }
 
     public override BT_Node.Status FindPossibleNodes(Node from, Vector2Int direction)
@@ -386,6 +387,8 @@ public class PawnEntity : BaseEntity
 
     public override BT_Node.Status ChooseEndNode()
     {
+        if (!_controller.IsFirstTurn)
+            _controller.Dir = Vector2Int.zero;
         return base.ChooseEndNode();
     }
 

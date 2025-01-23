@@ -15,6 +15,7 @@ public class AiController : Controller, IInteractable
 
     private void Start()
     {
+        IsFirstTurn = false;
         switch (BoardPiceType)
         {
             case EntityType.Pawn:
