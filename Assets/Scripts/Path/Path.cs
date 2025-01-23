@@ -65,8 +65,12 @@ public class Path : MonoBehaviour
         }
         _winNode = GetNodeFromCoordinate(WinNodeCoordinates);
         _winNode.IsWinNode = true;
+
+#if UNITY_EDITOR
         _winNode.NodeSpriteRenderer.color = Color.yellow;
         _winNode.oldColor = Color.yellow;
+#endif
+
     }
 
     public List<Node> FindPath(Vector2Int startCoordinate, Vector2Int endCoordinate, WrongMove wrongMove)
@@ -325,7 +329,7 @@ public class Path : MonoBehaviour
 
     public Node GetNodeFromCoordinate(Vector2Int givenCoordinate)
     {
-        if(givenCoordinate.x >= CollumsX || givenCoordinate.y >= RowsZ || givenCoordinate.y < 0 || givenCoordinate.x<0)
+        if (givenCoordinate.x >= CollumsX || givenCoordinate.y >= RowsZ || givenCoordinate.y < 0 || givenCoordinate.x < 0)
             return null;
 
         if (NodeArray[givenCoordinate.x, givenCoordinate.y])
