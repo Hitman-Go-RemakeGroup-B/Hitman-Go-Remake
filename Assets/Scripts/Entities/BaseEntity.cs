@@ -139,7 +139,7 @@ public class BaseEntity
         }
 
         if (hitNode == null)
-            return BT_Node.Status.Failure;
+            return BT_Node.Status.Running;
 
         _controller.Dir = NodeToDir(_controller.CurrentNode, hitNode);
         return BT_Node.Status.Success;
