@@ -62,6 +62,30 @@ namespace BT.Decorator
         }
     }
 
+    public class HighLightDecorator : BaseDecorator
+    {
+        public delegate BT_Node.Status ProcessAction(List<Node> nodes);
+        ProcessAction status;
+        List<Node> nodes;
+        public HighLightDecorator(Controller controller, ProcessAction action, List<Node> nodes) : base(controller)
+        {
+            this.nodes = nodes;
+            status = action;
+        }
+
+        public override BT_Node.Status Process()
+        {
+            if (status == null)
+                return BT_Node.Status.Failure;
+
+            return status.Invoke(nodes);
+        }
+        public override void Reset()
+        {
+            base.Reset();
+        }
+    }
+
     public class FindNodeDecorator : BaseDecorator
     {
         public delegate BT_Node.Status ProcessAction(Node from, Vector2Int direction);

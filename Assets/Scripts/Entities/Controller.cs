@@ -22,6 +22,7 @@ public class Controller : MonoBehaviour
     [HideInInspector] public Vector2Int GridSize;
     [HideInInspector] public BaseEntity BoardPice;
     [HideInInspector] public List<Node> PossibleNodes;
+    [HideInInspector] public List<Node> PossibleNodeDirections;
     [HideInInspector] public List<Node> FoundPath;
     [HideInInspector] public int Index;
     [HideInInspector] public int DirIndex;
@@ -48,6 +49,9 @@ public class Controller : MonoBehaviour
         BaseEntity newOne = newPice;
         newPice.controller = BoardPice.controller;        
         BoardPice = newPice;
+        Dir = Vector2Int.zero;
+        PossibleNodes.Clear();
+        PossibleNodeDirections.Clear();
         TurnSetUp();
     }
 

@@ -3727,6 +3727,7 @@ MonoBehaviour:
   Timer: 0
   GridSize: {x: 0, y: 0}
   PossibleNodes: []
+  PossibleNodeDirections: []
   FoundPath: []
   Index: 0
   DirIndex: 0
@@ -3734,7 +3735,7 @@ MonoBehaviour:
   EndNode: {fileID: 0}
   OldDir: {x: 0, y: 0}
   BoardPiceType: 1
-  PlayerCanTransformIntoMe: 0
+  _isPlayerAbleToTransformIntoMe: 0
   deathPosition: {fileID: 376613963}
 --- !u!65 &205102878
 BoxCollider:
@@ -5780,7 +5781,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &310059261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5795,9 +5796,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PossibleDirections:
     list: []
-  Dir: {x: 1, y: 2}
+  Dir: {x: 1, y: 0}
   TimeToReachNextNode: 1
-  IsImmobile: 0
+  IsImmobile: 1
   IsDead: 0
   IsDistracted: 0
   IsKilling: 0
@@ -5806,14 +5807,15 @@ MonoBehaviour:
   Timer: 0
   GridSize: {x: 0, y: 0}
   PossibleNodes: []
+  PossibleNodeDirections: []
   FoundPath: []
   Index: 0
   DirIndex: 0
   StartPos: {x: 0, y: 0, z: 0}
   EndNode: {fileID: 0}
   OldDir: {x: 0, y: 0}
-  BoardPiceType: 3
-  PlayerCanTransformIntoMe: 0
+  BoardPiceType: 1
+  _isPlayerAbleToTransformIntoMe: 1
   deathPosition: {fileID: 376613963}
 --- !u!65 &310059262
 BoxCollider:
@@ -22209,6 +22211,7 @@ MonoBehaviour:
   Timer: 0
   GridSize: {x: 0, y: 0}
   PossibleNodes: []
+  PossibleNodeDirections: []
   FoundPath: []
   Index: 0
   DirIndex: 0
@@ -22216,7 +22219,7 @@ MonoBehaviour:
   EndNode: {fileID: 0}
   OldDir: {x: 0, y: 0}
   BoardPiceType: 2
-  PlayerCanTransformIntoMe: 0
+  _isPlayerAbleToTransformIntoMe: 0
   deathPosition: {fileID: 376613963}
 --- !u!65 &1173464622
 BoxCollider:
@@ -41810,6 +41813,7 @@ MonoBehaviour:
   Timer: 0
   GridSize: {x: 0, y: 0}
   PossibleNodes: []
+  PossibleNodeDirections: []
   FoundPath: []
   Index: 0
   DirIndex: 0

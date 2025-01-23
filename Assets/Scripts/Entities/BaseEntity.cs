@@ -4,7 +4,7 @@ using UnityEngine;
 public class BaseEntity
 {
     protected Controller _controller;
-
+    public Controller controller { get => _controller; set => _controller = value; }
     protected Touch _touch;
 
     protected Vector2Int DirToNode(Node from, Node to)
@@ -71,6 +71,78 @@ public class BaseEntity
         return BT_Node.Status.Failure;
     }
 
+    public virtual BT_Node.Status FindDirection()
+    {
+        Node node = null;
+
+        foreach (Line connection in _controller.CurrentNode.Connections)
+        {
+            if (connection == null) continue;
+
+            Vector2Int directionToEndNode = DirToNode(_controller.CurrentNode, connection.EndNode);
+
+            if (WrongDirection(directionToEndNode.x, directionToEndNode.y))
+                continue;
+
+            node = connection.EndNode;
+
+            _controller.PossibleNodeDirections.Add(node);
+        }
+        if (node == null)
+            return BT_Node.Status.Failure;
+
+        return BT_Node.Status.Success;
+    }
+
+    public virtual BT_Node.Status ChooseDirection()
+    {
+        if (Input.touchCount <= 0)
+            return BT_Node.Status.Running;
+
+        Vector3 touchPos;
+        _touch = Input.GetTouch(0);
+
+        if (_touch.phase != TouchPhase.Began)
+            return BT_Node.Status.Running;
+
+        Ray ray = Camera.main.ScreenPointToRay(_touch.position);
+
+        Plane plane;
+        Node hitNode = null;
+        float distance = 99f;
+
+        foreach (Node node in _controller.PossibleNodeDirections)
+        {
+            if (node == null) continue;
+
+            plane = new(Vector3.up, node.transform.position);
+            float dist = 0;
+
+            if (!plane.Raycast(ray, out dist))
+                continue;
+
+            touchPos = ray.GetPoint(dist);
+            touchPos.y = 0;
+
+            float distanceToNode = (touchPos - node.transform.position).magnitude;
+
+            if (distanceToNode > 5f)
+                continue;
+
+            if (distanceToNode < distance)
+            {
+                distance = distanceToNode;
+                hitNode = node;
+            }
+        }
+
+        if (hitNode == null)
+            return BT_Node.Status.Failure;
+
+        _controller.Dir = DirToNode(_controller.CurrentNode, hitNode);
+        return BT_Node.Status.Success;
+    }
+
     /// <summary>
     /// finds all the possible nodes the entity can move twoards
     /// </summary>
@@ -131,7 +203,6 @@ public class BaseEntity
         // for the knight you have to change the raycast to a OverlapBox
         _controller.OldDir = -_controller.Dir;
         int possibleNodesNum = _controller.PossibleNodes.Count;
-        Debug.Log(possibleNodesNum);
         _controller.EndNode = _controller.PossibleNodes[possibleNodesNum - 1];
         _controller.PossibleNodes.Clear();
         Vector3 direction = _controller.EndNode.transform.position - _controller.CurrentNode.transform.position;
@@ -166,41 +237,42 @@ public class BaseEntity
         if (_touch.phase != TouchPhase.Began)
             return BT_Node.Status.Running;
 
-        touchPos = Camera.main.ScreenToWorldPoint(_touch.position);
-#if UNITY_EDITOR
-        DebugExtensions.DrawBox(Camera.main.ScreenToWorldPoint(_touch.position),_controller.transform.rotation,Vector3.one,Color.green,99f);
-#endif
+        Ray ray = Camera.main.ScreenPointToRay(_touch.position);
 
-        Collider[] shpereCast = Physics.OverlapSphere(touchPos,1);
+        Plane plane;
         Node hitNode = null;
-        float distance = -99f;
-
-        foreach (Collider collider in shpereCast)
-        {
-            if(collider.TryGetComponent(out Node node))
-            {
-                var dist = (node.transform.position - touchPos).magnitude;
-                if(distance > dist)
-                {
-                    distance = dist;
-                    hitNode = node;
-                }
-            }
-        }
+        float distance = 99f;
 
         foreach (Node node in _controller.PossibleNodes)
         {
             if (node == null) continue;
 
-            if(hitNode == node)
+            plane = new(Vector3.up, node.transform.position);
+            float dist = 0;
+
+            if (!plane.Raycast(ray, out dist))
+                continue;
+
+            touchPos = ray.GetPoint(dist);
+            touchPos.y = 0;
+
+            float distanceToNode = (touchPos - node.transform.position).magnitude;
+
+            if (distanceToNode > 5f)
+                continue;
+
+            if (distanceToNode < distance)
             {
-                _controller.enabled = node;
-                return BT_Node.Status.Success;
+                distance = distanceToNode;
+                hitNode = node;
             }
-            
         }
 
-        return BT_Node.Status.Running;
+        if (hitNode == null)
+            return BT_Node.Status.Failure;
+
+        _controller.EndNode = hitNode;
+        return BT_Node.Status.Success;
     }
 
     /// <summary>
@@ -225,7 +297,8 @@ public class BaseEntity
         _controller.transform.position = _controller.EndNode.transform.position;
         _controller.StartPos = _controller.transform.position;
         _controller.CurrentNode = _controller.EndNode;
-
+        _controller.PossibleNodeDirections.Clear();
+        _controller.PossibleNodes.Clear();
         return BT_Node.Status.Success;
     }
 }
@@ -246,6 +319,16 @@ public class PawnEntity : BaseEntity
     public override BT_Node.Status NextDirection()
     {
         return base.NextDirection();
+    }
+
+    public override BT_Node.Status FindDirection()
+    {
+        return BT_Node.Status.Success;
+    }
+
+    public override BT_Node.Status ChooseDirection()
+    {
+        return BT_Node.Status.Success;
     }
 
     public override BT_Node.Status FindPossibleNodes(Node from, Vector2Int direction)
@@ -293,6 +376,16 @@ public class RookEntity : BaseEntity
     public override BT_Node.Status NextDirection()
     {
         return base.NextDirection();
+    }
+
+    public override BT_Node.Status FindDirection()
+    {
+        return base.FindDirection();
+    }
+
+    public override BT_Node.Status ChooseDirection()
+    {
+        return base.ChooseDirection();
     }
 
     public override BT_Node.Status FindPossibleNodes(Node from, Vector2Int direction)
@@ -386,6 +479,15 @@ public class BishopEntity : BaseEntity
     public override BT_Node.Status NextDirection()
     {
         return base.NextDirection();
+    }
+    public override BT_Node.Status FindDirection()
+    {
+        return base.FindDirection();
+    }
+
+    public override BT_Node.Status ChooseDirection()
+    {
+        return base.ChooseDirection();
     }
 
     public override BT_Node.Status FindPossibleNodes(Node from, Vector2Int direction)
@@ -489,6 +591,15 @@ public class KnightEntity : BaseEntity
     {
         return BT_Node.Status.Success;
     }
+    public override BT_Node.Status FindDirection()
+    {
+        return BT_Node.Status.Success;
+    }
+
+    public override BT_Node.Status ChooseDirection()
+    {
+        return BT_Node.Status.Success;
+    }
 
     public override BT_Node.Status FindPossibleNodes(Node from, Vector2Int direction)
     {
@@ -557,7 +668,7 @@ public class KnightEntity : BaseEntity
 
     public override BT_Node.Status MoveTwoardsEndNode()
     {
-        if (_controller.IsImmobile && !_controller.IsKilling && !_controller.IsDistracted)
+        if (_controller.EndNode == null)
             return BT_Node.Status.Success;
 
         if (_index >= _directions.Length)
@@ -566,6 +677,8 @@ public class KnightEntity : BaseEntity
             _controller.StartPos = _controller.transform.position;
             _controller.CurrentNode = _controller.EndNode;
             _controller.IsKilling = false;
+            _controller.PossibleNodeDirections.Clear();
+            _controller.PossibleNodes.Clear();
             return BT_Node.Status.Success;
         }
 
@@ -581,6 +694,7 @@ public class KnightEntity : BaseEntity
         _controller.StartPos = _controller.transform.position;
         _timer = 0;
         _index++;
+        _controller.EndNode = null;
         return BT_Node.Status.Running;
     }
 }
