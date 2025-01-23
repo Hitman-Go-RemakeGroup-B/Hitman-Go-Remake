@@ -1916,6 +1916,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 169531224}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &197685121 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 116934746587526911, guid: ba73bcfc356ba8c4aa2e9120815b63ff, type: 3}
+  m_PrefabInstance: {fileID: 6216045943519822452}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &215864821
 GameObject:
   m_ObjectHideFlags: 0
@@ -7470,6 +7481,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7372367220450275223, guid: 167ba277f4201454eb6a0c1265203131, type: 3}
   m_PrefabInstance: {fileID: 849593671}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &849666412 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6062859538093890466, guid: ba73bcfc356ba8c4aa2e9120815b63ff, type: 3}
+  m_PrefabInstance: {fileID: 6216045943519822452}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &854398639
 GameObject:
   m_ObjectHideFlags: 0
@@ -8697,7 +8719,15 @@ PrefabInstance:
       value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: noenemy
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
       propertyPath: Star.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: text.Array.size
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
@@ -8724,6 +8754,66 @@ PrefabInstance:
       propertyPath: Star.Array.data[5]
       value: 
       objectReference: {fileID: 1042955257}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: text.Array.data[0]
+      value: 
+      objectReference: {fileID: 849666412}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: text.Array.data[1]
+      value: 
+      objectReference: {fileID: 197685121}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: text.Array.data[2]
+      value: 
+      objectReference: {fileID: 1498618169}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: wintext.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: wintext.Array.data[0]
+      value: que
+      objectReference: {fileID: 0}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: wintext.Array.data[1]
+      value: allen
+      objectReference: {fileID: 0}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: wintext.Array.data[2]
+      value: notur
+      objectReference: {fileID: 0}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: wintext.Array.data[3]
+      value: king
+      objectReference: {fileID: 0}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: wintext.Array.data[4]
+      value: 0ene
+      objectReference: {fileID: 0}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: variablename.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: variablename.Array.data[0]
+      value: QueenEnding
+      objectReference: {fileID: 0}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: variablename.Array.data[1]
+      value: EveryEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: variablename.Array.data[2]
+      value: MinTurns
+      objectReference: {fileID: 0}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: variablename.Array.data[3]
+      value: KillKing
+      objectReference: {fileID: 0}
+    - target: {fileID: 4622839906698327656, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
+      propertyPath: variablename.Array.data[4]
+      value: NoEnemy
+      objectReference: {fileID: 0}
     - target: {fileID: 7964027923590088794, guid: 653ed38a8cfff7f4387812555967bf55, type: 3}
       propertyPath: dropDown
       value: 
@@ -13623,6 +13713,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &1498618169 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7273787857680606185, guid: ba73bcfc356ba8c4aa2e9120815b63ff, type: 3}
+  m_PrefabInstance: {fileID: 6216045943519822452}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1546243656
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19216,37 +19317,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2031018588}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &2038413557
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2038413558}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2038413558
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2038413557}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2046539002
 GameObject:
   m_ObjectHideFlags: 0
@@ -20695,7 +20765,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 116934746587526911, guid: ba73bcfc356ba8c4aa2e9120815b63ff, type: 3}
       propertyPath: m_text
-      value: No Kills
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 864005581689229949, guid: ba73bcfc356ba8c4aa2e9120815b63ff, type: 3}
       propertyPath: m_Color.a
@@ -20799,11 +20869,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6062859538093890466, guid: ba73bcfc356ba8c4aa2e9120815b63ff, type: 3}
       propertyPath: m_text
-      value: Kill All Enemies
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7273787857680606185, guid: ba73bcfc356ba8c4aa2e9120815b63ff, type: 3}
       propertyPath: m_text
-      value: Max. 12 Turns
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8011927182422090423, guid: ba73bcfc356ba8c4aa2e9120815b63ff, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -20871,4 +20941,3 @@ SceneRoots:
   - {fileID: 1308356579}
   - {fileID: 1702741742}
   - {fileID: 1027630476}
-  - {fileID: 2038413558}

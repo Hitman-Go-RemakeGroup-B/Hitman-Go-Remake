@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -17,18 +19,29 @@ public class WinCondition : MonoBehaviour
     private SaveLevel level;
     private int starCount;
     public SaveDataJson Data;
+    Dictionary<string, string> varName=new ();
 
+    [SerializeField] string[] wintext;
+    [SerializeField] string[] variablename;
+    [SerializeField] TMP_Text[] text;
     [SerializeField] GameObject panel;
     [SerializeField] int numberOfEnemy;
+    [SerializeField] bool noenemy;
     [SerializeField] int minTurn;
     [SerializeField] LevelScriptableObject Nlevel;
     [SerializeField] Image[] Star;
     private void Awake()
     {
+        for (int i = 0; i < wintext.Length; i++)
+        {
+            varName.Add(variablename[i], wintext[i]);
+        }
+        //Debug.Log();
         level = new SaveLevel();
     }
     private void Start()
     {
+
         starCount = 0;
         if (Data.Data== null)
         {
@@ -65,6 +78,7 @@ public class WinCondition : MonoBehaviour
         if (Queen)
         {
             starCount++;
+            text[starCount - 1].text = varName[nameof(Data.Data.QueenEnding)];
             var tempColor = Star[starCount - 1].color;
             tempColor.a = 1f;
             Star[starCount - 1].color = tempColor;
@@ -77,6 +91,7 @@ public class WinCondition : MonoBehaviour
         if (King)
         {
             starCount++;
+            text[starCount - 1].text = varName[nameof(Data.Data.KillKing)];
             var tempColor = Star[starCount - 1].color;
             tempColor.a = 1f;
             Star[starCount - 1].color = tempColor;
@@ -90,6 +105,7 @@ public class WinCondition : MonoBehaviour
         {
             level.MinTurns = true;
             starCount++;
+            text[starCount - 1].text = varName[nameof(Data.Data.MinTurns)];
             var tempColor = Star[starCount - 1].color;
             tempColor.a = 1f;
             Star[starCount - 1].color = tempColor;
@@ -98,10 +114,11 @@ public class WinCondition : MonoBehaviour
 
     private void NoEnemy(int Enemy)
     {
-        if (Enemy == 0)
+        if (noenemy&&Enemy==0)
         {
             level.NoEnemy = true;
             starCount++;
+            text[starCount - 1].text = varName[nameof(Data.Data.NoEnemy)];
             var tempColor = Star[starCount - 1].color;
             tempColor.a = 1f;
             Star[starCount - 1].color = tempColor;
@@ -118,6 +135,7 @@ public class WinCondition : MonoBehaviour
         {
             level.EveryEnemy = true;
             starCount++;
+            text[starCount - 1].text = varName[nameof(Data.Data.EveryEnemy)];
             var tempColor = Star[starCount - 1].color;
             tempColor.a = 1f;
             Star[starCount - 1].color = tempColor;
