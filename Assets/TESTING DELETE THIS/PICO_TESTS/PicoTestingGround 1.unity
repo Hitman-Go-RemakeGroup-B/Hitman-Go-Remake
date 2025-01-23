@@ -831,6 +831,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &20220892
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -944,6 +945,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &21765224
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2040,6 +2042,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RowsZ: 8
   CollumsX: 8
+  WinNodeCoordinates: {x: 3, y: 0}
   UnitScale: 5
   NodePrefab: {fileID: 5278464472800113699, guid: 89295502976fe144caa9ee301ee61048, type: 3}
   LinePrefab: {fileID: -3945401427800089985, guid: 8925756ea0043864896e216cc8e912ad, type: 3}
@@ -2167,6 +2170,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &95922827
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2944,6 +2948,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &161102083
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3727,6 +3732,7 @@ MonoBehaviour:
   Timer: 0
   GridSize: {x: 0, y: 0}
   PossibleNodes: []
+  PossibleNodeDirections: []
   FoundPath: []
   Index: 0
   DirIndex: 0
@@ -3734,8 +3740,7 @@ MonoBehaviour:
   EndNode: {fileID: 0}
   OldDir: {x: 0, y: 0}
   BoardPiceType: 1
-  PlayerCanTransformIntoMe: 0
-  deathPosition: {fileID: 376613963}
+  _isPlayerAbleToTransformIntoMe: 0
 --- !u!65 &205102878
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4028,6 +4033,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &212178050
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4970,6 +4976,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &269224307
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5244,6 +5251,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &274676348
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5358,6 +5366,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &294640904
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5780,7 +5789,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &310059261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5794,8 +5803,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PossibleDirections:
-    list: []
-  Dir: {x: 1, y: 2}
+    list:
+    - vector2Ints:
+      - {x: 1, y: 0}
+      - {x: -1, y: 0}
+    - vector2Ints:
+      - {x: 0, y: -1}
+      - {x: 0, y: 1}
+  Dir: {x: 1, y: 0}
   TimeToReachNextNode: 1
   IsImmobile: 0
   IsDead: 0
@@ -5806,15 +5821,15 @@ MonoBehaviour:
   Timer: 0
   GridSize: {x: 0, y: 0}
   PossibleNodes: []
+  PossibleNodeDirections: []
   FoundPath: []
   Index: 0
   DirIndex: 0
   StartPos: {x: 0, y: 0, z: 0}
   EndNode: {fileID: 0}
   OldDir: {x: 0, y: 0}
-  BoardPiceType: 3
-  PlayerCanTransformIntoMe: 0
-  deathPosition: {fileID: 376613963}
+  BoardPiceType: 1
+  _isPlayerAbleToTransformIntoMe: 1
 --- !u!65 &310059262
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5895,7 +5910,7 @@ Transform:
   m_GameObject: {fileID: 310059260}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 20.151, y: 0, z: 9.88}
+  m_LocalPosition: {x: 20.151, y: -0.01, z: 9.88}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -7727,110 +7742,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1583517685}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &376613962
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 376613965}
-  - component: {fileID: 376613964}
-  - component: {fileID: 376613963}
-  m_Layer: 0
-  m_Name: DeathNodePawn
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &376613963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 376613962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11ec5682d75590640985aa25949b3ebe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Connections: []
-  GridCoordinate: {x: 7, y: 7}
-  HCost: 0
-  GCost: 0
-  PreviousNode: {fileID: 0}
-  NodeSpriteRenderer: {fileID: 0}
-  oldColor: {r: 0, g: 0, b: 0, a: 0}
---- !u!212 &376613964
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 376613962}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
---- !u!4 &376613965
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 376613962}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 20.09, y: 0, z: 49.93}
-  m_LocalScale: {x: 0.9, y: 0.9000002, z: 0.9000002}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &379252334
 GameObject:
   m_ObjectHideFlags: 0
@@ -8374,6 +8285,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &409401780
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8487,6 +8399,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &418121039
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8768,6 +8681,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &419227988
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -9047,6 +8961,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &441031066
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -9660,6 +9575,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &493234138
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -9942,6 +9858,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &500872015
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -10390,6 +10307,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &534115822
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -10503,6 +10421,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &534694843
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -12610,6 +12529,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &602138908
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -13058,6 +12978,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &620815474
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -13506,6 +13427,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &657282992
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -16109,6 +16031,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &802742315
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -17055,6 +16978,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &862133058
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -17334,6 +17258,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &868853301
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -17450,6 +17375,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &878460851
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -18728,6 +18654,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &971935757
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -19007,6 +18934,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &984339415
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -19121,6 +19049,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &986171058
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -19403,6 +19332,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &996872334
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -20224,7 +20154,7 @@ Transform:
   m_GameObject: {fileID: 1070620722}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0.7071068, w: 0}
-  m_LocalPosition: {x: 11.22, y: 14.08, z: 7.74}
+  m_LocalPosition: {x: 18.75, y: 23.02, z: 12.04}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -20438,6 +20368,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1098378696
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -21093,6 +21024,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1114275076
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -22209,6 +22141,7 @@ MonoBehaviour:
   Timer: 0
   GridSize: {x: 0, y: 0}
   PossibleNodes: []
+  PossibleNodeDirections: []
   FoundPath: []
   Index: 0
   DirIndex: 0
@@ -22216,8 +22149,7 @@ MonoBehaviour:
   EndNode: {fileID: 0}
   OldDir: {x: 0, y: 0}
   BoardPiceType: 2
-  PlayerCanTransformIntoMe: 0
-  deathPosition: {fileID: 376613963}
+  _isPlayerAbleToTransformIntoMe: 0
 --- !u!65 &1173464622
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23840,6 +23772,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1219463289
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -24286,6 +24219,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1227929685
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -24731,6 +24665,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1250391004
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -24844,6 +24779,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1257302171
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -25790,6 +25726,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1295711620
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -26069,6 +26006,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1297902195
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -26182,6 +26120,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1314491061
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -26796,6 +26735,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1355853673
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -27586,6 +27526,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1403530402
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -28674,6 +28615,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1431269951
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -28953,6 +28895,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1435862489
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -30001,6 +29944,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1493491416
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -30677,6 +30621,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1538291045
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -30790,6 +30735,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1551244289
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -30905,6 +30851,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1558243616
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -31187,6 +31134,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1583517684
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -31635,6 +31583,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1605683549
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -31917,6 +31866,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1624310366
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -32528,6 +32478,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1635209825
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -33471,6 +33422,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1689657542
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -35214,6 +35166,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1755028061
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -35493,6 +35446,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1764696635
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -36269,6 +36223,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1794798035
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -37544,6 +37499,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1838350514
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -38223,6 +38179,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1880468086
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -38334,6 +38291,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1884950240
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -38779,6 +38737,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1903808696
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -39061,6 +39020,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1933486015
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -39343,6 +39303,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1957753176
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -40286,6 +40247,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &1978150225
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -41110,6 +41072,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &2021338790
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -41779,7 +41742,7 @@ Transform:
   m_GameObject: {fileID: 2068888679}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10, y: 0, z: 10.01}
+  m_LocalPosition: {x: 14.95, y: 0, z: 9.84}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -41810,6 +41773,7 @@ MonoBehaviour:
   Timer: 0
   GridSize: {x: 0, y: 0}
   PossibleNodes: []
+  PossibleNodeDirections: []
   FoundPath: []
   Index: 0
   DirIndex: 0
@@ -42191,6 +42155,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &2083256424
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -42470,6 +42435,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &2088793670
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -42918,6 +42884,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &2101899014
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -43034,6 +43001,7 @@ MonoBehaviour:
   PreviousNode: {fileID: 0}
   NodeSpriteRenderer: {fileID: 0}
   oldColor: {r: 0, g: 0, b: 0, a: 0}
+  IsWinNode: 0
 --- !u!212 &2111547684
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -43779,7 +43747,6 @@ SceneRoots:
   - {fileID: 205102881}
   - {fileID: 310059265}
   - {fileID: 2068888683}
-  - {fileID: 376613965}
   - {fileID: 90306666}
   - {fileID: 1106476837}
   - {fileID: 1470717912}

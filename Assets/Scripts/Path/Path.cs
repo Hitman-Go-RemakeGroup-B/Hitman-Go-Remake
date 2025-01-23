@@ -10,18 +10,19 @@ public class Path : MonoBehaviour
     [Header("Setting")]
     public int RowsZ;
     public int CollumsX;
+    public Vector2Int WinNodeCoordinates;
 
     [Tooltip("the space between each node")]
     public float UnitScale = 1;
 
     [Header("Prefabs")]
     public Node NodePrefab;
-
     public Line LinePrefab;
 
     [Header("Data")]
     public static Node[,] NodeArray;
 
+    private Node _winNode;
     private static List<GameObject> _lineList;
     private GameObject[,] _gridArray;
     private Vector3 _generateFromPosition;
@@ -35,8 +36,8 @@ public class Path : MonoBehaviour
         _controllers = FindObjectsOfType<Controller>();
         foreach (Controller controller in _controllers)
         {
-            controller.FindPath += FindPath;
-            controller.NodeFromCoordinates += GetNodeFromCoordinate;
+            controller.FindPath = FindPath;
+            controller.NodeFromCoordinates = GetNodeFromCoordinate;
             controller.CurrentNode = NodeFromWorldPos(controller.transform.position);
         }
     }
@@ -59,8 +60,17 @@ public class Path : MonoBehaviour
         {
             Node child = transform.GetChild(i).GetComponent<Node>();
             child.OnColorChange += ChangeColor;
+            child.NodeSpriteRenderer = child.GetComponent<SpriteRenderer>();
             NodeArray[child.GridCoordinate.x, child.GridCoordinate.y] = child;
         }
+        _winNode = GetNodeFromCoordinate(WinNodeCoordinates);
+        _winNode.IsWinNode = true;
+
+#if UNITY_EDITOR
+        _winNode.NodeSpriteRenderer.color = Color.yellow;
+        _winNode.oldColor = Color.yellow;
+#endif
+
     }
 
     public List<Node> FindPath(Vector2Int startCoordinate, Vector2Int endCoordinate, WrongMove wrongMove)
@@ -319,6 +329,9 @@ public class Path : MonoBehaviour
 
     public Node GetNodeFromCoordinate(Vector2Int givenCoordinate)
     {
+        if (givenCoordinate.x >= CollumsX || givenCoordinate.y >= RowsZ || givenCoordinate.y < 0 || givenCoordinate.x < 0)
+            return null;
+
         if (NodeArray[givenCoordinate.x, givenCoordinate.y])
             return NodeArray[givenCoordinate.x, givenCoordinate.y];
 

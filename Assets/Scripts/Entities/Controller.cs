@@ -22,6 +22,7 @@ public class Controller : MonoBehaviour
     [HideInInspector] public Vector2Int GridSize;
     [HideInInspector] public BaseEntity BoardPice;
     [HideInInspector] public List<Node> PossibleNodes;
+    [HideInInspector] public List<Node> PossibleNodeDirections;
     [HideInInspector] public List<Node> FoundPath;
     [HideInInspector] public int Index;
     [HideInInspector] public int DirIndex;
@@ -43,9 +44,14 @@ public class Controller : MonoBehaviour
        StartPos = transform.position;
     }
 
-    protected virtual void PiceCange(BaseEntity newPice)
+    public virtual void PiceCange(BaseEntity newPice)
     {
+        BaseEntity newOne = newPice;
+        newPice.controller = BoardPice.controller;        
         BoardPice = newPice;
+        Dir = Vector2Int.zero;
+        PossibleNodes.Clear();
+        PossibleNodeDirections.Clear();
         TurnSetUp();
     }
 
@@ -74,15 +80,13 @@ public class Controller : MonoBehaviour
         return BoolCheck(IsDistracted);
     }
 
-    protected BT_Node.Status AmIDead()
-    {
-        return BoolCheck(IsDead);
-    }
 
     public virtual void StartTurn()
     {
         if (_behaviourTree == null)
             return;
+
+        StopAllCoroutines();
         StartCoroutine(TakeTurn());
     }
 
@@ -91,8 +95,8 @@ public class Controller : MonoBehaviour
         while (_behaviourTree.Process() == BT_Node.Status.Running)
             yield return null;
 
-        OnTurnEnd?.Invoke();
         _behaviourTree.Reset();
+        OnTurnEnd?.Invoke();
     }
 
     public virtual void Death()
