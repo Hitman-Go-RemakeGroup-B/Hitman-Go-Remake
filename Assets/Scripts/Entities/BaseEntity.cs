@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using BT;
 using UnityEngine;
 
@@ -7,7 +9,7 @@ public class BaseEntity
     public Controller controller { get => _controller; set => _controller = value; }
     protected Touch _touch;
 
-    protected Vector2Int DirToNode(Node from, Node to)
+    protected Vector2Int NodeToDir(Node from, Node to)
     { return (to.GridCoordinate - from.GridCoordinate); }
 
     public BaseEntity(Controller controller)
@@ -41,7 +43,7 @@ public class BaseEntity
             return BT_Node.Status.Success;
         }
 
-        _controller.PossibleNodes.Clear();
+        //_controller.PossibleNodes.Clear();
 
         if (_controller.Index >= _controller.PossibleDirections.list.Count)
         {
@@ -79,7 +81,7 @@ public class BaseEntity
         {
             if (connection == null) continue;
 
-            Vector2Int directionToEndNode = DirToNode(_controller.CurrentNode, connection.EndNode);
+            Vector2Int directionToEndNode = NodeToDir(_controller.CurrentNode, connection.EndNode);
 
             if (WrongDirection(directionToEndNode.x, directionToEndNode.y))
                 continue;
@@ -139,7 +141,7 @@ public class BaseEntity
         if (hitNode == null)
             return BT_Node.Status.Failure;
 
-        _controller.Dir = DirToNode(_controller.CurrentNode, hitNode);
+        _controller.Dir = NodeToDir(_controller.CurrentNode, hitNode);
         return BT_Node.Status.Success;
     }
 
@@ -156,7 +158,7 @@ public class BaseEntity
         {
             if (connection == null) continue;
 
-            Vector2Int directionToEndNode = DirToNode(from, connection.EndNode);
+            Vector2Int directionToEndNode = NodeToDir(from, connection.EndNode);
 
             if (WrongDirection(directionToEndNode.x, directionToEndNode.y)
                 || (_controller.Dir != directionToEndNode
@@ -204,7 +206,7 @@ public class BaseEntity
         _controller.OldDir = -_controller.Dir;
         int possibleNodesNum = _controller.PossibleNodes.Count;
         _controller.EndNode = _controller.PossibleNodes[possibleNodesNum - 1];
-        _controller.PossibleNodes.Clear();
+        
         Vector3 direction = _controller.EndNode.transform.position - _controller.CurrentNode.transform.position;
         Ray ray = new Ray(_controller.CurrentNode.transform.position, direction.normalized);
         bool raycast = Physics.Raycast(ray, out RaycastHit hit, direction.magnitude);
@@ -214,7 +216,7 @@ public class BaseEntity
         if (raycast && hit.transform.TryGetComponent(out PlayerController player))
         {
             //player.Death();
-            _controller.PossibleNodes.Clear();
+            
             _controller.EndNode = player.CurrentNode;
             return BT_Node.Status.Success;
         }
@@ -269,7 +271,7 @@ public class BaseEntity
         }
 
         if (hitNode == null)
-            return BT_Node.Status.Failure;
+            return BT_Node.Status.Running;
 
         _controller.EndNode = hitNode;
         return BT_Node.Status.Success;
@@ -281,7 +283,7 @@ public class BaseEntity
     /// <returns> Running while going twoards the endNode and Success when it's done </returns>
     public virtual BT_Node.Status MoveTwoardsEndNode()
     {
-        if (_controller.IsImmobile && !_controller.IsKilling)
+        if (_controller.IsImmobile && !_controller.IsKilling || _controller.EndNode == null)
             return BT_Node.Status.Success;
 
         if (_controller.Timer < _controller.TimeToReachNextNode)
@@ -297,6 +299,7 @@ public class BaseEntity
         _controller.transform.position = _controller.EndNode.transform.position;
         _controller.StartPos = _controller.transform.position;
         _controller.CurrentNode = _controller.EndNode;
+        _controller.EndNode = null;
         _controller.PossibleNodeDirections.Clear();
         _controller.PossibleNodes.Clear();
         return BT_Node.Status.Success;
@@ -359,9 +362,6 @@ public class PawnEntity : BaseEntity
 
 public class RookEntity : BaseEntity
 {
-
-    private int debug;
-
     public RookEntity(Controller controller) : base(controller)
     {
     }
@@ -396,7 +396,7 @@ public class RookEntity : BaseEntity
         {
             if (connection == null) continue;
 
-            Vector2Int directionToEndNode = DirToNode(from, connection.EndNode);
+            Vector2Int directionToEndNode = NodeToDir(from, connection.EndNode);
 
             if (WrongDirection(directionToEndNode.x, directionToEndNode.y)
                 || (_controller.Dir != directionToEndNode
@@ -420,7 +420,7 @@ public class RookEntity : BaseEntity
     public override BT_Node.Status FindEndNodeWhileDistracted()
     {
         Node node = _controller.FoundPath[0];
-        Vector2Int direction = DirToNode(_controller.CurrentNode, node);
+        Vector2Int direction = NodeToDir(_controller.CurrentNode, node);
         _controller.FoundPath.RemoveAt(0);
         node = GetLastNodeInDirection(node, direction);
 
@@ -435,7 +435,7 @@ public class RookEntity : BaseEntity
         {
             Node node = _controller.FoundPath[0];
 
-            if (DirToNode(from, node) == direction)
+            if (NodeToDir(from, node) == direction)
             {
                 _controller.FoundPath.RemoveAt(0);
                 return GetLastNodeInDirection(node, direction);
@@ -447,8 +447,6 @@ public class RookEntity : BaseEntity
 
     public override BT_Node.Status Raycast()
     {
-        Debug.Log(debug);
-
         return base.Raycast();
     }
 
@@ -498,7 +496,7 @@ public class BishopEntity : BaseEntity
         {
             if (connection == null) continue;
 
-            Vector2Int directionToEndNode = DirToNode(from, connection.EndNode);
+            Vector2Int directionToEndNode = NodeToDir(from, connection.EndNode);
 
             if (WrongDirection(directionToEndNode.x, directionToEndNode.y)
                 || (_controller.Dir != directionToEndNode
@@ -522,7 +520,7 @@ public class BishopEntity : BaseEntity
     public override BT_Node.Status FindEndNodeWhileDistracted()
     {
         Node node = _controller.FoundPath[0];
-        Vector2Int direction = DirToNode(_controller.CurrentNode, node);
+        Vector2Int direction = NodeToDir(_controller.CurrentNode, node);
         _controller.FoundPath.RemoveAt(0);
         node = GetLastNodeInDirection(node, direction);
 
@@ -538,7 +536,7 @@ public class BishopEntity : BaseEntity
         {
             Node node = _controller.FoundPath[0];
 
-            if (DirToNode(from, node) == direction)
+            if (NodeToDir(from, node) == direction)
             {
                 _controller.FoundPath.RemoveAt(0);
                 return GetLastNodeInDirection(node, direction);
@@ -572,7 +570,11 @@ public class KnightEntity : BaseEntity
 
     private int _index = 0;
     Vector3[] _directions = new Vector3[2];
-    private Node GetNodeFromDirection(Vector2Int dir) => _controller.NodeFromCoordinates?.Invoke(dir);
+    Vector2Int[] _possibleNodeDirs = new Vector2Int[8] { new(1, -2), new(-1, -2), new(-2, 1), new(-2, -1), new(1, 2), new(-1, 2), new(2, 1), new(2, -1) };
+    
+    List<Vector2Int> possibleDirections = new List<Vector2Int>();
+    
+    private Node GetNodeFromCoordinate(Vector2Int dir) => _controller.NodeFromCoordinates?.Invoke(dir);
 
     public KnightEntity(Controller controller) : base(controller)
     {
@@ -593,6 +595,7 @@ public class KnightEntity : BaseEntity
     }
     public override BT_Node.Status FindDirection()
     {
+        //_controller.PossibleNodeDirections.Clear();
         return BT_Node.Status.Success;
     }
 
@@ -603,6 +606,23 @@ public class KnightEntity : BaseEntity
 
     public override BT_Node.Status FindPossibleNodes(Node from, Vector2Int direction)
     {
+        if (_controller.IsImmobile)
+            return BT_Node.Status.Success;
+
+        var contrCoordinates = _controller.CurrentNode.GridCoordinate;
+
+        foreach (Vector2Int dir in _possibleNodeDirs)
+        {
+            var node = GetNodeFromCoordinate(contrCoordinates + dir);
+            if (node == null)
+                continue;
+            _controller.PossibleNodes.Add(node);
+        }
+
+        if (_controller.PossibleNodes.Count <= 0)
+            return BT_Node.Status.Failure;
+
+
         return BT_Node.Status.Success;
     }
 
@@ -613,19 +633,35 @@ public class KnightEntity : BaseEntity
 
     public override BT_Node.Status ChooseEndNode()
     {
-        return base.ChooseEndNode();
+        var baseChoice = base.ChooseEndNode();
+        if (baseChoice != BT_Node.Status.Success)
+            return baseChoice;
+
+        Vector2Int direction = NodeToDir(_controller.CurrentNode, _controller.EndNode);
+        float dirX = Mathf.Abs(direction.x);
+        float dirY = Mathf.Abs(direction.y);
+        if (dirX > dirY)
+        {
+            _directions[0] = new(_controller.EndNode.transform.position.x, 0, _controller.transform.position.z);
+        }
+        else
+        {
+            _directions[0] = new(_controller.transform.position.x, 0, _controller.EndNode.transform.position.z);
+        }
+        _directions[1] = _controller.EndNode.transform.position;
+        return BT_Node.Status.Success;
     }
 
     public override BT_Node.Status Raycast()
     {
         _controller.OldDir = -_controller.Dir;
         Vector2Int direction = _controller.Dir;
-        int x = Mathf.Abs(direction.x);
-        int y = Mathf.Abs(direction.y);
+        int dirX = Mathf.Abs(direction.x);
+        int dirY = Mathf.Abs(direction.y);
 
         for (int i = 0; i < 2; i++)
         {
-            Node rayNode = GetNodeFromDirection(_controller.CurrentNode.GridCoordinate + direction);
+            Node rayNode = GetNodeFromCoordinate(_controller.CurrentNode.GridCoordinate + direction);
 
             if (rayNode == null) continue;
 
@@ -641,7 +677,7 @@ public class KnightEntity : BaseEntity
                     _controller.EndNode = playerController.CurrentNode;
                     _controller.IsKilling = true;
 
-                    if (direction.x > direction.y)
+                    if (dirX > dirY)
                     {
                         _directions[0] = new(_controller.EndNode.transform.position.x, 0, _controller.transform.position.z);
                     }
@@ -650,11 +686,12 @@ public class KnightEntity : BaseEntity
                         _directions[0] = new(_controller.transform.position.x, 0, _controller.EndNode.transform.position.z);
                     }
                     _directions[1] = _controller.EndNode.transform.position;
+                    
                     return BT_Node.Status.Success;
                 }
             }
 
-            if (x < 2)
+            if (dirX < 2)
             {
                 direction.x *= -1;
                 continue;
@@ -668,7 +705,7 @@ public class KnightEntity : BaseEntity
 
     public override BT_Node.Status MoveTwoardsEndNode()
     {
-        if (_controller.EndNode == null)
+        if (_controller.EndNode == null || _controller.IsImmobile && !(_controller.IsKilling||_controller.IsDistracted))
             return BT_Node.Status.Success;
 
         if (_index >= _directions.Length)
@@ -676,6 +713,7 @@ public class KnightEntity : BaseEntity
             _index = 0;
             _controller.StartPos = _controller.transform.position;
             _controller.CurrentNode = _controller.EndNode;
+            _controller.EndNode = null;
             _controller.IsKilling = false;
             _controller.PossibleNodeDirections.Clear();
             _controller.PossibleNodes.Clear();
@@ -694,7 +732,6 @@ public class KnightEntity : BaseEntity
         _controller.StartPos = _controller.transform.position;
         _timer = 0;
         _index++;
-        _controller.EndNode = null;
         return BT_Node.Status.Running;
     }
 }

@@ -80,15 +80,13 @@ public class Controller : MonoBehaviour
         return BoolCheck(IsDistracted);
     }
 
-    protected BT_Node.Status AmIDead()
-    {
-        return BoolCheck(IsDead);
-    }
 
     public virtual void StartTurn()
     {
         if (_behaviourTree == null)
             return;
+
+        StopAllCoroutines();
         StartCoroutine(TakeTurn());
     }
 
@@ -97,8 +95,8 @@ public class Controller : MonoBehaviour
         while (_behaviourTree.Process() == BT_Node.Status.Running)
             yield return null;
 
-        OnTurnEnd?.Invoke();
         _behaviourTree.Reset();
+        OnTurnEnd?.Invoke();
     }
 
     public virtual void Death()

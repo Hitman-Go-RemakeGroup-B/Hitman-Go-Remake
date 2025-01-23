@@ -37,7 +37,7 @@ public class TurnsManager : MonoBehaviour
     {
         OnPlayerTurnStart?.Invoke();
     }
-   
+
 
     private void OnEnemyDeath(AiController controller)
     {
@@ -62,6 +62,13 @@ public class TurnsManager : MonoBehaviour
     public void PlayerTurnEnd()
     {
         // startEnemiesTurn
+
+        if (_nOfEnemies <= 0)
+        {
+            EnemyTurnEnd();
+            return;
+        }
+
         OnEnemiesTurnStart?.Invoke(); // says to all enemies to start taking their turn
     }
 

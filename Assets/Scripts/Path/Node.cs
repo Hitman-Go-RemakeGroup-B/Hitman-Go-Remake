@@ -12,13 +12,11 @@ public class Node : MonoBehaviour
     [HideInInspector] public Node PreviousNode;
     [HideInInspector] public SpriteRenderer NodeSpriteRenderer;
     [HideInInspector] public Color oldColor;
+    [HideInInspector] public bool IsWinNode = false;
     public delegate void NodeHiglight(Node node, Color color, bool isHiglight);
     public NodeHiglight OnColorChange;
     public int FCost => HCost+GCost;
 
-    private void Awake()
-    {
-        NodeSpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-    }
+   
 
 }
