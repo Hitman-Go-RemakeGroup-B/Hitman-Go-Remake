@@ -29,7 +29,6 @@ public class WinCondition : MonoBehaviour
     }
     private void Start()
     {
-        Star = new Image[3];
         starCount = 0;
         if (Data.Data== null)
         {
