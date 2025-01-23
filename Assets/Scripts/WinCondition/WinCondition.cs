@@ -3,9 +3,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
 public class WinCondition : MonoBehaviour
 {
-
 
     public static Action<bool> Queen;
     public static Action<bool> King;
@@ -16,14 +16,13 @@ public class WinCondition : MonoBehaviour
 
     private SaveLevel level;
     private int starCount;
-    public SaveData Data;
+    public SaveDataJson Data;
 
     [SerializeField] GameObject panel;
     [SerializeField] int numberOfEnemy;
     [SerializeField] int minTurn;
     [SerializeField] LevelScriptableObject Nlevel;
     [SerializeField] Image[] Star;
-    //
     private void Awake()
     {
         level = new SaveLevel();
@@ -32,9 +31,13 @@ public class WinCondition : MonoBehaviour
     {
         Star = new Image[3];
         starCount = 0;
-        if (Data == null)
+        if (Data.Data== null)
         {
-            Data = new SaveData(Nlevel.Nlevel);
+            Data = new SaveDataJson();
+        }
+        else
+        {
+            Data.LoadData();
         }
     }
 
@@ -127,7 +130,7 @@ public class WinCondition : MonoBehaviour
     }
     private void GetIndex(){
         string scene = SceneManager.GetActiveScene().name;
-        level.LevelIndex= int.Parse(scene.Split(' ')[1])-1;
+        level.LevelIndex= int.Parse(scene.Split(' ')[1]);
     }
 
 

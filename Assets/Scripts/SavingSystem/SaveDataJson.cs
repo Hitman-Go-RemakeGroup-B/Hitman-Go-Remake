@@ -8,20 +8,20 @@ using UnityEngine;
 public class SaveDataJson : MonoBehaviour
 {
 
-    [SerializeField] LevelScriptableObject level;
+    [SerializeField]LevelScriptableObject level;
 
-    public int starCount = 0;
+    public int starCount=0;
 
     public static Action<SaveLevel> levelAction;
     public SaveData Data;
-    byte[] key = Encoding.ASCII.GetBytes("Picodead");
+    byte[] key = Encoding.ASCII.GetBytes("Picodead"); 
     byte[] iv = Encoding.ASCII.GetBytes("abcdefgh");
 
     private void OnEnable()
     {
         if (Data == null)
         {
-            Data = new SaveData(level.Nlevel);
+            Data=new SaveData(level.Nlevel);
         }
         else
         {
@@ -32,7 +32,7 @@ public class SaveDataJson : MonoBehaviour
 
     private void OnDisable()
     {
-        levelAction -= SaveLevel;
+        levelAction  -= SaveLevel;
     }
 
     public void RestoreGame()
@@ -83,7 +83,7 @@ public class SaveDataJson : MonoBehaviour
         string json = JsonUtility.ToJson(Data);
         string encryptedString = Encrypt(json, key, iv);
 
-        using (StreamWriter writer = new StreamWriter(Application.persistentDataPath + "/" + "SaveData.json"))
+        using (StreamWriter writer= new StreamWriter(Application.persistentDataPath + "/" + "SaveData.json"))
         {
             writer.Write(encryptedString);
         }
@@ -91,25 +91,25 @@ public class SaveDataJson : MonoBehaviour
 
     public void LoadData()
     {
-        string json = string.Empty;
-        using (StreamReader reader = new StreamReader(Application.persistentDataPath + "/" + "SaveData.json"))
+        string json=string.Empty;
+        using (StreamReader reader=new StreamReader(Application.persistentDataPath+ "/" + "SaveData.json"))
         {
-            json = reader.ReadToEnd();
+            json=reader.ReadToEnd();
         }
         string decryptedString = Decrypt(json, key, iv);
-        Data = JsonUtility.FromJson<SaveData>(decryptedString);
+        Data =JsonUtility.FromJson<SaveData>(decryptedString);
     }
     public void SaveLevel(SaveLevel level)
     {
-        if (Data.LevelIndex < level.LevelIndex)
+        if (Data.LevelIndex<level.LevelIndex)
         {
-            Data.LevelIndex = level.LevelIndex;
+            Data.LevelIndex=level.LevelIndex;
         }
 
-        Data.KillKing[level.LevelIndex - 1] = level.KillKing;
-        Data.MinTurns[level.LevelIndex - 1] = level.MinTurns;
-        Data.NoEnemy[level.LevelIndex - 1] = level.NoEnemy;
-        Data.EveryEnemy[level.LevelIndex - 1] = level.EveryEnemy;
+        Data.KillKing[level.LevelIndex-1] = level.KillKing;
+        Data.MinTurns[level.LevelIndex-1] = level.MinTurns;
+        Data.NoEnemy[level.LevelIndex-1] = level.NoEnemy;
+        Data.EveryEnemy[level.LevelIndex-1] = level.EveryEnemy;
         Data.QueenEnding[level.LevelIndex - 1] = level.QueenEnding;
         SaveData();
     }
@@ -119,27 +119,23 @@ public class SaveDataJson : MonoBehaviour
         starCount = 0;
         if (Data == null)
         {
-            Data = new SaveData(this.level.Nlevel);
+            Data=new SaveData(this.level.Nlevel);
             SaveData();
         }
         LoadData();
         if (Data.EveryEnemy[i])
         {
             starCount++;
-        }
-        else if (Data.KillKing[i])
+        }else if (Data.KillKing[i])
+        {
+            starCount++; 
+        }else if (Data.QueenEnding[i])
         {
             starCount++;
-        }
-        else if (Data.QueenEnding[i])
+        }else if (Data.NoEnemy[i])
         {
             starCount++;
-        }
-        else if (Data.NoEnemy[i])
-        {
-            starCount++;
-        }
-        else if (Data.MinTurns[i])
+        }else if (Data.MinTurns[i])
         {
             starCount++;
         }
