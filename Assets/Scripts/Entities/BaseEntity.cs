@@ -206,7 +206,7 @@ public class BaseEntity
         _controller.OldDir = -_controller.Dir;
         int possibleNodesNum = _controller.PossibleNodes.Count;
         _controller.EndNode = _controller.PossibleNodes[possibleNodesNum - 1];
-        
+
         Vector3 direction = _controller.EndNode.transform.position - _controller.CurrentNode.transform.position;
         Ray ray = new Ray(_controller.CurrentNode.transform.position, direction.normalized);
         bool raycast = Physics.Raycast(ray, out RaycastHit hit, direction.magnitude);
@@ -216,7 +216,7 @@ public class BaseEntity
         if (raycast && hit.transform.TryGetComponent(out PlayerController player))
         {
             //player.Death();
-            
+
             _controller.EndNode = player.CurrentNode;
             return BT_Node.Status.Success;
         }
@@ -308,6 +308,7 @@ public class BaseEntity
 
 public class PawnEntity : BaseEntity
 {
+    int _index = 2;
     public PawnEntity(Controller controller) : base(controller)
     {
     }
@@ -326,17 +327,56 @@ public class PawnEntity : BaseEntity
 
     public override BT_Node.Status FindDirection()
     {
-        return BT_Node.Status.Success;
+        if (!_controller.IsFirstTurn)
+            return BT_Node.Status.Success;
+        return base.FindDirection();
     }
 
     public override BT_Node.Status ChooseDirection()
     {
-        return BT_Node.Status.Success;
+        if (!_controller.IsFirstTurn)
+            return BT_Node.Status.Success;
+        return base.ChooseDirection();
+
     }
 
     public override BT_Node.Status FindPossibleNodes(Node from, Vector2Int direction)
     {
-        return base.FindPossibleNodes(from, direction);
+        if (!_controller.IsFirstTurn)
+            return base.FindPossibleNodes(from, direction);
+
+        Node node = null;
+
+        foreach (Line connection in from.Connections)
+        {
+            if (connection == null) continue;
+
+            Vector2Int directionToEndNode = NodeToDir(from, connection.EndNode);
+
+            if (WrongDirection(directionToEndNode.x, directionToEndNode.y)
+                || (_controller.Dir != directionToEndNode
+                && _controller.Dir != Vector2Int.zero))
+                continue;
+
+            node = connection.EndNode;
+
+            _controller.PossibleNodes.Add(node);
+
+
+            if (_index > 0)
+            {
+                if (FindPossibleNodes(node, directionToEndNode) == BT_Node.Status.Failure)
+                    continue;
+                _index--;
+            }
+
+        }
+
+        if (node == null)
+            return BT_Node.Status.Failure;
+
+        _controller.IsFirstTurn = false;
+        return BT_Node.Status.Success;
     }
 
     public override BT_Node.Status FindEndNodeWhileDistracted()
@@ -571,9 +611,9 @@ public class KnightEntity : BaseEntity
     private int _index = 0;
     Vector3[] _directions = new Vector3[2];
     Vector2Int[] _possibleNodeDirs = new Vector2Int[8] { new(1, -2), new(-1, -2), new(-2, 1), new(-2, -1), new(1, 2), new(-1, 2), new(2, 1), new(2, -1) };
-    
+
     List<Vector2Int> possibleDirections = new List<Vector2Int>();
-    
+
     private Node GetNodeFromCoordinate(Vector2Int dir) => _controller.NodeFromCoordinates?.Invoke(dir);
 
     public KnightEntity(Controller controller) : base(controller)
@@ -686,7 +726,7 @@ public class KnightEntity : BaseEntity
                         _directions[0] = new(_controller.transform.position.x, 0, _controller.EndNode.transform.position.z);
                     }
                     _directions[1] = _controller.EndNode.transform.position;
-                    
+
                     return BT_Node.Status.Success;
                 }
             }
@@ -705,7 +745,7 @@ public class KnightEntity : BaseEntity
 
     public override BT_Node.Status MoveTwoardsEndNode()
     {
-        if (_controller.EndNode == null || _controller.IsImmobile && !(_controller.IsKilling||_controller.IsDistracted))
+        if (_controller.EndNode == null || _controller.IsImmobile && !(_controller.IsKilling || _controller.IsDistracted))
             return BT_Node.Status.Success;
 
         if (_index >= _directions.Length)

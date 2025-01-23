@@ -16,6 +16,7 @@ public class Controller : MonoBehaviour
     [HideInInspector] public bool IsDead = false;
     [HideInInspector] public bool IsDistracted = false;
     [HideInInspector] public bool IsKilling = false;
+    [HideInInspector] public bool IsFirstTurn = false;
     [HideInInspector] public Path Path;
     [HideInInspector] public Node CurrentNode;
     [HideInInspector] public float Timer;

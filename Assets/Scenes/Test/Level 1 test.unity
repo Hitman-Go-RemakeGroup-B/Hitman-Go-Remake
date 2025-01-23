@@ -1272,6 +1272,7 @@ MonoBehaviour:
   IsDead: 0
   IsDistracted: 0
   IsKilling: 0
+  IsFirstTurn: 0
   Path: {fileID: 0}
   CurrentNode: {fileID: 0}
   Timer: 0
@@ -14012,6 +14013,7 @@ MonoBehaviour:
   IsDead: 0
   IsDistracted: 0
   IsKilling: 0
+  IsFirstTurn: 0
   Path: {fileID: 0}
   CurrentNode: {fileID: 0}
   Timer: 0
@@ -14870,6 +14872,7 @@ MonoBehaviour:
   IsDead: 0
   IsDistracted: 0
   IsKilling: 0
+  IsFirstTurn: 0
   Path: {fileID: 0}
   CurrentNode: {fileID: 0}
   Timer: 0
@@ -16840,6 +16843,7 @@ MonoBehaviour:
   IsDead: 0
   IsDistracted: 0
   IsKilling: 0
+  IsFirstTurn: 0
   Path: {fileID: 0}
   CurrentNode: {fileID: 0}
   Timer: 0
@@ -18312,6 +18316,7 @@ MonoBehaviour:
   IsDead: 0
   IsDistracted: 0
   IsKilling: 0
+  IsFirstTurn: 0
   Path: {fileID: 0}
   CurrentNode: {fileID: 0}
   Timer: 0
@@ -19645,6 +19650,7 @@ MonoBehaviour:
   IsDead: 0
   IsDistracted: 0
   IsKilling: 0
+  IsFirstTurn: 0
   Path: {fileID: 0}
   CurrentNode: {fileID: 0}
   Timer: 0

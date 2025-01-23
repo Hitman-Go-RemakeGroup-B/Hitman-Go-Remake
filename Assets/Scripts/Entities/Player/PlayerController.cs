@@ -18,6 +18,7 @@ public class PlayerController : Controller
     [HideInInspector] public bool GotQueen;
     private void Start()
     {
+        IsFirstTurn = true;
         BoardPice = new PawnEntity(this);
         TurnSetUp();
 
