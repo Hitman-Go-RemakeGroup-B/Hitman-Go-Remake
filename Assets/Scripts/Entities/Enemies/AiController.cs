@@ -11,10 +11,11 @@ public class AiController : Controller, IInteractable
     public EntityType BoardPiceType;
     [SerializeField] private bool _isPlayerAbleToTransformIntoMe;
     public Action<AiController> OnDeath;
-
+    UIManager _UI;
 
     private void Start()
     {
+        _UI = FindObjectOfType<UIManager>();
         IsFirstTurn = false;
         switch (BoardPiceType)
         {
@@ -100,6 +101,8 @@ public class AiController : Controller, IInteractable
     {
         // you lose sad not pogchampion 
         Debug.Log("you lose, sad. not pogchampion");
+        _UI.RetryLevel();
+
         return BT_Node.Status.Success;
     }
 
