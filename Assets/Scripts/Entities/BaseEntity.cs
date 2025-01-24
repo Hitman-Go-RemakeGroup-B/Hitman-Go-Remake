@@ -152,6 +152,9 @@ public class BaseEntity
     /// <returns>the status of the process</returns>
     public virtual BT_Node.Status FindPossibleNodes(Node from, Vector2Int direction)
     {
+        if(_controller.PossibleNodes.Count >0)
+            return BT_Node.Status.Success;
+
         Node node = null;
 
         foreach (Line connection in from.Connections)
@@ -216,7 +219,7 @@ public class BaseEntity
         if (raycast && hit.transform.TryGetComponent(out PlayerController player))
         {
             //player.Death();
-
+            _controller.IsKilling = true;
             _controller.EndNode = player.CurrentNode;
             return BT_Node.Status.Success;
         }
@@ -432,6 +435,8 @@ public class RookEntity : BaseEntity
 
     public override BT_Node.Status FindPossibleNodes(Node from, Vector2Int direction)
     {
+        if (_controller.PossibleNodes.Count > 0)
+            return BT_Node.Status.Success;
         Node node = null;
 
         foreach (Line connection in from.Connections)
@@ -532,6 +537,8 @@ public class BishopEntity : BaseEntity
 
     public override BT_Node.Status FindPossibleNodes(Node from, Vector2Int direction)
     {
+        if (_controller.PossibleNodes.Count > 0)
+            return BT_Node.Status.Success;
         Node node = null;
 
         foreach (Line connection in from.Connections)
@@ -648,9 +655,11 @@ public class KnightEntity : BaseEntity
 
     public override BT_Node.Status FindPossibleNodes(Node from, Vector2Int direction)
     {
-        if (_controller.IsImmobile)
+        if (_controller.IsImmobile && !_controller.IsKilling)
             return BT_Node.Status.Success;
 
+        if (_controller.PossibleNodes.Count > 0)
+            return BT_Node.Status.Success;
         var contrCoordinates = _controller.CurrentNode.GridCoordinate;
 
         foreach (Vector2Int dir in _possibleNodeDirs)
@@ -729,6 +738,7 @@ public class KnightEntity : BaseEntity
                     }
                     _directions[1] = _controller.EndNode.transform.position;
 
+                    _controller.IsKilling = true;
                     return BT_Node.Status.Success;
                 }
             }
