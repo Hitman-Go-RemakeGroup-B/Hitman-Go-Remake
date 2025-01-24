@@ -134,6 +134,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Level 3 Prefab
       objectReference: {fileID: 0}
+    - target: {fileID: 4357475230067075877, guid: add9e63a2be70fd46bc2cfa9914713b2, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 6392685121592520062, guid: add9e63a2be70fd46bc2cfa9914713b2, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 8969126056892795678, guid: add9e63a2be70fd46bc2cfa9914713b2, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
+      objectReference: {fileID: 0}
     - target: {fileID: 9052558838088888744, guid: add9e63a2be70fd46bc2cfa9914713b2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 32.02754
