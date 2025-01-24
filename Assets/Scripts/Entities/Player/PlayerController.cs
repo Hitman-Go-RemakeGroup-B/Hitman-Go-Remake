@@ -20,7 +20,7 @@ public class PlayerController : Controller
     {
         IsFirstTurn = true;
         BoardPice = new PawnEntity(this);
-        //OnChangeBoardPiece?.Invoke(meshFilter, EntityType.Pawn, meshRenderer);
+        OnChangeBoardPiece?.Invoke(meshFilter, EntityType.Pawn, meshRenderer);
         TurnSetUp();
 
     }

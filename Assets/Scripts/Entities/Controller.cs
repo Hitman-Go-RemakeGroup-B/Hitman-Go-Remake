@@ -53,15 +53,7 @@ public class Controller : MonoBehaviour
 
     public virtual void PiceCange(BaseEntity newPice,EntityType type)
     {
-        BaseEntity newOne = newPice;
-        StopAllCoroutines();
-        newPice.controller = BoardPice.controller;
-        BoardPice = newPice;
-        Dir = Vector2Int.zero;
-        PossibleNodes.Clear();
-        PossibleNodeDirections.Clear();
-        TurnSetUp();
-        OnTurnEnd?.Invoke();
+        
     }
 
     protected virtual void TurnSetUp()
