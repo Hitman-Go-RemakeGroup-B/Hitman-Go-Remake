@@ -142,20 +142,27 @@ public class SaveDataJson : MonoBehaviour
             Data=new SaveData(this.level.Nlevel);
             SaveData();
         }
-        LoadData();
+        else
+        {
+            LoadData();
+        }
         if (Data.EveryEnemy[i])
         {
             starCount++;
-        }else if (Data.KillKing[i])
+        }
+        if (Data.KillKing[i])
         {
             starCount++; 
-        }else if (Data.QueenEnding[i])
+        }
+        if (Data.QueenEnding[i])
         {
             starCount++;
-        }else if (Data.NoEnemy[i])
+        }
+        if (Data.NoEnemy[i])
         {
             starCount++;
-        }else if (Data.MinTurns[i])
+        }
+        if (Data.MinTurns[i])
         {
             starCount++;
         }

@@ -15,8 +15,8 @@ public class VisualizeStar : MonoBehaviour
             tempColor.a = alpha / 255f;
             Star[i].color = tempColor;
         }
-
         saveDataJson.VisualizeStar(GetIndex() - 1);
+        Debug.Log(saveDataJson.starCount);
         for (int i = 0; i < saveDataJson.starCount; i++)
         {
             var tempColor = Star[i].color;
