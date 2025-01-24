@@ -50,3 +50,18 @@ MonoBehaviour:
     Position: {x: 0, y: 0, z: 0}
     Scale: {x: 0.03, y: 0.03, z: 0.03}
     entityType: 0
+  - Mesh: {fileID: -1314526170580811282, guid: 0b8f83214e028f743bc182a67754f64e, type: 3}
+    Material: {fileID: 2100000, guid: 7b0c59934b21934479c77482f7cc9283, type: 2}
+    Position: {x: 0, y: 0, z: 0}
+    Scale: {x: 0.04, y: 0.04, z: 0.04}
+    entityType: 1
+  - Mesh: {fileID: 1970794866792623276, guid: e44f2c7f304b8cb41a4672a28dc4e35e, type: 3}
+    Material: {fileID: 2100000, guid: 520079766dfa7bd419e3502afecf8579, type: 2}
+    Position: {x: 0, y: 0, z: 0}
+    Scale: {x: 0.05, y: 0.05, z: 0.05}
+    entityType: 3
+  - Mesh: {fileID: 4300000, guid: c6d4d7ede50c15447827f55b7fc6e8fc, type: 2}
+    Material: {fileID: 2100000, guid: 596130d29f2cf3744a96520d41ddd0fc, type: 2}
+    Position: {x: 0, y: 0, z: 0}
+    Scale: {x: 0.05, y: 0.05, z: 0.05}
+    entityType: 2
