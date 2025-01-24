@@ -118,6 +118,8 @@ public class Controller : MonoBehaviour
     {
         foreach (Node node in nodesToHiglight)
         {
+            if (node == null)
+                continue;
             node.OnColorChange?.Invoke(node, HilightColor, false);
         }
         return BT_Node.Status.Success;
