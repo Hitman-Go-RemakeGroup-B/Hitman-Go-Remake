@@ -1099,7 +1099,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Obj 1
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 04c40f4958f70e54e87177da12014eac, type: 2}
   m_sharedMaterial: {fileID: 1931458873778490088, guid: 04c40f4958f70e54e87177da12014eac, type: 2}
@@ -1729,7 +1729,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Obj 2
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 04c40f4958f70e54e87177da12014eac, type: 2}
   m_sharedMaterial: {fileID: 1931458873778490088, guid: 04c40f4958f70e54e87177da12014eac, type: 2}
@@ -2373,7 +2373,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Obj 3
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 04c40f4958f70e54e87177da12014eac, type: 2}
   m_sharedMaterial: {fileID: 1931458873778490088, guid: 04c40f4958f70e54e87177da12014eac, type: 2}
@@ -2931,7 +2931,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5673494313197069009, guid: e7da5fb7f8d223445b03ef90005bfc51, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5887366661653820790, guid: e7da5fb7f8d223445b03ef90005bfc51, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
