@@ -130,6 +130,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1293281089653186569, guid: ebfc9ec666d93f045a661972d21db9cf, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 3836352010315875945, guid: ebfc9ec666d93f045a661972d21db9cf, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
+      objectReference: {fileID: 0}
     - target: {fileID: 4617668853927089196, guid: ebfc9ec666d93f045a661972d21db9cf, type: 3}
       propertyPath: BoardPices.Array.size
       value: 4
@@ -361,6 +369,10 @@ PrefabInstance:
     - target: {fileID: 7950496898116258331, guid: ebfc9ec666d93f045a661972d21db9cf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8447932465745913426, guid: ebfc9ec666d93f045a661972d21db9cf, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

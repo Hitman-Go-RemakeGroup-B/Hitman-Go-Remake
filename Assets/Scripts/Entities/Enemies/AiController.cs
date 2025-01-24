@@ -130,7 +130,9 @@ public class AiController : Controller, IInteractable
 
     public void Interact(PlayerController player)
     {
-        base.DeselectNodes(lastPossibleNodes);
+        if (lastPossibleNodes != null && lastPossibleNodes.Count > 0)
+            base.DeselectNodes(lastPossibleNodes);
+
         IsDead = true;
         OnDeath?.Invoke(this);
         if (_isPlayerAbleToTransformIntoMe)
