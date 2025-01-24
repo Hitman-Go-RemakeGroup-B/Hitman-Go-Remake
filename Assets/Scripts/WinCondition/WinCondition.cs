@@ -145,6 +145,7 @@ public class WinCondition : MonoBehaviour
             level.EveryEnemy = false;
         }
     }
+
     private void GetIndex(){
         string scene = SceneManager.GetActiveScene().name;
         level.LevelIndex= int.Parse(scene.Split(' ')[1]);
