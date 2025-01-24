@@ -435,8 +435,7 @@ public class RookEntity : BaseEntity
 
     public override BT_Node.Status FindPossibleNodes(Node from, Vector2Int direction)
     {
-        if (_controller.PossibleNodes.Count > 0)
-            return BT_Node.Status.Success;
+        
         Node node = null;
 
         foreach (Line connection in from.Connections)
@@ -537,8 +536,7 @@ public class BishopEntity : BaseEntity
 
     public override BT_Node.Status FindPossibleNodes(Node from, Vector2Int direction)
     {
-        if (_controller.PossibleNodes.Count > 0)
-            return BT_Node.Status.Success;
+       
         Node node = null;
 
         foreach (Line connection in from.Connections)
