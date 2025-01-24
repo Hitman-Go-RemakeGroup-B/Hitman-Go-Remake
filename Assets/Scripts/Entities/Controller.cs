@@ -11,6 +11,7 @@ public class Controller : MonoBehaviour
     public Vector2Int Dir;
     public float TimeToReachNextNode;
     public bool IsImmobile;
+    public Color HilightColor;
 
     // hidden:
     [HideInInspector] public bool IsDead = false;
@@ -30,8 +31,11 @@ public class Controller : MonoBehaviour
     [HideInInspector] public Vector3 StartPos;
     [HideInInspector] public Node EndNode;
     [HideInInspector] public Vector2Int OldDir;
+    protected MeshFilter meshFilter;
+    protected MeshRenderer meshRenderer;
     protected BT_Sequence _behaviourTree;
     public Action OnTurnEnd;
+    public Action<MeshFilter, EntityType, MeshRenderer> OnChangeBoardPiece;
 
     // action:
     public delegate Node GetNode(Vector2Int coordinates);
@@ -42,23 +46,27 @@ public class Controller : MonoBehaviour
 
     private void Awake()
     {
-       StartPos = transform.position;
+        StartPos = transform.position;
+        meshFilter = GetComponentInChildren<MeshFilter>();
+        meshRenderer = GetComponentInChildren<MeshRenderer>();
     }
 
-    public virtual void PiceCange(BaseEntity newPice)
+    public virtual void PiceCange(BaseEntity newPice,EntityType type)
     {
         BaseEntity newOne = newPice;
-        newPice.controller = BoardPice.controller;        
+        StopAllCoroutines();
+        newPice.controller = BoardPice.controller;
         BoardPice = newPice;
         Dir = Vector2Int.zero;
         PossibleNodes.Clear();
         PossibleNodeDirections.Clear();
         TurnSetUp();
+        OnTurnEnd?.Invoke();
     }
 
     protected virtual void TurnSetUp()
     {
-        // AI: DONE | PlAYER: TODO
+        // AI: DONE | PlAYER: DONE
         _behaviourTree = null;
     }
 
@@ -103,6 +111,24 @@ public class Controller : MonoBehaviour
     public virtual void Death()
     {
 
+    }
+
+    protected BT_Node.Status HighlightNodes(List<Node> nodesToHiglight)
+    {
+        foreach (Node node in nodesToHiglight)
+        {
+            node.OnColorChange?.Invoke(node, HilightColor, true);
+        }
+        return BT_Node.Status.Success;
+    }
+
+    protected BT_Node.Status DeselectNodes(List<Node> nodesToHiglight)
+    {
+        foreach (Node node in nodesToHiglight)
+        {
+            node.OnColorChange?.Invoke(node, HilightColor, false);
+        }
+        return BT_Node.Status.Success;
     }
 }
 

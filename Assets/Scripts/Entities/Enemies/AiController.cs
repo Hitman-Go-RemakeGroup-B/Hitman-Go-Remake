@@ -32,24 +32,27 @@ public class AiController : Controller, IInteractable
                 BoardPice = new KnightEntity(this); break;
         }
 
+        HilightColor = Color.red;
+
         TurnSetUp();
     }
 
     protected override void TurnSetUp()
     {
         _behaviourTree = null;
-
-        // Selectors 
-        BT_Selector amIDistractedSelector = new("am i distracted?");
+        // Repeaters
         BT_Repeater findDirRepeater = new("did i find a sutabile direction");
+        BT_Repeater findNextDirRepeater = new("");
+        
+        // Selectors 
         BT_Selector raycastSelector = new("did the raycast hit?");
 
         // Sequences
         _behaviourTree = new("TurnTree");
         BT_Sequence afterDead = new("do this after you know you died");
-        BT_Sequence distractedSequence = new("do this while distracted");
         BT_Sequence findPossibleNodesSequence = new("do this after finding a possible node");
         BT_Sequence raycastSequence = new("do this while you check for the raycast");
+        BT_Sequence moveToSequence = new("moving and then do the rest");
 
         // Process
 
@@ -60,6 +63,8 @@ public class AiController : Controller, IInteractable
         BaseProcess raycastProcess = new(new CheckDecorator(this, BoardPice.Raycast));
         BaseProcess moveToEndNodeProcess = new(new CheckDecorator(this, BoardPice.MoveTwoardsEndNode));
         BaseProcess killPlayerProcess = new(new CheckDecorator(this, KillPlayer));
+        BaseProcess highlightNodesProcess = new(new HighLightDecorator(this, HighlightNodes, PossibleNodes));
+        BaseProcess deselectNodesProcess = new(new HighLightDecorator(this, DeselectNodes, PossibleNodes));
 
 
         // Leafs
@@ -71,12 +76,13 @@ public class AiController : Controller, IInteractable
         BT_Leaf raycastCheck = new("checks if the raycast hit", raycastProcess);
         BT_Leaf moveToEndNode = new("moves to the endNode", moveToEndNodeProcess);
         BT_Leaf killPlayer = new("kill the player", killPlayerProcess);
+        BT_Leaf highlightNodes = new("highlight found nodes", highlightNodesProcess);
+        BT_Leaf deselectNodes = new("deselectNodes", deselectNodesProcess);
 
 
         // constructing BT:
-        _behaviourTree.AddChild(amIDistractedSelector);
-        amIDistractedSelector.AddChild(distractedSequence);
-        amIDistractedSelector.AddChild(findDirRepeater);
+        _behaviourTree.AddChild(deselectNodes);
+        _behaviourTree.AddChild(findDirRepeater);
         findDirRepeater.AddChild(findPossibleNodesSequence);
         findDirRepeater.AddChild(getNextDir);
 
@@ -84,29 +90,38 @@ public class AiController : Controller, IInteractable
         findPossibleNodesSequence.AddChild(findPossibleNodes);
         findPossibleNodesSequence.AddChild(raycastSelector);
 
-        // distractedSequence:
-        distractedSequence.AddChild(distractedCheck);
-        distractedSequence.AddChild(findNodesWhileDistracted);
-        distractedSequence.AddChild(raycastSelector);
+        // raycastSelector:
         raycastSelector.AddChild(raycastSequence);
-        raycastSelector.AddChild(moveToEndNode);
+        raycastSelector.AddChild(moveToSequence);
 
         // raycastSequence:
         raycastSequence.AddChild(raycastCheck);
-        raycastSequence.AddChild(moveToEndNode);
+        raycastSequence.AddChild(highlightNodes);
+        raycastSequence.AddChild(moveToSequence);
+        raycastSequence.AddChild(deselectNodes);
         raycastSequence.AddChild(killPlayer);
+
+        // findNextDirRepeater
+        findNextDirRepeater.AddChild(findPossibleNodes);
+        findNextDirRepeater.AddChild(getNextDir);
+
+
+        // moveToSequence: 
+        moveToSequence.AddChild(moveToEndNode);
+        moveToSequence.AddChild(findNextDirRepeater);
+        moveToSequence.AddChild(highlightNodes);
     }
 
     private BT_Node.Status KillPlayer()
     {
         // you lose sad not pogchampion 
         Debug.Log("you lose, sad. not pogchampion");
+        IsKilling = false;
         _UI.RetryLevel();
-
         return BT_Node.Status.Success;
     }
 
-    public override void PiceCange(BaseEntity newPice)
+    public override void PiceCange(BaseEntity newPice, EntityType type)
     {
 
     }
@@ -117,7 +132,7 @@ public class AiController : Controller, IInteractable
         OnDeath?.Invoke(this);
         gameObject.SetActive(false);
         if (_isPlayerAbleToTransformIntoMe)
-            player.PiceCange(BoardPice);
+            player.PiceCange(BoardPice,BoardPiceType);
     }
 
 

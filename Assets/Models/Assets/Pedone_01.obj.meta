@@ -3,7 +3,12 @@ guid: f90cb11e942ef0c4a8538adcc022a9fc
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pedone_01Mat
+    second: {fileID: 2100000, guid: 5e5b1919bf618794f9b35a93009e5fed, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

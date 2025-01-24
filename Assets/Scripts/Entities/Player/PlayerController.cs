@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class PlayerController : Controller
 {
-    public Color HilightColor;
+
     public Action OnTurnSetupDone;
     public delegate int GetInt();
     public GetInt GetRemainginEnemies;
@@ -20,6 +20,7 @@ public class PlayerController : Controller
     {
         IsFirstTurn = true;
         BoardPice = new PawnEntity(this);
+        //OnChangeBoardPiece?.Invoke(meshFilter, EntityType.Pawn, meshRenderer);
         TurnSetUp();
 
     }
@@ -45,9 +46,9 @@ public class PlayerController : Controller
         BT_Leaf chooseDirections = new("chooses the direction to move twoards", chooseDirectionsProcess);
         BT_Leaf deselectDirections = new("", deselectDirectionsProcess);
         BT_Leaf findNodes = new("find all nodes", findNodesProcess);
-        BT_Leaf highlightNodes = new("highlight found nodes", highlightNodesProcess);
+        BT_Leaf highlightNodes = new("highlight found nodes", highlightNodesProcess);  
         BT_Leaf chooseNodes = new("choose found node", chooseNodesProcess);
-        BT_Leaf deselectNodes = new("deselectNodes", deselectNodesProcess);
+        BT_Leaf deselectNodes = new("deselectNodes", deselectNodesProcess);           
         BT_Leaf moveToEndNode = new("move to end node", moveToEndNodeProcess);
         BT_Leaf checkInteractables = new("check if there's an interactable", checkInteractablesProcess);
         BT_Leaf checkWinNode = new("", checkWinNodeProcess);
@@ -67,10 +68,19 @@ public class PlayerController : Controller
         OnTurnSetupDone?.Invoke();
     }
     
-    public override void PiceCange(BaseEntity newPice)
+    public override void PiceCange(BaseEntity newPice, EntityType type)
     {
         EndNode = null;
-        base.PiceCange(newPice);
+        BaseEntity newOne = newPice;
+        StopAllCoroutines();
+        newPice.controller = BoardPice.controller;
+        BoardPice = newPice;
+        Dir = Vector2Int.zero;
+        PossibleNodes.Clear();
+        PossibleNodeDirections.Clear();
+        OnChangeBoardPiece(meshFilter, type, meshRenderer);
+        TurnSetUp();
+        OnTurnEnd?.Invoke();
     }
     
     public override void StartTurn()
@@ -88,23 +98,6 @@ public class PlayerController : Controller
         base.Death();
     }
 
-    BT_Node.Status HighlightNodes(List<Node> nodesToHiglight)
-    {
-        foreach (Node node in nodesToHiglight)
-        {
-            node.OnColorChange?.Invoke(node, HilightColor, true);
-        }
-        return BT_Node.Status.Success;
-    }
-
-    BT_Node.Status DeselectNodes(List<Node> nodesToHiglight)
-    {
-        foreach (Node node in nodesToHiglight)
-        {
-            node.OnColorChange?.Invoke(node, HilightColor, false);
-        }
-        return BT_Node.Status.Success;
-    }
 
     BT_Node.Status CheckIInteractable()
     {
