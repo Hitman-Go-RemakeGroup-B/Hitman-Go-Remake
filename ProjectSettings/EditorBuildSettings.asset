@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Test/TaraTest.unity
+    path: Assets/Scenes/Definitive/Main Menu.unity
     guid: 1d2807b82d3b6bd4998fb8e6b70042aa
   - enabled: 0
     path: Assets/Prefab/Scenes/Test/GameTest.unity
@@ -36,15 +36,15 @@ EditorBuildSettings:
     path: Assets/Prefab/Scenes/Level 4.unity
     guid: 55ca18daf38ac874387586f5ff8cff30
   - enabled: 1
-    path: Assets/Scenes/Level 1 New.unity
+    path: Assets/Scenes/Definitive/Level 1 New.unity
     guid: 52b8e96b147f9664586c8311bca5055b
   - enabled: 1
-    path: Assets/Scenes/Level 2 New.unity
+    path: Assets/Scenes/Definitive/Level 2 New.unity
     guid: 49660045a4d3d1d46972f882a39e4d45
   - enabled: 1
-    path: Assets/Scenes/Level 3 New.unity
+    path: Assets/Scenes/Definitive/Level 3 New.unity
     guid: f1041c74d305d1f479a0c77f804c1a90
   - enabled: 1
-    path: Assets/Scenes/Level 4 New.unity
+    path: Assets/Scenes/Definitive/Level 4 New.unity
     guid: 50fdd365ea606bc4d8957d4c0f27ff5d
   m_configObjects: {}
