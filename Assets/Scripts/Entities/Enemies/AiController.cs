@@ -153,9 +153,9 @@ public class AiController : Controller, IInteractable
             {
                 lastPossibleNodes = PossibleNodes;
             }
-
             yield return null;
         }
+
         _behaviourTree.Reset();
         OnTurnEnd?.Invoke();
     }
