@@ -105,26 +105,26 @@ public class SaveDataJson : MonoBehaviour
         {
             Data.LevelIndex=level.LevelIndex;
         }
-        //if (Data.KillKing[level.LevelIndex - 1])
-        //{
-        //    level.KillKing=true;
-        //}
-        //if (Data.MinTurns[level.LevelIndex - 1])
-        //{
-        //    level.MinTurns = true;
-        //}
-        //if (Data.NoEnemy[level.LevelIndex - 1])
-        //{
-        //    level.NoEnemy = true;
-        //}
-        //if (Data.EveryEnemy[level.LevelIndex - 1])
-        //{
-        //    level.EveryEnemy = true;
-        //}
-        //if (Data.QueenEnding[level.LevelIndex - 1])
-        //{
-        //    level.QueenEnding = true;
-        //}
+        if (Data.KillKing[level.LevelIndex - 1])
+        {
+            level.KillKing=true;
+        }
+        if (Data.MinTurns[level.LevelIndex - 1])
+        {
+            level.MinTurns = true;
+        }
+        if (Data.NoEnemy[level.LevelIndex - 1])
+        {
+            level.NoEnemy = true;
+        }
+        if (Data.EveryEnemy[level.LevelIndex - 1])
+        {
+            level.EveryEnemy = true;
+        }
+        if (Data.QueenEnding[level.LevelIndex - 1])
+        {
+            level.QueenEnding = true;
+        }
 
         Data.KillKing[level.LevelIndex-1] = level.KillKing;
         Data.MinTurns[level.LevelIndex-1] = level.MinTurns;
