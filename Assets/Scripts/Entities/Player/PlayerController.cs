@@ -79,6 +79,7 @@ public class PlayerController : Controller
         PossibleNodes.Clear();
         PossibleNodeDirections.Clear();
         OnChangeBoardPiece(meshFilter, type, meshRenderer);
+        base.DeselectNodes(PossibleNodes);
         TurnSetUp();
         OnTurnEnd?.Invoke();
     }

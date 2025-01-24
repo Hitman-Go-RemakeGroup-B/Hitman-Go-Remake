@@ -61,6 +61,7 @@ public class Path : MonoBehaviour
             Node child = transform.GetChild(i).GetComponent<Node>();
             child.OnColorChange += ChangeColor;
             child.NodeSpriteRenderer = child.GetComponent<SpriteRenderer>();
+            child.oldColor = child.NodeSpriteRenderer.color;
             NodeArray[child.GridCoordinate.x, child.GridCoordinate.y] = child;
         }
         _winNode = GetNodeFromCoordinate(WinNodeCoordinates);
@@ -205,7 +206,7 @@ public class Path : MonoBehaviour
     {
         if (isHiglighting)
         {
-            node.oldColor = node.NodeSpriteRenderer.color;
+            
             node.NodeSpriteRenderer.color = color;
             return;
         }

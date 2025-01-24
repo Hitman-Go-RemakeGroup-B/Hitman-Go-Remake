@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Numerics;
 using BT;
 using BT.Decorator;
@@ -12,6 +13,7 @@ public class AiController : Controller, IInteractable
     [SerializeField] private bool _isPlayerAbleToTransformIntoMe;
     public Action<AiController> OnDeath;
     UIManager _UI;
+    List<Node> lastPossibleNodes;
 
     private void Start()
     {
@@ -43,7 +45,7 @@ public class AiController : Controller, IInteractable
         // Repeaters
         BT_Repeater findDirRepeater = new("did i find a sutabile direction");
         BT_Repeater findNextDirRepeater = new("");
-        
+
         // Selectors 
         BT_Selector raycastSelector = new("did the raycast hit?");
 
@@ -128,11 +130,12 @@ public class AiController : Controller, IInteractable
 
     public void Interact(PlayerController player)
     {
+        base.DeselectNodes(lastPossibleNodes);
         IsDead = true;
         OnDeath?.Invoke(this);
-        gameObject.SetActive(false);
         if (_isPlayerAbleToTransformIntoMe)
-            player.PiceCange(BoardPice,BoardPiceType);
+            player.PiceCange(BoardPice, BoardPiceType);
+        gameObject.SetActive(false);
     }
 
 
@@ -144,7 +147,17 @@ public class AiController : Controller, IInteractable
 
     protected override IEnumerator TakeTurn()
     {
-        return base.TakeTurn();
+        while (_behaviourTree.Process() == BT_Node.Status.Running)
+        {
+            if (PossibleNodes.Count > 0)
+            {
+                lastPossibleNodes = PossibleNodes;
+            }
+
+            yield return null;
+        }
+        _behaviourTree.Reset();
+        OnTurnEnd?.Invoke();
     }
 
     private void OnDisable()
